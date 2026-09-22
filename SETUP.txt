@@ -1,0 +1,27 @@
+MOHAMMAD ARSHIL SIDDIQUI — PORTFOLIO
+
+Requirements:
+- Node.js 18+
+
+Run:
+  npm install
+  npm run dev
+
+Build:
+  npm run build
+  npm run preview
+
+This version is a self-contained portfolio conversion of the Coffee Studio visual direction.
+It removes authentication, PDF/tools/workspace/backend functionality and keeps the coffee theme,
+light/dark mode, responsive navigation, animations, certificate viewer, project links, and Tic-Tac-Toe.
+
+Hero artwork:
+- public/hero-light.png
+- public/hero-dark.png
+
+Certificate PDFs included:
+- NASA Open Science 101
+- NASA ARSET Fundamentals of Remote Sensing
+- NASA ARSET Hyperspectral Data for Land and Coastal Systems
+
+No README.md or LICENSE file is included by design.
