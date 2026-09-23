@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@400;600&display=swap');
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg-primary);
+  color-scheme: light;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@theme {
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-handwriting: 'Caveat', cursive;
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-card: var(--bg-card);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-border: var(--border-color);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
+  --color-accent-gold: var(--accent-gold);
+  --color-badge-new: var(--badge-new);
+  --color-toggle-bg: var(--toggle-bg);
+}
+
+@layer base {
+  :root {
+    --bg-primary: #FAF6F1;
+    --bg-secondary: #F2EBE0;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FDF8F3;
+    --border-color: #E8DDD0;
+    --text-primary: #2C1810;
+    --text-secondary: #6B4C3B;
+    --text-muted: #9B7B6B;
+    --accent-primary: #8B4513;
+    --accent-hover: #6B3410;
+    --accent-light: #D4956A;
+    --accent-gold: #C4956A;
+    --badge-new: #D4956A;
+    --shadow-color: rgba(139, 69, 19, 0.12);
+    --toggle-bg: #EDE0D4;
+
+    /* Sticky Notes (Light) */
+    --sticky-bg: #fcf3cc;
+    --sticky-text: #554a1f;
+    --sticky-border: #efe2b8;
+    --sticky-shadow: rgba(85, 74, 31, 0.12);
+    --sticky-tape: rgba(255, 255, 255, 0.7);
+    --sticky-tape-border: rgba(0, 0, 0, 0.05);
+
+    --sticky-green-bg: #eef2de;
+    --sticky-green-text: #51633d;
+    --sticky-green-border: #dae3cb;
+
+    /* Profile Header Sticky (Light) */
+    --profile-bg: #f6edce;
+    --profile-border: rgba(235, 216, 183, 0.5);
+    --profile-text-primary: #1f1712;
+    --profile-text-secondary: #4a2e1b;
+    --profile-tape-bg: rgba(228, 212, 178, 0.9);
+    --profile-tape-border: rgba(214, 195, 154, 0.3);
+  }
+
+  .espresso-mode {
+    --bg-primary: #0F0A06;
+    --bg-secondary: #1C1008;
+    --bg-card: #241408;
+    --bg-card-hover: #2E1A0A;
+    --border-color: #3D2410;
+    --text-primary: #F5ECD7;
+    --text-secondary: #C4956A;
+    --text-muted: #8B6B4A;
+    --accent-primary: #C4956A;
+    --accent-hover: #D4A574;
+    --accent-light: #8B4513;
+    --accent-gold: #C4956A;
+    --badge-new: #8B4513;
+    --shadow-color: rgba(196, 149, 106, 0.15);
+    --toggle-bg: #2E1A0A;
+
+    /* Sticky Notes (Espresso) */
+    --sticky-bg: #6F4E37;
+    --sticky-text: #F3D7BD;
+    --sticky-border: #8A6852;
+    --sticky-shadow: rgba(30, 15, 5, 0.5);
+    --sticky-tape: rgba(230, 210, 190, 0.28);
+    --sticky-tape-border: transparent;
+
+    --sticky-green-bg: #5F5A3E;
+    --sticky-green-text: #E9DFC8;
+    --sticky-green-border: #6B6545;
+
+    /* Profile Header Sticky (Espresso) */
+    --profile-bg: #6F4E37;
+    --profile-border: #8A6852;
+    --profile-text-primary: #F5ECD7;
+    --profile-text-secondary: #F3D7BD;
+    --profile-tape-bg: rgba(230, 210, 190, 0.28);
+    --profile-tape-border: transparent;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overscroll-behavior-y: none;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .espresso-mode {
+    color-scheme: dark;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+}
+
+div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1),
+.polaroid-card-container {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"), radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 150px 150px, 8px 8px;
+}
+
+.espresso-mode div#root:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1),
+.espresso-mode .polaroid-card-container {
+  background-color: #cdb190 !important;
+}
+
+.reduce-motion * {
+   transition-duration: 0.01ms !important;
+   animation-duration: 0.01ms !important;
+   animation-iteration-count: 1 !important;
+   scroll-behavior: auto !important;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-timing-function: ease-in-out;
+}
+
+html.view-transition-active,
+html.view-transition-active *,
+html.view-transition-active *::before,
+html.view-transition-active *::after {
+  transition: none !important;
+}
+
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow !important;
+  transition-duration: 800ms !important;
+  transition-timing-function: ease-in-out !important;
+  transition-delay: 0ms !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar for inner zones */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Utility for notch phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* --- Theme View Transition --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  will-change: transform, opacity;
+}
+
+::view-transition-group(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+::view-transition-old(root) {
+  animation: cozy-fade-out 0.7s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: cozy-fade-in 0.7s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes cozy-fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.995); }
+}
+
+@keyframes cozy-fade-in {
+  from { opacity: 0; transform: scale(1.005); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Hardware Accelerated Scroll Reveal System --- */
+.reveal-target {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.group-cards > *:nth-child(1) { transition-delay: 40ms; }
+.group-cards > *:nth-child(2) { transition-delay: 90ms; }
+.group-cards > *:nth-child(3) { transition-delay: 140ms; }
+.group-cards > *:nth-child(4) { transition-delay: 190ms; }
+
+/* Portfolio additions: the original Coffee Studio theme/animations stay intact. */
+html { scroll-padding-top: 90px; }
+section[id] { scroll-margin-top: 90px; }
+.portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }
