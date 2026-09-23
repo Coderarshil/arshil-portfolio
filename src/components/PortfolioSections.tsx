@@ -71,7 +71,7 @@ function ProjectPart({label,text}:{label:string;text:string}) { return <div clas
 function Skills() {
   return (
     <Wrap id="skills" eyebrow="how I work ♡" title="Skills">
-      <div className="relative mx-auto w-[min(94vw,520px)] aspect-square">
+      <div className="relative mx-auto w-[min(96vw,560px)] aspect-square">
         <div className="absolute inset-0 rounded-full border border-[var(--border-color)]/45" aria-hidden="true" />
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] flex flex-col items-center justify-center text-center shadow-inner px-4">
@@ -81,8 +81,8 @@ function Skills() {
 
         {skills.map(([name, Icon], i) => {
           const angle = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
-          const x = Math.cos(angle) * 145;
-          const y = Math.sin(angle) * 145;
+          const x = Math.cos(angle) * 165;
+          const y = Math.sin(angle) * 165;
           return (
             <div
               key={name}
