@@ -423,6 +423,7 @@ header { z-index: 70 !important; }
 
 /* Final mobile alignment: keep skill chips on a clean, collision-free ring and center the email CTA. */
 @media (max-width: 639px) {
+  /* Keep the skill wheel size/position unchanged. */
   .skills-section > div:last-child {
     width: min(100vw - 8px, 360px) !important;
     max-width: 360px !important;
@@ -430,6 +431,7 @@ header { z-index: 70 !important; }
     max-height: 360px !important;
   }
 
+  /* Email CTA — user's preferred compact sizing. */
   .contact-card > a[href^="mailto:"] {
     min-height: 3.5rem;
     width: 100%;
@@ -441,5 +443,40 @@ header { z-index: 70 !important; }
     box-sizing: border-box;
     margin-left: auto !important;
     margin-right: auto !important;
+  }
+
+  /* Tighten the large mobile gaps between sections. */
+  section[id] {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  /* Experiments should finish close to the next section instead of leaving a
+     large blank band below the cards. */
+  #experiments {
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Keep the Let's talk heading and contact card visually together. */
+  .contact-section {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .contact-section > div:first-child {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .contact-section .contact-card {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* The footer follows the contact card directly, with only a small breathing
+     space at the bottom for the fixed mobile navigation. */
+  footer {
+    margin-top: 0 !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 1.5rem !important;
   }
 }
