@@ -33,7 +33,7 @@ export function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-in-out ${scrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)]/50 py-3' : 'bg-transparent py-4 lg:py-5'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 ease-in-out ${scrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)]/50 py-3' : 'bg-transparent py-4 lg:py-5'}`}>
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-5 flex items-center justify-between">
           <div className="flex items-center gap-3 shrink-0 md:flex-1 min-w-0">
             <button

@@ -363,3 +363,60 @@ section[id] { scroll-margin-top: 90px; }
     hyphens: none;
   }
 }
+
+
+/* Mobile stability pass: keep the contact card inside the viewport, keep the header above hero controls, and give the five-slot bottom nav explicit columns. */
+@media (max-width: 639px) {
+  .contact-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    overflow: visible;
+  }
+
+  .contact-section .contact-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .skills-section > div:last-child {
+    width: min(100%, 330px) !important;
+    max-width: 330px !important;
+    height: min(100vw - 30px, 330px) !important;
+    max-height: 330px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .skills-section .skill-chip {
+    min-width: 80px !important;
+    max-width: 118px !important;
+    min-height: 30px !important;
+    padding: 5px 9px !important;
+    line-height: 1 !important;
+  }
+
+  .skills-section .skill-chip > div {
+    gap: 5px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+  }
+
+  .skills-section .skill-chip span {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+
+  .skills-section .skill-chip svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+}
+
+/* Header must always sit above hero buttons and sticky artwork. */
+header { z-index: 70 !important; }

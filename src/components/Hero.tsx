@@ -190,7 +190,7 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
           </div>
         </div>
 
-        <div className="block md:hidden w-full flex justify-center mt-2 mb-10 relative z-40">
+        <div className="block md:hidden w-full flex justify-center mt-2 mb-10 relative z-10">
           <motion.button
             onClick={() => scrollTo('#about')}
             whileHover={{ scale: 1.02 }}

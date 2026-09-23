@@ -163,9 +163,12 @@ function SkillOrbitItem({
   // This keeps every word intact instead of solving collisions by chopping
   // words onto multiple lines.
   const desktopRadius = 255;
+  // Mobile uses a collision-free 3-2-2-3 ring layout rather than a
+  // mathematically even orbit. This keeps long labels like
+  // \"Experimental\" and \"Communication\" intact on narrow screens.
   const mobilePositions = [
-    [0, -146], [94, -104], [137, -34], [137, 46], [91, 108],
-    [0, 142], [-91, 108], [-137, 46], [-137, -34], [-94, -104],
+    [0, -142], [76, -116], [112, -42], [112, 42], [76, 116],
+    [0, 142], [-76, 116], [-112, 42], [-112, -42], [-76, -116],
   ] as const;
   const [mobileX, mobileY] = mobilePositions[index];
   const x = isMobile ? mobileX : Math.cos(angle) * desktopRadius;
