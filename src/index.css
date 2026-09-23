@@ -271,3 +271,56 @@ section[id] { scroll-margin-top: 90px; }
   .skills-section .skills-mobile-center { display: block; }
   .skills-section .skill-chip { width: 86px; min-height: 38px; }
 }
+
+
+/* Final mobile polish: keep skill chips inside the orbit and keep the contact card clear of fixed UI. */
+.skills-section { overflow: visible; }
+.skill-orbit-item { overflow: visible; }
+.skill-chip { box-sizing: border-box; }
+
+@media (max-width: 639px) {
+  .skills-section {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 110px;
+  }
+
+  .skills-section > div:last-child {
+    width: min(94vw, 350px);
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .skills-section .skill-chip {
+    width: 94px;
+    min-height: 42px;
+    padding: 6px 7px;
+  }
+
+  .skills-section .skill-chip > div {
+    width: 100%;
+  }
+
+  .skills-section .skill-chip span {
+    max-width: 70px;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .contact-section {
+    scroll-margin-top: 105px;
+    padding-top: 105px;
+    padding-bottom: 145px;
+  }
+
+  .contact-section > div:last-child {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-section .font-handwriting {
+    overflow-wrap: anywhere;
+  }
+}

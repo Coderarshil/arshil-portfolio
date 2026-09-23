@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion={animations === 'calmer' ? 'always' : 'user'}>
-      <div className="min-h-screen font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden pb-[80px] md:pb-0">
+      <div className="min-h-screen font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden pb-[104px] md:pb-0">
         <Header />
         <main className="flex flex-col items-center relative w-full min-h-[60vh] overflow-x-hidden md:overflow-visible">
           <Hero onPlay={() => setShowTicTacToe(true)} />
