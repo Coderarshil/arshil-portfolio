@@ -254,7 +254,7 @@ html.view-transition-active *::after {
 .group-cards > *:nth-child(3) { transition-delay: 140ms; }
 .group-cards > *:nth-child(4) { transition-delay: 190ms; }
 
-/* Portfolio additions: the original Coffee Studio theme/animations stay intact. */
+/* Portfolio additions — keep the original Coffee Studio spacing/visual language. */
 html { scroll-padding-top: 90px; }
 section[id] { scroll-margin-top: 90px; }
 .portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }

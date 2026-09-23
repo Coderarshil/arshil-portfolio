@@ -28,7 +28,7 @@ const interests = [
 const certificates = [
   { title: 'Elements of AI', org: 'University of Helsinki / MinnaLearn', date: 'Aug 30, 2026', image: '/certificates/elements-of-ai.png', full: '/certificates/elements-of-ai.png', kind: 'image' as const },
   { title: 'NASA Open Science 101', org: 'NASA', date: 'Aug 17, 2026', image: '/certificates/nasa-open-science-101.png', full: '/certificates/OpenScience101-Certificate.pdf', kind: 'pdf' as const },
-  { title: 'Fundamentals of Remote Sensing', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/nasa-fundamentals-remote-sensing.png', full: '/certificates/NASA-ARSET-Fundamentals-of-Remote-Sensing.pdf', kind: 'pdf' as const },
+  { title: 'Fundamentals of Remote Sensing', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/nasa-fundamentals-remote-sensing.png', full: '/certificates/NASA-ARSET-Fundamentals-of-Remote-Sensing.pdf#page=2', kind: 'pdf' as const },
   { title: 'Hyperspectral Data for Land and Coastal Systems', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/nasa-hyperspectral.png', full: '/certificates/NASA-ARSET-Hyperspectral.pdf', kind: 'pdf' as const },
 ];
 
