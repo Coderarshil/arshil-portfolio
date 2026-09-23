@@ -420,3 +420,18 @@ section[id] { scroll-margin-top: 90px; }
 
 /* Header must always sit above hero buttons and sticky artwork. */
 header { z-index: 70 !important; }
+
+/* Final mobile alignment: keep skill chips on a clean, collision-free ring and center the email CTA. */
+@media (max-width: 639px) {
+  .skills-section > div:last-child {
+    width: min(100vw - 8px, 360px) !important;
+    max-width: 360px !important;
+    height: min(100vw - 8px, 360px) !important;
+    max-height: 360px !important;
+  }
+
+  .contact-card > a[href^="mailto:"] {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
