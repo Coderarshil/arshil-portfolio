@@ -430,14 +430,14 @@ header { z-index: 70 !important; }
     max-height: 360px !important;
   }
 
-  .contact-card > a[href^="mailto:"] {
-    min-height: 4.25rem;
-    width: 100%;
-    max-width: 36rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    box-sizing: border-box;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+ .contact-card > a[href^="mailto:"] {
+  min-height: 4.25rem;
+  width: 100%;
+  max-width: 39rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-size: 1.15rem;
+  box-sizing: border-box;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
