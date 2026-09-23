@@ -273,7 +273,7 @@ section[id] { scroll-margin-top: 90px; }
 }
 
 
-/* Final mobile polish: keep skill chips inside the orbit and keep the contact card clear of fixed UI. */
+/* Final mobile polish: never split words and never let fixed UI cover the contact card. */
 .skills-section { overflow: visible; }
 .skill-orbit-item { overflow: visible; }
 .skill-chip { box-sizing: border-box; }
@@ -286,16 +286,16 @@ section[id] { scroll-margin-top: 90px; }
   }
 
   .skills-section > div:last-child {
-    width: min(94vw, 350px);
+    width: min(96vw, 350px);
     max-width: 350px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .skills-section .skill-chip {
-    width: 94px;
+    width: 104px;
     min-height: 42px;
-    padding: 6px 7px;
+    padding: 6px 8px;
   }
 
   .skills-section .skill-chip > div {
@@ -303,24 +303,29 @@ section[id] { scroll-margin-top: 90px; }
   }
 
   .skills-section .skill-chip span {
-    max-width: 70px;
-    overflow-wrap: anywhere;
+    max-width: 88px;
+    overflow-wrap: normal;
     word-break: normal;
+    hyphens: none;
   }
 
   .contact-section {
     scroll-margin-top: 105px;
     padding-top: 105px;
-    padding-bottom: 145px;
+    padding-bottom: 165px;
   }
 
   .contact-section > div:last-child {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     margin-left: auto;
     margin-right: auto;
   }
 
   .contact-section .font-handwriting {
-    overflow-wrap: anywhere;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 }

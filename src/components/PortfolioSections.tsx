@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Trophy, Heart, ExternalLink } from 'lucide-react';
+import { Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Heart, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const projects = [
@@ -158,11 +158,17 @@ function SkillOrbitItem({
   open: boolean;
   isMobile: boolean;
 }) {
+  // Desktop has enough width for one generous orbit. Mobile uses two 5-item
+  // rings so long words never need to be chopped or forced into each other.
   const desktopRadius = 255;
-  const mobileRadius = 126;
+  const mobileRing = index % 2;
+  const mobileIndex = Math.floor(index / 2);
+  const mobileRadius = mobileRing === 0 ? 86 : 113;
+  const mobileAngle = (mobileIndex / 5) * Math.PI * 2 - Math.PI / 2 + (mobileRing ? Math.PI / 5 : 0);
   const radius = isMobile ? mobileRadius : desktopRadius;
-  const x = Math.cos(angle) * radius;
-  const y = Math.sin(angle) * radius;
+  const finalAngle = isMobile ? mobileAngle : angle;
+  const x = Math.cos(finalAngle) * radius;
+  const y = Math.sin(finalAngle) * radius;
 
   return (
     <motion.div
@@ -187,7 +193,7 @@ function SkillOrbitItem({
       >
         <div className="flex items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-[1.15] text-[var(--text-primary)] max-w-full">
           <Icon size={14} className="text-[var(--accent-primary)] shrink-0" />
-          <span className="min-w-0 max-w-[78px] sm:max-w-[88px] whitespace-normal break-words">{name}</span>
+          <span className="min-w-0 max-w-[88px] sm:max-w-[96px] whitespace-normal break-normal">{name}</span>
         </div>
       </motion.div>
     </motion.div>
@@ -206,4 +212,4 @@ function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;o
 
 function Interests() { return <Wrap id="interests" eyebrow="things that pull my attention" title="Interests"><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{interests.map(([title,body],i)=><motion.div key={title} whileHover={{ y:-4 }} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 shadow-sm relative overflow-hidden"><div className="absolute -right-8 -top-8 w-20 h-20 rounded-full bg-[var(--accent-primary)]/5"/><p className="font-serif text-xl font-bold text-[var(--text-primary)]">{title}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-1">{body}</p></motion.div>)}</div></Wrap>; }
 
-function Contact() { return <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk"><div className="max-w-3xl mx-auto rounded-3xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-7 sm:p-10 text-center relative overflow-visible"><div className="absolute -top-3 left-[22%] w-16 h-7 bg-white/30 dark:bg-white/10 rotate-[-4deg] border border-black/5 dark:border-white/10"/><p className="font-handwriting text-3xl text-[var(--accent-primary)]">Grab a cup and say hello.</p><p className="mt-3 text-[var(--text-secondary)]">Ideas, collaborations, questions, or just a good conversation — my inbox is open.</p><a href="mailto:arshilaehmad.2000@gmail.com" className="inline-flex items-center gap-2 mt-6 bg-[var(--accent-primary)] text-white px-6 py-3 rounded-full font-serif font-bold">arshilaehmad.2000@gmail.com <Mail size={16}/></a><div className="mt-6 flex justify-center gap-3">{[[Github,'https://github.com/Coderarshil','GitHub'],[Instagram,'https://instagram.com/arshil7474','Instagram'],[Linkedin,'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5','LinkedIn']].map(([Icon,href,label])=> <a key={label as string} href={href as string} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] hover:text-[var(--accent-primary)]" aria-label={label as string}><Icon size={17}/></a>)}</div></div></Wrap>; }
+function Contact() { return <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section"><div className="contact-card w-full max-w-3xl mx-auto box-border rounded-3xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-6 sm:p-10 text-center relative overflow-visible"><div className="absolute -top-3 left-[22%] w-16 h-7 bg-white/30 dark:bg-white/10 rotate-[-4deg] border border-black/5 dark:border-white/10"/><p className="font-handwriting text-3xl text-[var(--accent-primary)]">Grab a cup and say hello.</p><p className="mt-3 text-[var(--text-secondary)]">Ideas, collaborations, questions, or just a good conversation — my inbox is open.</p><a href="mailto:arshilaehmad.2000@gmail.com" className="inline-flex items-center gap-2 mt-6 bg-[var(--accent-primary)] text-white px-6 py-3 rounded-full font-serif font-bold">arshilaehmad.2000@gmail.com <Mail size={16}/></a><div className="mt-6 flex justify-center gap-3">{[[Github,'https://github.com/Coderarshil','GitHub'],[Instagram,'https://instagram.com/arshil7474','Instagram'],[Linkedin,'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5','LinkedIn']].map(([Icon,href,label])=> <a key={label as string} href={href as string} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] hover:text-[var(--accent-primary)]" aria-label={label as string}><Icon size={17}/></a>)}</div></div></Wrap>; }
