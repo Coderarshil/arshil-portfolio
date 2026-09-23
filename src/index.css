@@ -258,3 +258,16 @@ html.view-transition-active *::after {
 html { scroll-padding-top: 90px; }
 section[id] { scroll-margin-top: 90px; }
 .portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* Skills interaction: desktop orbit stays open; mobile becomes a compact tap-to-reveal skill wheel. */
+.skills-section .skills-center-label { font-size: 1.45rem; }
+.skills-section .skill-chip { will-change: transform; }
+.skills-mobile-center { display: none; }
+@media (max-width: 639px) {
+  .skills-section { padding-top: 2rem; padding-bottom: 3.5rem; }
+  .skills-section > div:first-child { display: none; }
+  .skills-section > div:last-child { margin-top: 0; width: min(92vw, 330px); }
+  .skills-section .skills-desktop-center { display: none; }
+  .skills-section .skills-mobile-center { display: block; }
+  .skills-section .skill-chip { width: 86px; min-height: 38px; }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, Github, Instagram, Linkedin, Mail, Sparkles, PenLine, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Trophy, Heart, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -69,40 +69,119 @@ function Projects() {
 function ProjectPart({label,text}:{label:string;text:string}) { return <div className="mt-4"><p className="font-handwriting text-lg text-[var(--accent-primary)]">{label}</p><p className="text-sm text-[var(--text-secondary)] leading-relaxed">{text}</p></div>; }
 
 function Skills() {
-  return (
-    <Wrap id="skills" eyebrow="how I work ♡" title="Skills">
-      <div className="relative mx-auto w-[min(96vw,560px)] aspect-square">
-        <div className="absolute inset-0 rounded-full border border-[var(--border-color)]/45" aria-hidden="true" />
+  const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] flex flex-col items-center justify-center text-center shadow-inner px-4">
-          <p className="font-handwriting text-xl sm:text-2xl text-[var(--accent-primary)] leading-tight">me, in the middle</p>
-          <p className="font-serif text-sm sm:text-xl font-bold leading-tight text-[var(--text-primary)] mt-1">always figuring it out</p>
-        </div>
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
+
+  return (
+    <Wrap id="skills" eyebrow="how I work ♡" title="Skills" className="skills-section">
+      <div className="relative mx-auto w-[min(96vw,700px)] aspect-square sm:mt-2">
+        <motion.div
+          className="absolute inset-0 rounded-full border border-[var(--border-color)]/35"
+          animate={{ opacity: isMobile ? (open ? 1 : 0) : 1 }}
+          transition={{ duration: 0.35 }}
+          aria-hidden="true"
+        />
+
+        <motion.button
+          type="button"
+          onClick={() => setOpen(v => !v)}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-inner flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40 skills-center"
+          animate={{ width: isMobile ? (open ? 54 : 118) : 160, height: isMobile ? (open ? 54 : 118) : 160, rotate: isMobile && open ? 90 : 0 }}
+          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          aria-expanded={isMobile ? open : undefined}
+          aria-label={isMobile ? (open ? 'Close skills' : 'Show skills') : 'Skills'}
+        >
+          <span className="skills-desktop-center text-center px-4">
+            <span className="block font-handwriting text-2xl text-[var(--accent-primary)]">me, in the middle</span>
+            <span className="block font-serif text-xl font-bold leading-tight text-[var(--text-primary)] mt-1">always figuring it out</span>
+          </span>
+          <motion.span
+            className="font-handwriting text-[var(--accent-primary)] skills-mobile-center"
+            animate={{ opacity: open ? 0 : 1, scale: open ? 0.65 : 1 }}
+            transition={{ duration: 0.2 }}
+          >Skills??</motion.span>
+          <motion.span
+            className="absolute text-2xl text-[var(--accent-primary)] skills-mobile-center"
+            animate={{ opacity: open ? 1 : 0, rotate: open ? -90 : 0, scale: open ? 1 : 0.6 }}
+            transition={{ duration: 0.22, delay: open ? 0.12 : 0 }}
+          >×</motion.span>
+        </motion.button>
 
         {skills.map(([name, Icon], i) => {
           const angle = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
-          const x = Math.cos(angle) * 165;
-          const y = Math.sin(angle) * 165;
           return (
-            <div
+            <SkillOrbitItem
               key={name}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{ marginLeft: x, marginTop: y }}
-            >
-              <motion.div
-                whileHover={{ scale: 1.07 }}
-                className="w-[74px] sm:w-[96px] min-h-9 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-2 py-1.5 flex items-center justify-center text-center"
-              >
-                <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs leading-tight text-[var(--text-primary)]">
-                  <Icon size={13} className="text-[var(--accent-primary)] shrink-0" />
-                  <span>{name}</span>
-                </div>
-              </motion.div>
-            </div>
+              name={name}
+              Icon={Icon}
+              angle={angle}
+              index={i}
+              open={open}
+              isMobile={isMobile}
+            />
           );
         })}
       </div>
     </Wrap>
+  );
+}
+
+function SkillOrbitItem({
+  name,
+  Icon,
+  angle,
+  index,
+  open,
+  isMobile,
+}: {
+  name: string;
+  Icon: React.ComponentType<{ size?: number; className?: string }>;
+  angle: number;
+  index: number;
+  open: boolean;
+  isMobile: boolean;
+}) {
+  const desktopRadius = 220;
+  const mobileRadius = 116;
+  const radius = isMobile ? mobileRadius : desktopRadius;
+  const x = Math.cos(angle) * radius;
+  const y = Math.sin(angle) * radius;
+
+  return (
+    <motion.div
+      className="skill-orbit-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      initial={false}
+      animate={{
+        opacity: isMobile ? (open ? 1 : 0) : 1,
+        scale: isMobile ? (open ? 1 : 0.35) : 1,
+        x: open ? x : 0,
+        y: open ? y : 0,
+      }}
+      transition={{
+        duration: 0.58,
+        delay: isMobile ? (open ? index * 0.025 : (skills.length - index) * 0.012) : index * 0.015,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      style={{ '--skill-x': `${x}px`, '--skill-y': `${y}px` } as React.CSSProperties}
+    >
+      <motion.div
+        whileHover={{ scale: 1.07 }}
+        className="skill-chip w-[92px] sm:w-[108px] min-h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-2 py-1.5 flex items-center justify-center text-center"
+      >
+        <div className="flex items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-tight text-[var(--text-primary)]">
+          <Icon size={14} className="text-[var(--accent-primary)] shrink-0" />
+          <span>{name}</span>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

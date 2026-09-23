@@ -34,7 +34,7 @@ export function Header() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-in-out ${scrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)]/50 py-3' : 'bg-transparent py-4 lg:py-5'}`}>
-        <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-5 flex items-center justify-between">
           <div className="flex items-center gap-3 shrink-0 md:flex-1 min-w-0">
             <button
               type="button"
@@ -44,8 +44,8 @@ export function Header() {
             >
               <img src={avatar} alt="Arshil" className="w-full h-full object-cover" />
             </button>
-            <button type="button" onClick={() => setSummaryOpen(true)} className="flex flex-col leading-[1.05] mt-1 text-left text-[var(--text-primary)] min-w-0">
-              <span className="font-serif font-bold text-[1.2rem] lg:text-[1.38rem] tracking-tight truncate">Mohammad Arshil Siddiqui</span>
+            <button type="button" onClick={() => setSummaryOpen(true)} className="flex flex-col leading-[1.05] mt-1 text-left text-[var(--text-primary)] min-w-0 lg:-ml-2">
+              <span className="font-serif font-bold text-[1.12rem] lg:text-[1.48rem] tracking-tight whitespace-nowrap">Mohammad Arshil Siddiqui</span>
               <span className="font-handwriting text-[0.78rem] text-[var(--accent-primary)] font-medium tracking-wide">student · developer · AI enthusiast</span>
             </button>
           </div>
