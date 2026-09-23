@@ -39,7 +39,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setSummaryOpen(true)}
-              className="w-11 h-11 rounded-full border-2 border-[var(--accent-light)] flex items-center justify-center bg-[var(--bg-card)] shadow-sm overflow-hidden shrink-0 hover:scale-[1.03] transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40"
+              className="hidden md:flex w-11 h-11 rounded-full border-2 border-[var(--accent-light)] items-center justify-center bg-[var(--bg-card)] shadow-sm overflow-hidden shrink-0 hover:scale-[1.03] transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40"
               aria-label="Open Arshil's profile summary"
             >
               <img src={avatar} alt="Arshil" className="w-full h-full object-cover" />
@@ -74,16 +74,7 @@ export function Header() {
             className="fixed inset-0 z-[100] bg-[var(--bg-primary)]/95 backdrop-blur-3xl flex flex-col p-6"
             initial={{ opacity: 0, x: '8%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '8%' }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="flex items-center justify-between">
-              <button type="button" onClick={() => setSummaryOpen(true)} className="flex items-center gap-3 text-left">
-                <span className="w-11 h-11 rounded-full border-2 border-[var(--accent-light)] overflow-hidden shrink-0 bg-[var(--bg-card)]">
-                  <img src={avatar} alt="Arshil" className="w-full h-full object-cover" />
-                </span>
-                <span className="flex flex-col leading-tight">
-                  <span className="font-serif font-bold text-lg text-[var(--text-primary)]">Mohammad Arshil Siddiqui</span>
-                  <span className="font-handwriting text-sm text-[var(--accent-primary)]">tap for a little summary</span>
-                </span>
-              </button>
+            <div className="flex items-center justify-end">
               <button className="text-[var(--text-primary)] p-2" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
                 <X size={30} />
               </button>

@@ -69,7 +69,41 @@ function Projects() {
 function ProjectPart({label,text}:{label:string;text:string}) { return <div className="mt-4"><p className="font-handwriting text-lg text-[var(--accent-primary)]">{label}</p><p className="text-sm text-[var(--text-secondary)] leading-relaxed">{text}</p></div>; }
 
 function Skills() {
-  return <Wrap id="skills" eyebrow="how I work ♡" title="Skills"><div className="relative max-w-5xl mx-auto min-h-[430px] hidden md:block"><div className="absolute inset-0 flex items-center justify-center"><div className="w-52 h-52 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] flex flex-col items-center justify-center shadow-inner"><p className="font-handwriting text-2xl text-[var(--accent-primary)]">me, in the middle</p><p className="font-serif text-xl font-bold text-[var(--text-primary)] mt-1">always figuring it out</p></div></div>{skills.map(([name,Icon],i)=>{ const a=(i/skills.length)*Math.PI*2; const radius=185; const x=Math.cos(a)*radius; const y=Math.sin(a)*radius; return <motion.div key={name} whileHover={{ scale:1.06, rotate: i%2?1:-1 }} className="absolute left-1/2 top-1/2 -ml-16 -mt-8 w-32 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl px-3 py-2 shadow-sm" style={{ transform:`translate(${x}px, ${y}px)` }}><div className="flex items-center gap-2 text-sm text-[var(--text-primary)]"><Icon size={15} className="text-[var(--accent-primary)]"/>{name}</div></motion.div>})}</div><div className="md:hidden grid grid-cols-2 gap-3 max-w-lg mx-auto">{skills.map(([name,Icon]) => <div key={name} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl px-4 py-3 shadow-sm flex items-center gap-2 text-sm text-[var(--text-primary)]"><Icon size={15} className="text-[var(--accent-primary)]"/>{name}</div>)}</div></Wrap>;
+  return (
+    <Wrap id="skills" eyebrow="how I work ♡" title="Skills">
+      <div className="relative mx-auto w-[min(94vw,520px)] aspect-square">
+        <div className="absolute inset-0 rounded-full border border-[var(--border-color)]/45" aria-hidden="true" />
+
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] flex flex-col items-center justify-center text-center shadow-inner px-4">
+          <p className="font-handwriting text-xl sm:text-2xl text-[var(--accent-primary)] leading-tight">me, in the middle</p>
+          <p className="font-serif text-sm sm:text-xl font-bold leading-tight text-[var(--text-primary)] mt-1">always figuring it out</p>
+        </div>
+
+        {skills.map(([name, Icon], i) => {
+          const angle = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
+          const x = Math.cos(angle) * 145;
+          const y = Math.sin(angle) * 145;
+          return (
+            <div
+              key={name}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ marginLeft: x, marginTop: y }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.07 }}
+                className="w-[74px] sm:w-[96px] min-h-9 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-2 py-1.5 flex items-center justify-center text-center"
+              >
+                <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs leading-tight text-[var(--text-primary)]">
+                  <Icon size={13} className="text-[var(--accent-primary)] shrink-0" />
+                  <span>{name}</span>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })}
+      </div>
+    </Wrap>
+  );
 }
 
 function ThingsDone() {

@@ -96,10 +96,10 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute inset-0 lg:inset-2 overflow-hidden rounded-full custom-mask-image mix-blend-multiply dark:mix-blend-normal cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40 transition-transform duration-500 ${showPlayInvite ? 'scale-[0.985]' : 'scale-100'}`}
+            className={`absolute inset-0 lg:inset-2 custom-mask-image mix-blend-multiply dark:mix-blend-normal cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40 transition-transform duration-500 ${showPlayInvite ? 'scale-[0.985]' : 'scale-100'}`}
             style={{
-              clipPath: 'circle(50% at 50% 50%)',
-              WebkitClipPath: 'circle(50% at 50% 50%)',
+              maskImage: 'radial-gradient(ellipse at center, black 44%, transparent 68%)',
+              WebkitMaskImage: 'radial-gradient(ellipse at center, black 44%, transparent 70%)',
             }}
             aria-label="Click for a little surprise"
           >
