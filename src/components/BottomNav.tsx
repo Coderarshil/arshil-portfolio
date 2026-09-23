@@ -6,7 +6,7 @@ import { ProfileSummary } from './ProfileSummary';
 export function BottomNav() {
   const [summaryOpen, setSummaryOpen] = useState(false);
   const theme = useAppStore(s => s.theme);
-  const avatar = theme === 'espresso' ? '/arshil-espresso.png' : '/arshil-cappuccino.png';
+  const avatar = theme === 'espresso' ? '/arshil-espresso.webp' : '/arshil-cappuccino.webp';
   const go = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   const items = [
     { label: 'Home', icon: Home, target: '#home' },

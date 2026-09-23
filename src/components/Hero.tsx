@@ -104,7 +104,7 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
             aria-label="Click for a little surprise"
           >
             <img
-              src="/arshil-cappuccino.png"
+              src="/arshil-cappuccino.webp"
               alt="Arshil integrated into cappuccino latte art"
               className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] ${isEspresso ? 'opacity-0 scale-[0.96]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
@@ -114,7 +114,7 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
               onLoad={() => !isEspresso && setArtworkReady(true)}
             />
             <img
-              src="/arshil-espresso.png"
+              src="/arshil-espresso.webp"
               alt="Arshil reflected in espresso"
               className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] ${isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
               style={{ objectPosition: 'center center' }}

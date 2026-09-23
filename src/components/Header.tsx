@@ -11,7 +11,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
-  const avatar = isEspresso ? '/arshil-espresso.png' : '/arshil-cappuccino.png';
+  const avatar = isEspresso ? '/arshil-espresso.webp' : '/arshil-cappuccino.webp';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);

@@ -6,8 +6,8 @@ import { useAppStore } from '../lib/store';
 export function ProfileSummary({ onClose }: { onClose: () => void }) {
   const theme = useAppStore(s => s.theme);
   const espresso = theme === 'espresso';
-  const avatar = espresso ? '/arshil-espresso.png' : '/arshil-cappuccino.png';
-  const polaroid = espresso ? '/polaroidexpresso.webp' : '/polaroidcappuccino.webp';
+  const avatar = espresso ? '/arshil-espresso.webp' : '/arshil-cappuccino.webp';
+  const polaroid = espresso ? '/polaroidespresso.webp' : '/polaroidcappuccino.webp';
 
   return (
     <motion.div

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, Github, Instagram, Linkedin, Mail, Sparkles, PenLine, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Trophy, Heart, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Trophy, Heart, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const projects = [
@@ -9,7 +9,7 @@ const projects = [
 ];
 
 const skills = [
-  ['Fast learner', Lightbulb], ['Team worker', Users], ['Problem solver', Zap], ['Writer', PenLine], ['Communication', Mail], ['Extrovert', Heart], ['Adaptive', Sparkles], ['Creative', Palette], ['Design', Code2], ['Experimental', Lightbulb], ['Curious', BookOpen], ['AI enthusiast', Code2]
+  ['Fast learner', Lightbulb], ['Team worker', Users], ['Problem solver', Zap], ['Communication', Mail], ['Extrovert', Heart], ['Adaptive', Sparkles], ['Creative', Palette], ['Design', Code2], ['Experimental', Lightbulb], ['Curious', BookOpen]
 ] as const;
 
 const done = [
@@ -26,10 +26,10 @@ const interests = [
 ];
 
 const certificates = [
-  { title: 'Elements of AI', org: 'University of Helsinki / MinnaLearn', date: 'Aug 30, 2026', image: '/certificates/elements-of-ai.png', full: '/certificates/elements-of-ai.png', kind: 'image' as const },
-  { title: 'NASA Open Science 101', org: 'NASA', date: 'Aug 17, 2026', image: '/certificates/nasa-open-science-101.png', full: '/certificates/OpenScience101-Certificate.pdf', kind: 'pdf' as const },
-  { title: 'Fundamentals of Remote Sensing', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/nasa-fundamentals-remote-sensing.png', full: '/certificates/NASA-ARSET-Fundamentals-of-Remote-Sensing.pdf#page=2', kind: 'pdf' as const },
-  { title: 'Hyperspectral Data for Land and Coastal Systems', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/nasa-hyperspectral.png', full: '/certificates/NASA-ARSET-Hyperspectral.pdf', kind: 'pdf' as const },
+  { title: 'Elements of AI', org: 'University of Helsinki / MinnaLearn', date: 'Aug 30, 2026', image: '/certificates/UNIVERSITY OF HELSINKI ELEMENTS OF AI.webp', full: '/certificates/UNIVERSITY OF HELSINKI ELEMENTS OF AI.webp' },
+  { title: 'NASA Open Science 101', org: 'NASA', date: 'Aug 17, 2026', image: '/certificates/OpenScience101 Certificate.webp', full: '/certificates/OpenScience101 Certificate.webp' },
+  { title: 'Fundamentals of Remote Sensing', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/NASA ARSET Fundamentals of Remote Sensing.webp', full: '/certificates/NASA ARSET Fundamentals of Remote Sensing.webp' },
+  { title: 'Hyperspectral Data for Land and Coastal Systems', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/NASA Hyperspectral Data for Land and Coastal Systems.webp', full: '/certificates/NASA Hyperspectral Data for Land and Coastal Systems.webp' },
 ];
 
 export function PortfolioSections() {
@@ -193,7 +193,7 @@ function Certifications() {
   const [open,setOpen]=useState<(typeof certificates)[number] | null>(null);
   return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications"><div className="grid md:grid-cols-2 gap-5">{certificates.map(c => <motion.button type="button" key={c.title} onClick={()=>setOpen(c)} whileHover={{ y:-5, rotate:c.title.length%2?-0.4:0.4 }} className="text-left bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm"><div className="bg-[var(--bg-secondary)] p-3 border-b border-[var(--border-color)]"><img src={c.image} alt={`${c.title} certificate`} className="w-full aspect-[4/3] object-contain rounded-xl bg-white/50 dark:bg-black/10"/></div><div className="p-5"><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{c.org}</p><h3 className="font-serif font-bold text-xl text-[var(--text-primary)] mt-1">{c.title}</h3><p className="text-sm text-[var(--text-muted)] mt-2">{c.date}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-3">view certificate →</p></div></motion.button>)}</div><AnimateCert open={open} onClose={()=>setOpen(null)}/></Wrap>;
 }
-function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{open.kind==='image' ? <img src={open.full} alt={open.title} className="w-full rounded-xl"/> : <iframe src={open.full} title={open.title} className="w-full h-[70vh] rounded-xl border border-[var(--border-color)] bg-white"/>}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
+function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{<img src={open.full} alt={open.title} className="w-full rounded-xl"/>}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
 
 function Interests() { return <Wrap id="interests" eyebrow="things that pull my attention" title="Interests"><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{interests.map(([title,body],i)=><motion.div key={title} whileHover={{ y:-4 }} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 shadow-sm relative overflow-hidden"><div className="absolute -right-8 -top-8 w-20 h-20 rounded-full bg-[var(--accent-primary)]/5"/><p className="font-serif text-xl font-bold text-[var(--text-primary)]">{title}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-1">{body}</p></motion.div>)}</div></Wrap>; }
 
