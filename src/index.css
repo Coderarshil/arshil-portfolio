@@ -431,12 +431,13 @@ header { z-index: 70 !important; }
   }
 
   .contact-card > a[href^="mailto:"] {
-    min-height: 4.25rem;
+    min-height: 4rem;
     width: 100%;
     max-width: 39rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
+    font-style: bold;
     box-sizing: border-box;
     margin-left: auto !important;
     margin-right: auto !important;
