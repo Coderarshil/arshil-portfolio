@@ -421,35 +421,105 @@ section[id] { scroll-margin-top: 90px; }
 /* Header must always sit above hero buttons and sticky artwork. */
 header { z-index: 70 !important; }
 
-/* Final mobile alignment: keep skill chips on a clean, collision-free ring and center the email CTA. */
+/* Final spacing + contact CTA polish. Keep content compact without letting the fixed mobile nav cover it. */
+header { z-index: 70 !important; }
+
 @media (max-width: 639px) {
-  .skills-section > div:last-child {
-    width: min(100vw - 8px, 360px) !important;
-    max-width: 360px !important;
-    height: min(100vw - 8px, 360px) !important;
-    max-height: 360px !important;
+  /* Tighten section-to-section whitespace without changing the visual cards. */
+  main > section:not(:first-child) {
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
+  }
+
+  #experiments {
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+}
+
+.contact-card > a[href^="mailto:"] {
+  min-height: 3.5rem;
+  width: min(100%, 39rem);
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 0.75rem 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 85%, black 15%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.contact-card > a[href^="mailto:"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.11), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+/* Reduce unused vertical whitespace between the final content blocks. */
+#interests {
+  padding-bottom: 1.5rem !important;
+}
+
+.contact-section {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.contact-section > div:first-child {
+  margin-bottom: 1rem !important;
+}
+
+footer {
+  margin-top: 0 !important;
+  min-height: 0 !important;
+  padding-top: 2rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+@media (max-width: 639px) {
+  .contact-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .contact-section > div:first-child {
+    margin-bottom: 0.85rem !important;
+  }
+
+  .contact-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 1.75rem 1rem 1.5rem !important;
   }
 
   .contact-card > a[href^="mailto:"] {
-    min-height: 4.25rem;
-    width: 100%;
-    max-width: 36rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    box-sizing: border-box;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    width: min(100%, 39rem);
+    min-height: 3.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.74rem;
+    gap: 0.55rem;
+    white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 0 !important;
+    min-height: 0 !important;
+    padding-top: 2rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  footer > div {
+    padding-bottom: 0.75rem !important;
   }
 }
-
-/* Mobile hero spacing: keep the greeting comfortably below the fixed header without the large empty gap. */
-@media (max-width: 639px) {
-  #home {
-    padding-top: 3.25rem !important;
-  }
-
-  #home > div > div:first-child > div {
-    justify-content: flex-start !important;
-  }
-}
-
