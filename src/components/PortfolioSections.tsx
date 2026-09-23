@@ -158,17 +158,18 @@ function SkillOrbitItem({
   open: boolean;
   isMobile: boolean;
 }) {
-  // Desktop has enough width for one generous orbit. Mobile uses two 5-item
-  // rings so long words never need to be chopped or forced into each other.
+  // Desktop keeps the original circular orbit. On mobile, use a single
+  // carefully spaced ring with positions chosen for the actual chip widths.
+  // This keeps every word intact instead of solving collisions by chopping
+  // words onto multiple lines.
   const desktopRadius = 255;
-  const mobileRing = index % 2;
-  const mobileIndex = Math.floor(index / 2);
-  const mobileRadius = mobileRing === 0 ? 86 : 113;
-  const mobileAngle = (mobileIndex / 5) * Math.PI * 2 - Math.PI / 2 + (mobileRing ? Math.PI / 5 : 0);
-  const radius = isMobile ? mobileRadius : desktopRadius;
-  const finalAngle = isMobile ? mobileAngle : angle;
-  const x = Math.cos(finalAngle) * radius;
-  const y = Math.sin(finalAngle) * radius;
+  const mobilePositions = [
+    [0, -146], [94, -104], [137, -34], [137, 46], [91, 108],
+    [0, 142], [-91, 108], [-137, 46], [-137, -34], [-94, -104],
+  ] as const;
+  const [mobileX, mobileY] = mobilePositions[index];
+  const x = isMobile ? mobileX : Math.cos(angle) * desktopRadius;
+  const y = isMobile ? mobileY : Math.sin(angle) * desktopRadius;
 
   return (
     <motion.div
@@ -189,11 +190,11 @@ function SkillOrbitItem({
     >
       <motion.div
         whileHover={{ scale: 1.07 }}
-        className="skill-chip w-[104px] sm:w-[112px] min-h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-2.5 py-1.5 flex items-center justify-center text-center overflow-visible"
+        className="skill-chip w-max min-w-[88px] max-w-[132px] min-h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-3 py-2 flex items-center justify-center text-center overflow-visible"
       >
-        <div className="flex items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-[1.15] text-[var(--text-primary)] max-w-full">
+        <div className="flex w-max items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-[1.15] text-[var(--text-primary)] whitespace-nowrap">
           <Icon size={14} className="text-[var(--accent-primary)] shrink-0" />
-          <span className="min-w-0 max-w-[88px] sm:max-w-[96px] whitespace-normal break-normal">{name}</span>
+          <span className="whitespace-nowrap">{name}</span>
         </div>
       </motion.div>
     </motion.div>
