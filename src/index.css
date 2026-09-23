@@ -329,3 +329,68 @@ section[id] { scroll-margin-top: 90px; }
     word-break: normal;
   }
 }
+
+/* Mobile contact + profile-button correction */
+@media (max-width: 639px) {
+  .contact-section {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .contact-section > div:first-child {
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+
+  .contact-card {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .contact-card > p:first-of-type {
+    white-space: normal;
+    overflow: visible;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .contact-card .contact-socials,
+  .contact-card > div:last-child {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mobile-profile-button {
+    left: 50% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: translate3d(-50%, -50%, 0) !important;
+  }
+
+  .mobile-profile-button-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 4px;
+  }
+
+  .mobile-profile-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    object-fit: cover;
+    object-position: 50% 50%;
+    border-radius: 50%;
+  }
+}

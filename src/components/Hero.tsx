@@ -173,7 +173,7 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
           </div>
         </div>
 
-        <div className="block md:hidden w-full text-center -mt-9 mb-4 relative z-30 select-none">
+        <div className="block md:hidden w-full text-center -mt-9 mb-4 relative z-20 select-none">
           <div className="flex items-center justify-center gap-2">
             <svg className="w-10 h-10 text-[#b89574] dark:text-[#d4af8c] opacity-80" viewBox="0 0 100 60" fill="none">
               <path d="M80,48 C60,35 65,22 80,12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
