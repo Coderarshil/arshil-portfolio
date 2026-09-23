@@ -431,21 +431,25 @@ header { z-index: 70 !important; }
   }
 
   .contact-card > a[href^="mailto:"] {
-    min-height: 4.5rem;
+    min-height: 4.25rem;
     width: 100%;
-    max-width: 39rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    font-size: 1.15rem;
+    max-width: 36rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
     box-sizing: border-box;
     margin-left: auto !important;
     margin-right: auto !important;
   }
 }
 
-/* Mobile header clearance: keep the hero title completely below the fixed header. */
+/* Mobile hero spacing: keep the greeting comfortably below the fixed header without the large empty gap. */
 @media (max-width: 639px) {
   #home {
-    padding-top: 8.25rem !important;
+    padding-top: 3.25rem !important;
+  }
+
+  #home > div > div:first-child > div {
+    justify-content: flex-start !important;
   }
 }
+
