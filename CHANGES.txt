@@ -1,13 +1,12 @@
-Recommendation viewer update
+Desktop header navigation alignment fix
 
-- Restored the centered rounded modal/popup viewer with smooth fade/scale animation.
-- View Letter no longer opens the raw image in the browser/external image viewer.
-- Recommendation images are displayed directly as WebP files, unchanged.
-- Removed any extra contact-number masking/filter/overlay from the UI. The privacy masking that exists in the WebP source is the only masking shown.
-- Both recommendation images use their existing WebP sources.
-
-Replace/add these files in the project:
-src/components/PortfolioSections.tsx
+Updated:
 src/components/Header.tsx
-public/recommendations/Recommendation-Dr-Ravil-Das.webp
-public/recommendations/Recommendation-Ms-Raza.webp
+
+Change:
+- Removed the flexible desktop width from the name/branding block.
+- Moved the desktop navigation to the right using ml-auto and justify-end.
+- Added controlled right spacing before the theme toggle.
+- Kept mobile navigation behavior unchanged.
+
+This prevents the desktop navigation from merging/overlapping with “Mohammad Arshil Siddiqui” while keeping the header compact.

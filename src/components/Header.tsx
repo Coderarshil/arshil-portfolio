@@ -36,7 +36,7 @@ export function Header() {
     <>
       <header className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 ease-in-out ${scrolled ? 'bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)]/50 py-3' : 'bg-transparent py-4 lg:py-5'}`}>
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-5 flex items-center justify-between">
-          <div className="flex items-center gap-3 shrink-0 md:flex-1 min-w-0">
+          <div className="flex items-center gap-3 shrink-0 min-w-0">
             <button
               type="button"
               onClick={() => setSummaryOpen(true)}
@@ -51,7 +51,7 @@ export function Header() {
             </button>
           </div>
 
-          <nav className="hidden md:flex justify-center flex-[2] items-center gap-6 lg:gap-10 shrink-0 mt-1" aria-label="Main navigation">
+          <nav className="hidden md:flex ml-auto mr-6 lg:mr-10 justify-end flex-1 items-center gap-5 lg:gap-8 shrink-0 mt-1" aria-label="Main navigation">
             {nav.map((link, i) => (
               <a key={link.label} href={link.href} className={`text-[13px] lg:text-[14.5px] font-semibold transition-colors relative group ${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'}`}>
                 {link.label}
@@ -60,7 +60,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center justify-end gap-3 lg:gap-5 shrink-0 md:flex-1">
+          <div className="flex items-center justify-end gap-3 lg:gap-5 shrink-0">
             <ThemeToggle />
             <button className="md:hidden flex items-center justify-center w-10 h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm hover:border-[var(--accent-primary)] transition-all" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
               <Menu size={20} strokeWidth={2} />
