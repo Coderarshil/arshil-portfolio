@@ -1,16 +1,1 @@
-Added a new Letters of Recommendation section to the portfolio UI.
-
-Updated files:
-src/components/PortfolioSections.tsx
-src/components/Header.tsx
-
-Added privacy-masked recommendation WebP images:
-public/recommendations/Recommendation-Dr-Ravil-Das.webp
-public/recommendations/Recommendation-Ms-Raza.webp
-
-UI:
-- Added Recommendations section after Things I've Done.
-- Added two teacher recommendation cards with short excerpts and attribution.
-- Added View letter buttons opening the masked PDFs.
-- Added Recommendations to desktop navigation and mobile menu.
-- Teacher phone numbers are masked in the public PDFs.
+Updated recommendation viewer: image is rendered directly with no CSS filter/overlay/masking layer. Existing WebP files are unchanged.

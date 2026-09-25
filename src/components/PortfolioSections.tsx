@@ -253,7 +253,7 @@ function Recommendations() {
     </Wrap>
 
     {open && <motion.div
-      className="fixed inset-0 z-[130] bg-black/70 backdrop-blur-sm p-2 sm:p-5 flex items-center justify-center"
+      className="fixed inset-0 z-[130] bg-black/80 p-0 flex items-center justify-center"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       onClick={() => setOpen(null)} role="dialog" aria-modal="true"
       aria-label={`${open.name} letter of recommendation`}
@@ -261,9 +261,9 @@ function Recommendations() {
       <motion.div
         onClick={e => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.98, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="relative w-full max-w-5xl max-h-[94vh] overflow-auto rounded-xl bg-white shadow-2xl"
+        className="relative w-full h-full max-h-screen overflow-auto bg-transparent"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-3 py-2 sm:px-4 bg-white/95 backdrop-blur border-b border-black/10">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-3 py-2 sm:px-4 bg-white border-b border-black/10">
           <div className="min-w-0">
             <p className="font-serif font-bold text-sm sm:text-base text-black truncate">{open.name}</p>
             <p className="text-xs text-black/60 truncate">{open.role} · {open.org}</p>
@@ -271,7 +271,7 @@ function Recommendations() {
           <button type="button" onClick={() => setOpen(null)} className="shrink-0 px-3 py-1.5 rounded-full border border-black/15 text-sm text-black hover:bg-black/5">Close</button>
         </div>
         {/* The WebP already contains the privacy masking; no extra phone-number overlay/filter is applied. */}
-        <img src={open.file} alt={`${open.name} letter of recommendation`} className="block w-full h-auto" />
+        <img src={open.file} alt={`${open.name} letter of recommendation`} className="block w-full h-auto filter-none mix-blend-normal" />
       </motion.div>
     </motion.div>}
   </>;
