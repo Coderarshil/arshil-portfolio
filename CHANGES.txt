@@ -4,9 +4,9 @@ Updated files:
 src/components/PortfolioSections.tsx
 src/components/Header.tsx
 
-Added privacy-masked recommendation PDFs:
-public/recommendations/Recommendation-Dr-Ravil-Das.pdf
-public/recommendations/Recommendation-Ms-Raza.pdf
+Added privacy-masked recommendation WebP images:
+public/recommendations/Recommendation-Dr-Ravil-Das.webp
+public/recommendations/Recommendation-Ms-Raza.webp
 
 UI:
 - Added Recommendations section after Things I've Done.

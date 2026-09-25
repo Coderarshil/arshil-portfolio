@@ -217,7 +217,7 @@ function Recommendations() {
       org: 'Lucknow Christian College',
       quote: 'a passionate learner who constantly asks meaningful questions — often beyond the scope of the classroom.',
       note: 'His recommendation also highlights the reasoning and design behind the Mosquito Risk Calculator prototype.',
-      file: '/recommendations/Recommendation-Dr-Ravil-Das.pdf',
+      file: '/recommendations/Recommendation-Dr-Ravil-Das.webp',
     },
     {
       name: 'Ms. Raza',
@@ -225,7 +225,7 @@ function Recommendations() {
       org: 'Lucknow Christian College',
       quote: 'His writing has a unique rhythm — both emotional and intelligent — drawing readers into the heart of his message.',
       note: 'Her recommendation highlights storytelling, presentation, peer support and his environmental glider campaign.',
-      file: '/recommendations/Recommendation-Ms-Raza.pdf',
+      file: '/recommendations/Recommendation-Ms-Raza.webp',
     },
   ];
 
