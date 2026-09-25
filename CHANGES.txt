@@ -1,1 +1,13 @@
-Updated recommendation viewer: image is rendered directly with no CSS filter/overlay/masking layer. Existing WebP files are unchanged.
+Recommendation viewer update
+
+- Restored the centered rounded modal/popup viewer with smooth fade/scale animation.
+- View Letter no longer opens the raw image in the browser/external image viewer.
+- Recommendation images are displayed directly as WebP files, unchanged.
+- Removed any extra contact-number masking/filter/overlay from the UI. The privacy masking that exists in the WebP source is the only masking shown.
+- Both recommendation images use their existing WebP sources.
+
+Replace/add these files in the project:
+src/components/PortfolioSections.tsx
+src/components/Header.tsx
+public/recommendations/Recommendation-Dr-Ravil-Das.webp
+public/recommendations/Recommendation-Ms-Raza.webp
