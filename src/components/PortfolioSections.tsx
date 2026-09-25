@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
-  { title: 'MiniCPM-V Apps', label: 'Contribution · Android', what: 'An English-localized, UI/UX-refined Android experience based on OpenBMB MiniCPM-V Apps.', why: 'I wanted the app to feel cleaner, softer and more at home on a modern Android device.', learned: 'Small visual decisions and usability refinements can completely change how a technical product feels.', github: 'https://github.com/Coderarshil/MiniCPM-V-Apps', demo: 'https://github.com/Coderarshil/MiniCPM-V-Apps/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
+  { title: 'MiniCPM-V Apps', label: 'Contribution · Android', what: 'An English-localized, UI/UX-refined Android experience based on OpenBMB MiniCPM-V Apps.', why: 'I wanted the app to feel cleaner, softer and more at home on a modern Android device.', learned: 'Small visual decisions and usability refinements can completely change how a technical product feels.', github: 'https://github.com/Coderarshil/MiniCPM-V-Apps' },
   { title: 'Mosquito Risk', label: 'Open Source · Computational Project', what: 'A climate-informed mosquito risk assessment prototype using weather data and environmental modeling.', why: 'I wanted to turn environmental variables into something understandable and useful through computation.', learned: 'Mixing APIs, mathematical relationships, geospatial thinking and ML ideas is messy — and fun.', github: 'https://github.com/Coderarshil/Mosquito-risk', demo: 'https://mosquito-risk-zeta.vercel.app/', demoLabel: 'Demo' },
 ];
 
@@ -48,6 +48,7 @@ export function PortfolioSections() {
     <Projects />
     <Skills />
     <ThingsDone />
+    <Recommendations />
     <Certifications />
     <Interests />
     <Contact />
@@ -206,6 +207,46 @@ function SkillOrbitItem({
 
 function ThingsDone() {
   return <Wrap id="done" eyebrow="a few pages from the notebook" title="Things I’ve Done"><div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">{done.map(([text,date],i) => <motion.div key={text} whileHover={{ x:i%2?2:-2 }} className="relative bg-[var(--sticky-bg)] border border-[var(--sticky-border)] rounded-xl p-5 shadow-sm"><div className="absolute -top-2 left-1/2 -translate-x-1/2 w-14 h-5 bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10 rotate-2"/><div className="flex items-start justify-between gap-3"><p className="font-handwriting text-xl text-[var(--sticky-text)]">{text}</p><span className="text-xs font-medium text-[var(--sticky-text)]/70 mt-1 whitespace-nowrap">{date}</span></div></motion.div>)}</div></Wrap>;
+}
+
+function Recommendations() {
+  const letters = [
+    {
+      name: 'Dr. Ravil Das, Ph.D.',
+      role: 'Science & Hindi Teacher',
+      org: 'Lucknow Christian College',
+      quote: 'a passionate learner who constantly asks meaningful questions — often beyond the scope of the classroom.',
+      note: 'His recommendation also highlights the reasoning and design behind the Mosquito Risk Calculator prototype.',
+      file: '/recommendations/Recommendation-Dr-Ravil-Das.pdf',
+    },
+    {
+      name: 'Ms. Raza',
+      role: 'English Language Teacher',
+      org: 'Lucknow Christian College',
+      quote: 'His writing has a unique rhythm — both emotional and intelligent — drawing readers into the heart of his message.',
+      note: 'Her recommendation highlights storytelling, presentation, peer support and his environmental glider campaign.',
+      file: '/recommendations/Recommendation-Ms-Raza.pdf',
+    },
+  ];
+
+  return <Wrap id="recommendations" eyebrow="a few words from my teachers" title="Letters of Recommendation">
+    <div className="grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+      {letters.map((letter, i) => <motion.article key={letter.name} whileHover={{ y: -5, rotate: i ? 0.25 : -0.25 }} className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 sm:p-7 shadow-sm">
+        <div className="absolute -top-3 left-[20%] w-16 h-6 rotate-[-3deg] bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10" />
+        <p className="font-handwriting text-lg text-[var(--accent-primary)]">from the classroom</p>
+        <blockquote className="mt-4 font-serif text-xl sm:text-2xl leading-relaxed text-[var(--text-primary)]">“{letter.quote}”</blockquote>
+        <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">{letter.note}</p>
+        <div className="mt-6 pt-4 border-t border-[var(--border-color)] flex items-end justify-between gap-4">
+          <div>
+            <p className="font-serif font-bold text-[var(--text-primary)]">{letter.name}</p>
+            <p className="text-sm text-[var(--text-muted)]">{letter.role}</p>
+            <p className="text-sm text-[var(--text-muted)]">{letter.org}</p>
+          </div>
+          <a href={letter.file} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)] text-white text-sm">View letter <ExternalLink size={14} /></a>
+        </div>
+      </motion.article>)}
+    </div>
+  </Wrap>;
 }
 
 function Certifications() {

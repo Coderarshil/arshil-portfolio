@@ -28,6 +28,7 @@ export function Header() {
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
+    { label: 'Recommendations', href: '#recommendations' },
     { label: 'Contact', href: '#contact' },
   ];
 

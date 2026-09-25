@@ -1,8 +1,16 @@
-Updated file:
-src/components/PortfolioSections.tsx
+Added a new Letters of Recommendation section to the portfolio UI.
 
-Change:
-- Pretext Kotlin Library now has a "Demo APK" button.
-- Clicking it opens the GitHub v1.0.0 release page:
-  https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0
-- Mosquito Risk keeps its normal "Demo" button.
+Updated files:
+src/components/PortfolioSections.tsx
+src/components/Header.tsx
+
+Added privacy-masked recommendation PDFs:
+public/recommendations/Recommendation-Dr-Ravil-Das.pdf
+public/recommendations/Recommendation-Ms-Raza.pdf
+
+UI:
+- Added Recommendations section after Things I've Done.
+- Added two teacher recommendation cards with short excerpts and attribution.
+- Added View letter buttons opening the masked PDFs.
+- Added Recommendations to desktop navigation and mobile menu.
+- Teacher phone numbers are masked in the public PDFs.
