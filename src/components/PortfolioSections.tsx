@@ -228,25 +228,53 @@ function Recommendations() {
       file: '/recommendations/Recommendation-Ms-Raza.webp',
     },
   ];
+  const [open, setOpen] = useState<(typeof letters)[number] | null>(null);
 
-  return <Wrap id="recommendations" eyebrow="a few words from my teachers" title="Letters of Recommendation">
-    <div className="grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">
-      {letters.map((letter, i) => <motion.article key={letter.name} whileHover={{ y: -5, rotate: i ? 0.25 : -0.25 }} className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 sm:p-7 shadow-sm">
-        <div className="absolute -top-3 left-[20%] w-16 h-6 rotate-[-3deg] bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10" />
-        <p className="font-handwriting text-lg text-[var(--accent-primary)]">from the classroom</p>
-        <blockquote className="mt-4 font-serif text-xl sm:text-2xl leading-relaxed text-[var(--text-primary)]">“{letter.quote}”</blockquote>
-        <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">{letter.note}</p>
-        <div className="mt-6 pt-4 border-t border-[var(--border-color)] flex items-end justify-between gap-4">
-          <div>
-            <p className="font-serif font-bold text-[var(--text-primary)]">{letter.name}</p>
-            <p className="text-sm text-[var(--text-muted)]">{letter.role}</p>
-            <p className="text-sm text-[var(--text-muted)]">{letter.org}</p>
+  return <>
+    <Wrap id="recommendations" eyebrow="a few words from my teachers" title="Letters of Recommendation">
+      <div className="grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+        {letters.map((letter, i) => <motion.article key={letter.name} whileHover={{ y: -5, rotate: i ? 0.25 : -0.25 }} className="relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 sm:p-7 shadow-sm">
+          <div className="absolute -top-3 left-[20%] w-16 h-6 rotate-[-3deg] bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10" />
+          <p className="font-handwriting text-lg text-[var(--accent-primary)]">from the classroom</p>
+          <blockquote className="mt-4 font-serif text-xl sm:text-2xl leading-relaxed text-[var(--text-primary)]">“{letter.quote}”</blockquote>
+          <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">{letter.note}</p>
+          <div className="mt-6 pt-4 border-t border-[var(--border-color)] flex items-end justify-between gap-4">
+            <div>
+              <p className="font-serif font-bold text-[var(--text-primary)]">{letter.name}</p>
+              <p className="text-sm text-[var(--text-muted)]">{letter.role}</p>
+              <p className="text-sm text-[var(--text-muted)]">{letter.org}</p>
+            </div>
+            <button type="button" onClick={() => setOpen(letter)} className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)] text-white text-sm">
+              View letter <ExternalLink size={14} />
+            </button>
           </div>
-          <a href={letter.file} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)] text-white text-sm">View letter <ExternalLink size={14} /></a>
+        </motion.article>)}
+      </div>
+    </Wrap>
+
+    {open && <motion.div
+      className="fixed inset-0 z-[130] bg-black/70 backdrop-blur-sm p-2 sm:p-5 flex items-center justify-center"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={() => setOpen(null)} role="dialog" aria-modal="true"
+      aria-label={`${open.name} letter of recommendation`}
+    >
+      <motion.div
+        onClick={e => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.98, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative w-full max-w-5xl max-h-[94vh] overflow-auto rounded-xl bg-white shadow-2xl"
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-3 py-2 sm:px-4 bg-white/95 backdrop-blur border-b border-black/10">
+          <div className="min-w-0">
+            <p className="font-serif font-bold text-sm sm:text-base text-black truncate">{open.name}</p>
+            <p className="text-xs text-black/60 truncate">{open.role} · {open.org}</p>
+          </div>
+          <button type="button" onClick={() => setOpen(null)} className="shrink-0 px-3 py-1.5 rounded-full border border-black/15 text-sm text-black hover:bg-black/5">Close</button>
         </div>
-      </motion.article>)}
-    </div>
-  </Wrap>;
+        {/* The WebP already contains the privacy masking; no extra phone-number overlay/filter is applied. */}
+        <img src={open.file} alt={`${open.name} letter of recommendation`} className="block w-full h-auto" />
+      </motion.div>
+    </motion.div>}
+  </>;
 }
 
 function Certifications() {
