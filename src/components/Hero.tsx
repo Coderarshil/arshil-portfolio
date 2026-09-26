@@ -173,6 +173,12 @@ export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void })
           </div>
         </div>
 
+        <div className="hidden md:flex absolute left-0 bottom-0 lg:bottom-1 z-40 items-center gap-3">
+          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[var(--accent-primary)] text-white px-5 py-2.5 rounded-xl font-serif text-[0.95rem] font-bold hover:bg-[var(--accent-hover)] transition-all shadow-sm">
+            View my resume →
+          </a>
+        </div>
+
         <div className="block md:hidden w-full text-center -mt-9 mb-4 relative z-30 select-none">
           <div className="flex items-center justify-center gap-2">
             <svg className="w-10 h-10 text-[#b89574] dark:text-[#d4af8c] opacity-80" viewBox="0 0 100 60" fill="none">

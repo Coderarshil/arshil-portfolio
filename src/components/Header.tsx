@@ -25,11 +25,12 @@ export function Header() {
   }, [mobileMenuOpen, summaryOpen]);
 
   const nav = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Recommendations', href: '#recommendations' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Home', href: '#home', external: false },
+    { label: 'About', href: '#about', external: false },
+    { label: 'Projects', href: '#projects', external: false },
+    { label: 'Recommendations', href: '#recommendations', external: false },
+    { label: 'Resume', href: '/resume.pdf', external: true },
+    { label: 'Contact', href: '#contact', external: false },
   ];
 
   return (
@@ -53,7 +54,7 @@ export function Header() {
 
           <nav className="hidden md:flex ml-auto mr-6 lg:mr-10 justify-end flex-1 items-center gap-5 lg:gap-8 shrink-0 mt-1" aria-label="Main navigation">
             {nav.map((link, i) => (
-              <a key={link.label} href={link.href} className={`text-[13px] lg:text-[14.5px] font-semibold transition-colors relative group ${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'}`}>
+              <a key={link.label} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined} className={`text-[13px] lg:text-[14.5px] font-semibold transition-colors relative group ${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'}`}>
                 {link.label}
                 <span className={`absolute -bottom-[6px] left-0 h-[2px] bg-[var(--accent-primary)] transition-all ${i === 0 ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </a>
@@ -83,7 +84,7 @@ export function Header() {
 
             <div className="flex-1 flex flex-col items-center justify-center gap-8 text-3xl font-serif">
               {nav.map((link, i) => (
-                <a key={link.label} href={link.href} className={`${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'} transition-colors`} onClick={() => setMobileMenuOpen(false)}>
+                <a key={link.label} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined} className={`${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'} transition-colors`} onClick={() => setMobileMenuOpen(false)}>
                   {link.label}
                 </a>
               ))}

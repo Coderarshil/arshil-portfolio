@@ -19,8 +19,6 @@ const projects = [
     why: 'I liked the project and wanted the Android experience to feel clearer, softer and more polished.',
     learned: 'How small visual and usability changes can make an existing product feel much more natural.',
     github: 'https://github.com/Coderarshil/MiniCPM-V-Apps',
-    demo: 'https://github.com/Coderarshil/MiniCPM-V-Apps/releases/tag/v1.0.0',
-    demoLabel: 'Demo APK',
     accent: 'pixel',
   },
   {

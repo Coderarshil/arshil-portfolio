@@ -1,12 +1,1 @@
-Desktop header navigation alignment fix
-
-Updated:
-src/components/Header.tsx
-
-Change:
-- Removed the flexible desktop width from the name/branding block.
-- Moved the desktop navigation to the right using ml-auto and justify-end.
-- Added controlled right spacing before the theme toggle.
-- Kept mobile navigation behavior unchanged.
-
-This prevents the desktop navigation from merging/overlapping with “Mohammad Arshil Siddiqui” while keeping the header compact.
+Resume integration: added public/resume.pdf, Resume navigation link, and hero View my resume CTA. Latest recommendation viewer and desktop-right navigation preserved.
