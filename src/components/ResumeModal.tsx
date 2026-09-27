@@ -27,6 +27,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   const [zoom, setZoom] = useState(1);
   const [mode, setMode] = useState<ResumeMode>('pdf');
   const [frameReady, setFrameReady] = useState(false);
+  const [flightState, setFlightState] = useState<'ready' | 'folded' | 'unfolded'>('ready');
   const flightFrameRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       setZoom(1);
       setMode('pdf');
       setFrameReady(false);
+      setFlightState('ready');
       return;
     }
 
@@ -62,7 +64,14 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       if (event.data?.type === 'RESUME_SHOW_PDF') {
         setMode('pdf');
         setFrameReady(false);
+        setFlightState('ready');
         setZoom(1);
+      }
+      if (event.data?.type === 'RESUME_3D_STATE') {
+        const nextState = event.data?.state;
+        if (nextState === 'ready' || nextState === 'folded' || nextState === 'unfolded') {
+          setFlightState(nextState);
+        }
       }
     };
 
@@ -81,6 +90,12 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   const open3D = () => {
     setMode('3d');
     setFrameReady(false);
+    setFlightState('ready');
+  };
+
+  const runFlightAction = () => {
+    if (!flightFrameRef.current?.contentWindow) return;
+    flightFrameRef.current.contentWindow.postMessage({ type: 'RESUME_FLIGHT_ACTION' }, '*');
   };
 
   return (
@@ -143,7 +158,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   </div>
                 )}
 
-                {mode === 'pdf' && (
+                {mode === 'pdf' ? (
                   <button
                     type="button"
                     onClick={open3D}
@@ -152,6 +167,22 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     title="Open 3D resume"
                   >
                     <Box size={17} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={runFlightAction}
+                    disabled={!frameReady}
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] grid place-items-center overflow-hidden hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors disabled:opacity-40"
+                    aria-label={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
+                    title={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
+                  >
+                    <img
+                      src={flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'}
+                      alt=""
+                      className="w-[17px] h-[17px] object-contain"
+                      draggable={false}
+                    />
                   </button>
                 )}
 

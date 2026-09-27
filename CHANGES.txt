@@ -6,3 +6,10 @@ Clean 3D resume UI update
 - Kept drag-to-rotate interaction.
 - A deliberate tap/click on the 3D canvas now advances the existing flow: fold → unfold → return to PDF.
 - The parent resume modal keeps its normal download and close controls.
+
+UI update: single compact 3D action button
+- Added one circular fold/unfold control beside the download button in 3D mode.
+- The control triggers fold on first click and unfold on second click.
+- After unfolding, the same control returns to the PDF view on the next click.
+- Removed canvas tap-to-fold behavior so the canvas is only for 360° rotation.
+- Added the supplied paper-plane and fold SVG icons for the compact stateful control.

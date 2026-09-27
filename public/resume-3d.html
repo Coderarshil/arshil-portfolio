@@ -452,8 +452,8 @@ scene.updateMatrixWorld(true);
 
         let flightState = 'ready';
 
-        function post(type) {
-            if (window.parent !== window) window.parent.postMessage({ type }, '*');
+        function post(type, extra = {}) {
+            if (window.parent !== window) window.parent.postMessage({ type, ...extra }, '*');
         }
 
         function resetHinges(tl) {
@@ -480,6 +480,7 @@ scene.updateMatrixWorld(true);
                     onComplete: () => {
                         animationRunning = false;
                         flightState = 'folded';
+                        post('RESUME_3D_STATE', { state: 'folded' });
                     }
                 });
 
@@ -506,6 +507,7 @@ scene.updateMatrixWorld(true);
                     onComplete: () => {
                         animationRunning = false;
                         flightState = 'unfolded';
+                        post('RESUME_3D_STATE', { state: 'unfolded' });
                     }
                 });
                 resetHinges(tl);
@@ -517,22 +519,14 @@ scene.updateMatrixWorld(true);
             }
         }
 
-        // Keep the 3D view clean: a deliberate tap/click on the canvas performs
-        // the same action the old flight button did. Dragging still rotates.
-        let pointerDownX = 0;
-        let pointerDownY = 0;
-        let pointerDownTime = 0;
-        renderer.domElement.addEventListener('pointerdown', (event) => {
-            pointerDownX = event.clientX;
-            pointerDownY = event.clientY;
-            pointerDownTime = performance.now();
+        // Keep the 3D canvas purely for viewing/rotation. Fold/unfold is
+        // controlled by the single compact button in the parent toolbar.
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'RESUME_FLIGHT_ACTION') runFlightAction();
         });
-        renderer.domElement.addEventListener('pointerup', (event) => {
-            const dx = event.clientX - pointerDownX;
-            const dy = event.clientY - pointerDownY;
-            const elapsed = performance.now() - pointerDownTime;
-            if (Math.hypot(dx, dy) < 8 && elapsed < 450) runFlightAction();
-        });
+
+        // Tell the parent that the clean 3D view is ready.
+        post('RESUME_3D_STATE', { state: 'ready' });
 
         function animate() {
             requestAnimationFrame(animate);
