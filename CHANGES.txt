@@ -1,9 +1,13 @@
-Resume popup update — 2026-09-27
+Resume viewer update — 2026-09-27
 
-- Resume CTA now opens a centered animated resume chooser instead of navigating away.
-- Added two options: Interactive 3D Resume and Download PDF.
-- Embedded the folding 3D resume inside the popup.
-- Disabled 3D zoom (scroll/pinch); drag-to-rotate remains available.
-- Added Back and Close controls with smooth modal/view transitions.
-- Resume navigation in the desktop/mobile header now opens the same chooser.
-- Preserved the existing recommendation WebP viewer and added its required image assets.
+- Replaced the two-card resume chooser with a single centered resume viewer.
+- Resume pages are shown as high-resolution WebP renders derived from the existing resume PDF.
+- Added previous/next page arrows.
+- Added zoom controls (desktop toolbar + compact mobile controls).
+- Added one download icon that downloads the original /resume.pdf.
+- Added an X close button.
+- Added a single “Wanna fly” action below the resume.
+- “Wanna fly” hides the PDF controls, switches to the galaxy scene, and starts the folding paper-plane animation.
+- At the end of the animation, the action becomes “Landing”; clicking it returns to the PDF viewer.
+- Removed the old Fold Resume / Reset controls from the 3D page.
+- Disabled 3D zoom; the 3D scene is controlled by the parent viewer during the flight sequence.
