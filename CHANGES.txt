@@ -1,8 +1,8 @@
-A4 popup spacing fix
+Resume viewer update
 
-- Removed the oversized empty area below the resume.
-- Popup now sizes itself from the A4 sheet plus its toolbar instead of using a fixed 92vh height.
-- The sheet keeps the exact 210:297 A4 portrait ratio.
-- Popup width is constrained by both viewport width and available viewport height, so the whole A4 page fits without top/bottom cropping.
-- Toolbar remains outside the A4 page and no longer consumes page space.
-- Preserved page arrows, PDF zoom, download, close, and 3D resume flow.
+- Removed the large bottom “3D Resume” button from the A4 viewer.
+- Added a compact circular cube icon button in the toolbar that opens the same 3D resume experience.
+- Desktop: cube button sits beside the zoom controls.
+- Mobile: cube button sits beside the download control.
+- Kept the existing 3D flight/landing flow and A4 sizing fixes.
+- 3D viewer zoom controls remain disabled.

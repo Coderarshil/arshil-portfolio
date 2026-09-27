@@ -3,7 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Download,
-  Plane,
+  Box,
   X,
   ZoomIn,
   ZoomOut,
@@ -143,6 +143,18 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   </div>
                 )}
 
+                {mode === 'pdf' && (
+                  <button
+                    type="button"
+                    onClick={open3D}
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] grid place-items-center hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors"
+                    aria-label="Open 3D resume"
+                    title="Open 3D resume"
+                  >
+                    <Box size={17} />
+                  </button>
+                )}
+
                 <a
                   href="/resume.pdf"
                   download="Mohammad-Arshil-Siddiqui-Resume.pdf"
@@ -204,15 +216,6 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     <ArrowRight size={19} />
                   </button>
 
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg px-2 py-1.5">
-                    <button
-                      type="button"
-                      onClick={open3D}
-                      className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-primary)] text-white px-5 py-2.5 text-sm font-bold shadow-md hover:bg-[var(--accent-hover)] transition-all"
-                    >
-                      3D Resume <Plane size={15} />
-                    </button>
-                  </div>
                 </motion.div>
               ) : (
                 <motion.div
