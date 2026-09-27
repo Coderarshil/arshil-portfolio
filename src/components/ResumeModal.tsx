@@ -179,18 +179,18 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                 ) : (
                   <button
                     type="button"
-                    onClick={runFlightAction}
+                    onClick={flightState === 'unfolded' ? () => setMode('pdf') : runFlightAction}
                     disabled={!frameReady}
                     className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] grid place-items-center overflow-hidden hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors disabled:opacity-40"
-                    aria-label={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
-                    title={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
+                    aria-label={flightState === 'unfolded' ? 'Return to PDF' : flightState === 'folded' ? 'Unfold resume' : 'Fold resume'}
+                    title={flightState === 'unfolded' ? 'Return to PDF' : flightState === 'folded' ? 'Unfold resume' : 'Fold resume'}
                   >
                     <span
                       aria-hidden="true"
                       className="w-[17px] h-[17px] block bg-current shrink-0"
                       style={{
-                        WebkitMaskImage: `url(${flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
-                        maskImage: `url(${flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
+                        WebkitMaskImage: `url(${flightState === 'unfolded' ? '/icons/pdf-return.svg' : flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
+                        maskImage: `url(${flightState === 'unfolded' ? '/icons/pdf-return.svg' : flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
                         WebkitMaskRepeat: 'no-repeat',
                         maskRepeat: 'no-repeat',
                         WebkitMaskPosition: 'center',

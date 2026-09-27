@@ -1,16 +1,5 @@
-Clean 3D resume UI update
-
-- Removed the extra in-canvas download and close controls.
-- Removed the large “Let's fly” / play button from the 3D scene.
-- Removed the “Drag to rotate 360°” helper text.
-- Kept drag-to-rotate interaction.
-- Added one compact circular fold/unfold control beside the download button in 3D mode.
-- The compact control triggers fold, then unfold, then returns to the PDF view.
-- Added the supplied paper-plane and fold SVG icons.
-
-Directional page-flip update
-- Left arrow always uses a leftward physical page-flip animation.
-- Right arrow always uses a rightward physical page-flip animation.
-- Both arrows remain active on every page.
-- Page navigation wraps around, so repeated clicks continue flipping between the available resume pages.
-- The selected arrow determines the flip direction, while the displayed page changes on every click.
+Updated the resume 3D toolbar flow:
+- Uses the supplied PDF SVG icon after the resume has unfolded.
+- Clicking the PDF icon returns directly to the normal PDF viewer.
+- Keeps cube -> 3D, airplane/fold -> flight, fold -> unfold behavior.
+- PDF SVG is rendered through the same currentColor mask as the other adaptive icons.
