@@ -1,5 +1,11 @@
-Updated the resume 3D toolbar flow:
-- Uses the supplied PDF SVG icon after the resume has unfolded.
-- Clicking the PDF icon returns directly to the normal PDF viewer.
-- Keeps cube -> 3D, airplane/fold -> flight, fold -> unfold behavior.
-- PDF SVG is rendered through the same currentColor mask as the other adaptive icons.
+Optimization pass
+
+- Replaced the resume-page WebP renderer with PDF.js rendering of the single public/resume.pdf source.
+- The PDF viewer now renders the real PDF pages in-browser, with the existing A4 sizing, flip arrows and zoom controls preserved.
+- The 3D folding resume now renders page 1 and page 2 from the same public/resume.pdf through PDF.js instead of embedding duplicate base64 artwork.
+- Removed public/resume-pages/ and the old standalone folding-resume source copy.
+- Removed unused legacy src/main.jsx and src/styles.css.
+- Optimized resume.pdf from about 1.72 MB to about 760 KB while preserving A4 page geometry and vector/text content.
+- Download action now uses the filename "Arshil's Resume.pdf".
+- Added lazy loading/async decoding for certificates and recommendation images.
+- Added a build/dev preparation script that copies PDF.js into public/pdfjs at build time; PDF.js is loaded only when the resume feature is opened.

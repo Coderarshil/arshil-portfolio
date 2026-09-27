@@ -1,27 +1,14 @@
-MOHAMMAD ARSHIL SIDDIQUI — PORTFOLIO
+Portfolio setup
 
-Requirements:
-- Node.js 18+
+1. Install dependencies:
+   npm install
 
-Run:
-  npm install
-  npm run dev
+2. Start development:
+   npm run dev
 
-Build:
-  npm run build
-  npm run preview
+3. Production build:
+   npm run build
 
-This version is a self-contained portfolio conversion of the Coffee Studio visual direction.
-It removes authentication, PDF/tools/workspace/backend functionality and keeps the coffee theme,
-light/dark mode, responsive navigation, animations, certificate viewer, project links, and Tic-Tac-Toe.
+PDF.js is included as a build-time dependency and is copied into public/pdfjs automatically by the prepare:pdfjs script. The resume viewer and the 3D folding resume both use the single public/resume.pdf file.
 
-Hero artwork:
-- public/hero-light.png
-- public/hero-dark.png
-
-Certificate PDFs included:
-- NASA Open Science 101
-- NASA ARSET Fundamentals of Remote Sensing
-- NASA ARSET Hyperspectral Data for Land and Coastal Systems
-
-No README.md or LICENSE file is included by design.
+The public/resume.pdf file is the optimized A4 resume and is also the file downloaded by the Resume viewer.
