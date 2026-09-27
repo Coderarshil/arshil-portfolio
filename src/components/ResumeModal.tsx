@@ -185,11 +185,19 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     aria-label={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
                     title={flightState === 'folded' ? 'Unfold resume' : flightState === 'unfolded' ? 'Return to resume' : 'Fold resume'}
                   >
-                    <img
-                      src={flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'}
-                      alt=""
-                      className="w-[17px] h-[17px] object-contain"
-                      draggable={false}
+                    <span
+                      aria-hidden="true"
+                      className="w-[17px] h-[17px] block bg-current shrink-0"
+                      style={{
+                        WebkitMaskImage: `url(${flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
+                        maskImage: `url(${flightState === 'folded' ? '/icons/fold.svg' : '/icons/paper-plane.svg'})`,
+                        WebkitMaskRepeat: 'no-repeat',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskPosition: 'center',
+                        WebkitMaskSize: 'contain',
+                        maskSize: 'contain',
+                      }}
                     />
                   </button>
                 )}

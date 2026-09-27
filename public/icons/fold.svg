@@ -2,7 +2,7 @@
 <svg version="1.1" id="Uploaded to svgrepo.com" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	 width="800px" height="800px" viewBox="0 0 32 32" xml:space="preserve">
 <style type="text/css">
-	.dashing_een{fill:#0B1719;}
+	.dashing_een{fill:currentColor;}
 </style>
 <path class="dashing_een" d="M29,2H3C2.448,2,2,2.448,2,3v26c0,0.552,0.448,1,1,1h26c0.552,0,1-0.448,1-1V3C30,2.448,29.552,2,29,2z
 	 M3.707,29l0.979-0.979c0.195-0.195,0.195-0.512,0-0.707c-0.195-0.195-0.512-0.195-0.707,0L3,28.293V3h25.293l-0.979,0.979
