@@ -32,114 +32,17 @@
 
         #canvas-container:active { cursor: grabbing; }
 
-        #ui-container {
-            position: fixed;
-            top: 14px;
-            right: 14px;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px;
-            border: 1px solid rgba(60,38,22,.12);
-            border-radius: 999px;
-            background: rgba(255,252,247,.94);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(0,0,0,.18);
-        }
-
-        #ui-container button {
-            width: 34px;
-            height: 34px;
-            padding: 0;
-            display: grid;
-            place-items: center;
-            border: 0;
-            border-radius: 999px;
-            background: transparent;
-            color: #5b351d;
-            font: 700 14px/1 Inter, system-ui, sans-serif;
-            cursor: pointer;
-            transition: transform .18s ease, background .18s ease, opacity .18s ease;
-        }
-
-        #ui-container button:hover:not(:disabled) {
-            transform: translateY(-1px);
-            background: rgba(139,69,19,.10);
-        }
-
-        #ui-container button:active:not(:disabled) { transform: scale(.94); }
-        #ui-container button:disabled { opacity: .38; cursor: not-allowed; }
-
-        #btn-fold {
-            position: fixed;
-            left: 50%;
-            bottom: 24px;
-            transform: translateX(-50%);
-            width: auto !important;
-            min-width: 118px;
-            padding: 10px 18px !important;
-            border-radius: 999px !important;
-            background: #8b4513 !important;
-            color: #fff !important;
-            box-shadow: 0 10px 28px rgba(139,69,19,.28);
-            z-index: 21;
-            font-size: 12px !important;
-        }
-
-        #btn-fold:hover:not(:disabled) {
-            background: #6f3510 !important;
-            transform: translateX(-50%) translateY(-1px) !important;
-        }
-
-        #btn-reset { display: none !important; }
-
-        #hint {
-            position: fixed;
-            left: 50%;
-            bottom: 62px;
-            transform: translateX(-50%);
-            z-index: 10;
-            color: rgba(255,255,255,.56);
-            font-size: 11px;
-            letter-spacing: .03em;
-            pointer-events: none;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        #btn-close {
-            font-size: 20px !important;
-            margin-left: 2px;
-        }
-
-        @media (max-width: 600px) {
-            #ui-container { top: 10px; right: 10px; }
-            #ui-container button { width: 32px; height: 32px; }
-            #hint { bottom: 60px; font-size: 10px; }
-        }
+        /* The 3D view is intentionally chrome-free. The parent resume modal owns
+           the download/close controls, while the canvas stays clean. */
     </style>
 </head>
 
 <body>
-    <div id="hint">Drag to rotate 360°</div>
-
-    <div id="ui-container" aria-label="Resume controls">
-        <button id="btn-download" aria-label="Download resume" title="Download resume">⇩</button>
-        <button id="btn-close" aria-label="Close" title="Close">×</button>
-    </div>
-
-    <button id="btn-fold" aria-label="Start folding animation">Let's fly ✈</button>
-    <button id="btn-reset" disabled>Reset</button>
 
     <div id="canvas-container"></div>
 
     <script>
         const container = document.getElementById('canvas-container');
-        const btnFold = document.getElementById('btn-fold');
-        const btnReset = document.getElementById('btn-reset');
-        const btnDownload = document.getElementById('btn-download');
-        const btnClose = document.getElementById('btn-close');
 
 
         const scene = new THREE.Scene();
@@ -284,22 +187,6 @@
         controls.minDistance = 3.4;
         controls.maxDistance = 13;
 
-        btnDownload.addEventListener('click', () => {
-            const a = document.createElement('a');
-            a.href = window.location.href.split('#')[0];
-            a.download = 'Arshil-Folding-Resume.html';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        });
-
-        btnClose.addEventListener('click', () => {
-            if (window.parent !== window) {
-                window.parent.postMessage({ type: 'close-resume-modal' }, '*');
-            } else {
-                window.history.length > 1 ? window.history.back() : window.close();
-            }
-        });
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.78);
         scene.add(ambientLight);
@@ -583,57 +470,68 @@ scene.updateMatrixWorld(true);
             tl.to(mainAssembly.rotation, { x: -0.5, y: 0, z: -0.2, duration: 1.9, ease: 'power2.inOut' }, 0);
         }
 
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'ready') return;
-            animationRunning = true;
-            btnFold.disabled = true;
+        function runFlightAction() {
+            if (animationRunning) return;
 
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    animationRunning = false;
-                    flightState = 'folded';
-                    btnFold.disabled = false;
-                    btnFold.textContent = 'Landing';
-                    btnFold.setAttribute('aria-label', 'Unfold the resume');
-                }
-            });
+            if (flightState === 'ready') {
+                animationRunning = true;
 
-            tl.to(mainAssembly.rotation,
-                { x: -0.8, z: 0.6, y: 0.5, duration: 2.2, ease: 'power1.inOut' }, 0);
-            tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
-            tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
-            tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
-            tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
-            tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
-            tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
-            tl.to(mainAssembly.rotation,
-                { x: -0.12, y: Math.PI * 2 + Math.PI / 4, z: 0.1, duration: 2.4, ease: 'power2.out' }, 4.7);
+                const tl = gsap.timeline({
+                    onComplete: () => {
+                        animationRunning = false;
+                        flightState = 'folded';
+                    }
+                });
+
+                tl.to(mainAssembly.rotation,
+                    { x: -0.8, z: 0.6, y: 0.5, duration: 2.2, ease: 'power1.inOut' }, 0);
+                tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
+                tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
+                tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
+                tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
+                tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
+                tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
+                tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
+                tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
+                tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
+                tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
+                tl.to(mainAssembly.rotation,
+                    { x: -0.12, y: Math.PI * 2 + Math.PI / 4, z: 0.1, duration: 2.4, ease: 'power2.out' }, 4.7);
+                return;
+            }
+
+            if (flightState === 'folded') {
+                animationRunning = true;
+                const tl = gsap.timeline({
+                    onComplete: () => {
+                        animationRunning = false;
+                        flightState = 'unfolded';
+                    }
+                });
+                resetHinges(tl);
+                return;
+            }
+
+            if (flightState === 'unfolded') {
+                post('RESUME_SHOW_PDF');
+            }
+        }
+
+        // Keep the 3D view clean: a deliberate tap/click on the canvas performs
+        // the same action the old flight button did. Dragging still rotates.
+        let pointerDownX = 0;
+        let pointerDownY = 0;
+        let pointerDownTime = 0;
+        renderer.domElement.addEventListener('pointerdown', (event) => {
+            pointerDownX = event.clientX;
+            pointerDownY = event.clientY;
+            pointerDownTime = performance.now();
         });
-
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'folded') return;
-            animationRunning = true;
-            btnFold.disabled = true;
-
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    animationRunning = false;
-                    flightState = 'unfolded';
-                    btnFold.disabled = false;
-                    btnFold.textContent = 'Land';
-                    btnFold.setAttribute('aria-label', 'Return to PDF resume');
-                }
-            });
-            resetHinges(tl);
-        });
-
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'unfolded') return;
-            post('RESUME_SHOW_PDF');
+        renderer.domElement.addEventListener('pointerup', (event) => {
+            const dx = event.clientX - pointerDownX;
+            const dy = event.clientY - pointerDownY;
+            const elapsed = performance.now() - pointerDownTime;
+            if (Math.hypot(dx, dy) < 8 && elapsed < 450) runFlightAction();
         });
 
         function animate() {

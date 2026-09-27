@@ -1,8 +1,8 @@
-Resume viewer update
+Clean 3D resume UI update
 
-- Removed the large bottom “3D Resume” button from the A4 viewer.
-- Added a compact circular cube icon button in the toolbar that opens the same 3D resume experience.
-- Desktop: cube button sits beside the zoom controls.
-- Mobile: cube button sits beside the download control.
-- Kept the existing 3D flight/landing flow and A4 sizing fixes.
-- 3D viewer zoom controls remain disabled.
+- Removed the extra in-canvas download and close controls.
+- Removed the large “Let's fly” / play button from the 3D scene.
+- Removed the “Drag to rotate 360°” helper text.
+- Kept drag-to-rotate interaction.
+- A deliberate tap/click on the 3D canvas now advances the existing flow: fold → unfold → return to PDF.
+- The parent resume modal keeps its normal download and close controls.
