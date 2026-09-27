@@ -100,7 +100,15 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-5xl h-[min(94vh,980px)] overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
+            className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
+            style={{
+              // Keep the entire viewer at true A4 portrait proportions.
+              // The width is capped by both the viewport width and the
+              // available viewport height so the A4 sheet never gets cropped.
+              width: 'min(92vw, 62.22vh)',
+              aspectRatio: '210 / 297',
+              maxHeight: '92vh',
+            }}
           >
             <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-3 sm:px-5 py-2.5 bg-[var(--bg-primary)]/95 backdrop-blur-md border-b border-[var(--border-color)]">
               <div className="min-w-0">
@@ -167,7 +175,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                       <img
                         src={pages[page]}
                         alt={`Resume page ${page + 1}`}
-                        className="block w-full max-w-[980px] h-auto origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
+                        className="block w-full max-w-[980px] h-auto aspect-[210/297] object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
                         draggable={false}
                         style={{ transform: `scale(${zoom})`, transformOrigin: 'center top', marginBottom: `${Math.max(0, (zoom - 1) * 40)}px` }}
                       />

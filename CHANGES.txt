@@ -1,7 +1,10 @@
-Resume 3D flow update
+Resume 3D flow update — A4 fixed
 
 PDF viewer -> 3D Resume -> Let's fly -> Landing -> Land -> PDF
 
+- Viewer popup is now true A4 portrait ratio (210:297).
+- Popup scales down based on viewport height so the A4 sheet is never cropped.
+- Resume image preserves A4 proportions and uses contain-style sizing instead of cropping.
 - 3D Resume button opens the galaxy/3D resume.
 - 3D button initially reads "Let's fly".
 - Let's fly folds the resume into the paper plane.
