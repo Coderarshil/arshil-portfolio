@@ -74,6 +74,10 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
     };
   }, [open, onClose, mode]);
 
+  const changeZoom = (delta: number) => {
+    setZoom((current) => Math.min(2.4, Math.max(1, Number((current + delta).toFixed(1)))));
+  };
+
   const open3D = () => {
     setMode('3d');
     setFrameReady(false);
@@ -100,18 +104,15 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
+            className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)] flex flex-col"
             style={{
-              // The popup itself includes the toolbar, so it must NOT use
-              // the A4 ratio. The A4 ratio belongs to the resume sheet
-              // below the toolbar. Reserving the toolbar height here keeps
-              // the first rows of the resume from being hidden underneath it.
-              width: 'min(92vw, 57.5vh)',
-              height: '92vh',
-              maxHeight: '92vh',
+              // Size the whole popup from the A4 sheet itself. The width is
+              // also limited by the available viewport height so the A4 page
+              // plus toolbar always fits without leaving a large blank area.
+              width: 'min(92vw, 620px, calc((92vh - 58px) * 0.7071))',
             }}
           >
-            <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-3 sm:px-5 py-2.5 bg-[var(--bg-primary)]/95 backdrop-blur-md border-b border-[var(--border-color)]">
+            <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-5 py-2.5 bg-[var(--bg-primary)]/95 backdrop-blur-md border-b border-[var(--border-color)]">
               <div className="min-w-0">
                 <p className="font-serif font-bold text-sm sm:text-base text-[var(--text-primary)]">Mohammad Arshil Siddiqui</p>
                 <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">Resume · {mode === '3d' ? '3D Resume' : `Page ${page + 1} of ${pages.length}`}</p>
@@ -165,18 +166,18 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
               {mode === 'pdf' ? (
                 <motion.div
                   key="pdf"
-                  className="absolute inset-0 top-[58px] bottom-0 bg-[var(--bg-secondary)] overflow-hidden"
+                  className="relative w-full aspect-[210/297] bg-[var(--bg-secondary)] overflow-hidden shrink-0"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  <div className="absolute inset-0 overflow-auto px-2 sm:px-4 py-2 sm:py-3">
-                    <div className="min-h-full flex items-start justify-center">
+                  <div className="absolute inset-0 overflow-auto p-0">
+                    <div className="w-full h-full flex items-start justify-center">
                       <img
                         src={pages[page]}
                         alt={`Resume page ${page + 1}`}
-                        className="block w-auto max-w-full h-auto max-h-full aspect-[210/297] object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
+                        className="block w-full h-full object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
                         draggable={false}
                         style={{ transform: `scale(${zoom})`, transformOrigin: 'center top', marginBottom: `${Math.max(0, (zoom - 1) * 40)}px` }}
                       />
@@ -216,7 +217,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
               ) : (
                 <motion.div
                   key="3d"
-                  className="absolute inset-0 pt-[58px] bg-black overflow-hidden"
+                  className="relative w-full aspect-[210/297] bg-black overflow-hidden shrink-0"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
