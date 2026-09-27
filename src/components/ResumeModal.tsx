@@ -256,11 +256,12 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   <button
                     type="button"
                     onClick={() => {
-                      if (page === 0) return;
+                      // Left arrow always flips the physical sheet to the left.
+                      // With two pages, wrap around so the control remains usable
+                      // repeatedly from either side.
                       setFlipDirection(-1);
-                      setPage((current) => Math.max(0, current - 1));
+                      setPage((current) => (current - 1 + pages.length) % pages.length);
                     }}
-                    disabled={page === 0}
                     className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] disabled:opacity-25 hover:border-[var(--accent-primary)] transition-all"
                     aria-label="Previous resume page"
                   >
@@ -270,11 +271,11 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   <button
                     type="button"
                     onClick={() => {
-                      if (page === pages.length - 1) return;
+                      // Right arrow always flips the physical sheet to the right.
+                      // Wrap around so repeated clicks continue the page-flip cycle.
                       setFlipDirection(1);
-                      setPage((current) => Math.min(pages.length - 1, current + 1));
+                      setPage((current) => (current + 1) % pages.length);
                     }}
-                    disabled={page === pages.length - 1}
                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] disabled:opacity-25 hover:border-[var(--accent-primary)] transition-all"
                     aria-label="Next resume page"
                   >

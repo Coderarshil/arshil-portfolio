@@ -4,14 +4,13 @@ Clean 3D resume UI update
 - Removed the large “Let's fly” / play button from the 3D scene.
 - Removed the “Drag to rotate 360°” helper text.
 - Kept drag-to-rotate interaction.
-- A deliberate tap/click on the 3D canvas now advances the existing flow: fold → unfold → return to PDF.
-- The parent resume modal keeps its normal download and close controls.
+- Added one compact circular fold/unfold control beside the download button in 3D mode.
+- The compact control triggers fold, then unfold, then returns to the PDF view.
+- Added the supplied paper-plane and fold SVG icons.
 
-UI update: single compact 3D action button
-- Added one circular fold/unfold control beside the download button in 3D mode.
-- The control triggers fold on first click and unfold on second click.
-- After unfolding, the same control returns to the PDF view on the next click.
-- Removed canvas tap-to-fold behavior so the canvas is only for 360° rotation.
-- Added the supplied paper-plane and fold SVG icons for the compact stateful control.
-
-- Added directional 3D page-flip transitions to the PDF resume viewer. Right arrow flips the sheet toward the right; left arrow flips it toward the left, with the new page rotating in from the opposite face.
+Directional page-flip update
+- Left arrow always uses a leftward physical page-flip animation.
+- Right arrow always uses a rightward physical page-flip animation.
+- Both arrows remain active on every page.
+- Page navigation wraps around, so repeated clicks continue flipping between the available resume pages.
+- The selected arrow determines the flip direction, while the displayed page changes on every click.
