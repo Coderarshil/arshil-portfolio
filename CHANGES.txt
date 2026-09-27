@@ -1,9 +1,7 @@
-Resume viewer v3 patch
+Latest full portfolio package
 
-- Kept the centered A4 portrait popup.
-- Smoothed the paper-plane flight timeline and reduced abrupt motion.
-- Paper plane now remains inside the popup and finishes exactly at the visual center.
-- Added an exact 360-degree Y-axis rotation during flight.
-- Increased plane visibility slightly while flying.
-- Landing continues to start from the centered plane and reverse the fold sequence.
-- Added a mobile-friendly renderer color-space setting for more consistent rendering.
+- Full portfolio source based on the supplied arshil-portfolio-main project.
+- Integrated the latest resume viewer modal with zoom, page navigation, download and close controls.
+- Integrated the latest folding-resume / Wanna fly HTML.
+- Included resume PDF and resume page assets.
+- Included recommendation WebP assets.

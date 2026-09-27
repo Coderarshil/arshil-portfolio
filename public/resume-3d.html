@@ -32,14 +32,147 @@
 
         #canvas-container:active { cursor: grabbing; }
 
+        #ui-container {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            border: 1px solid rgba(60,38,22,.12);
+            border-radius: 999px;
+            background: rgba(255,252,247,.94);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0,0,0,.18);
+        }
+
+        #ui-container button {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: #5b351d;
+            font: 700 14px/1 Inter, system-ui, sans-serif;
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease, opacity .18s ease;
+        }
+
+        #ui-container button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            background: rgba(139,69,19,.10);
+        }
+
+        #ui-container button:active:not(:disabled) { transform: scale(.94); }
+        #ui-container button:disabled { opacity: .38; cursor: not-allowed; }
+
+        #zoom-label {
+            min-width: 48px;
+            font-size: 11px !important;
+            letter-spacing: .01em;
+            cursor: default !important;
+        }
+
+        #btn-fold {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            width: auto !important;
+            min-width: 118px;
+            padding: 10px 18px !important;
+            border-radius: 999px !important;
+            background: #8b4513 !important;
+            color: #fff !important;
+            box-shadow: 0 10px 28px rgba(139,69,19,.28);
+            z-index: 21;
+            font-size: 12px !important;
+        }
+
+        #btn-fold:hover:not(:disabled) {
+            background: #6f3510 !important;
+            transform: translateX(-50%) translateY(-1px) !important;
+        }
+
+        #btn-reset { display: none !important; }
+
+        #hint {
+            position: fixed;
+            left: 50%;
+            bottom: 62px;
+            transform: translateX(-50%);
+            z-index: 10;
+            color: rgba(255,255,255,.56);
+            font-size: 11px;
+            letter-spacing: .03em;
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #btn-close {
+            font-size: 20px !important;
+            margin-left: 2px;
+        }
+
+        @media (max-width: 600px) {
+            #ui-container { top: 10px; right: 10px; }
+            #ui-container button { width: 32px; height: 32px; }
+            #zoom-label { min-width: 44px; }
+            #hint { bottom: 60px; font-size: 10px; }
+        }
     </style>
 </head>
 
 <body>
+    <div id="hint">Drag to rotate 360° · Use + / − to zoom</div>
+
+    <div id="ui-container" aria-label="Resume controls">
+        <button id="btn-zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+        <button id="zoom-label" aria-label="Current zoom">100%</button>
+        <button id="btn-zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+        <button id="btn-download" aria-label="Download resume" title="Download resume">⇩</button>
+        <button id="btn-close" aria-label="Close" title="Close">×</button>
+    </div>
+
+    <button id="btn-fold" aria-label="Start folding animation">Wanna fly ✈</button>
+    <button id="btn-reset" disabled>Reset</button>
+
     <div id="canvas-container"></div>
 
     <script>
         const container = document.getElementById('canvas-container');
+        const btnFold = document.getElementById('btn-fold');
+        const btnReset = document.getElementById('btn-reset');
+        const btnZoomOut = document.getElementById('btn-zoom-out');
+        const btnZoomIn = document.getElementById('btn-zoom-in');
+        const zoomLabel = document.getElementById('zoom-label');
+        const btnDownload = document.getElementById('btn-download');
+        const btnClose = document.getElementById('btn-close');
+
+        let zoomPercent = 100;
+        function updateZoomLabel() {
+            zoomLabel.textContent = `${zoomPercent}%`;
+        }
+
+        function applyZoom(delta) {
+            zoomPercent = Math.max(60, Math.min(160, zoomPercent + delta));
+            const distance = THREE.MathUtils.lerp(10.2, 5.2, (zoomPercent - 60) / 100);
+            gsap.to(camera.position, {
+                duration: 0.28,
+                x: camera.position.x * (distance / camera.position.length()),
+                y: camera.position.y * (distance / camera.position.length()),
+                z: camera.position.z * (distance / camera.position.length()),
+                ease: 'power2.out',
+                onUpdate: () => controls.update()
+            });
+            updateZoomLabel();
+        }
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x03040a);
@@ -172,16 +305,50 @@
         controls.minPolarAngle = 0.04;
         controls.maxPolarAngle = Math.PI - 0.04;
 
-        // Drag = rotate. Zoom is intentionally disabled in the portfolio flight view.
+        // Drag = rotate; wheel/pinch = zoom. No invisible panning boundary.
         controls.enablePan = false;
         controls.screenSpacePanning = false;
         controls.rotateSpeed = 0.9;
+        controls.zoomSpeed = 0.85;
         controls.enableZoom = false;
-        controls.zoomSpeed = 0;
 
         controls.target.set(0, 0, 0);
-        controls.minDistance = 6;
-        controls.maxDistance = 6;
+        controls.minDistance = 3.4;
+        controls.maxDistance = 13;
+
+        btnZoomOut.addEventListener('click', () => applyZoom(-10));
+        btnZoomIn.addEventListener('click', () => applyZoom(10));
+        zoomLabel.addEventListener('click', () => {
+            zoomPercent = 100;
+            const current = camera.position.length();
+            const targetDistance = 7.2;
+            gsap.to(camera.position, {
+                duration: 0.32,
+                x: camera.position.x * (targetDistance / current),
+                y: camera.position.y * (targetDistance / current),
+                z: camera.position.z * (targetDistance / current),
+                ease: 'power2.out',
+                onUpdate: () => controls.update()
+            });
+            updateZoomLabel();
+        });
+
+        btnDownload.addEventListener('click', () => {
+            const a = document.createElement('a');
+            a.href = window.location.href.split('#')[0];
+            a.download = 'Arshil-Folding-Resume.html';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        });
+
+        btnClose.addEventListener('click', () => {
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'close-resume-modal' }, '*');
+            } else {
+                window.history.length > 1 ? window.history.back() : window.close();
+            }
+        });
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.78);
         scene.add(ambientLight);
@@ -430,18 +597,74 @@ scene.updateMatrixWorld(true);
 
         const F1R_ANG =  180 * deg;
         const F1L_ANG = -180 * deg;
+
         const F2R_ANG =  180 * deg;
         const F2L_ANG = -180 * deg;
+
         const F0R_ANG = -180 * deg;
         const F0L_ANG =  180 * deg;
+
         const CTR_ANG = -88 * deg;
         const CTL_ANG =  88 * deg;
+
         const WGR_ANG =  90 * deg;
         const WGL_ANG = -90 * deg;
 
         let animationRunning = false;
 
-        function resetAssembly() {
+        btnFold.addEventListener('click', () => {
+            if (animationRunning) return;
+
+            animationRunning = true;
+            btnFold.disabled = true;
+            btnReset.disabled = true;
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    animationRunning = false;
+                    btnReset.disabled = false;
+                }
+            });
+
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.8, z: 0.6, y: 0.5, duration: 10, ease: "power1.inOut" },
+                0
+            );
+
+            // Step 1: fold top corners
+            tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 2, ease: "power2.inOut" }, 0.5);
+            tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 2, ease: "power2.inOut" }, 0.5);
+
+            // Step 2: sharpening fold + hidden tuck
+            tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+            tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+
+            tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+            tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+
+            // Step 3: center fold
+            tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 2, ease: "power2.inOut" }, 4.5);
+            tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 2, ease: "power2.inOut" }, 4.5);
+
+            // Step 4: wings
+            tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 2, ease: "power2.inOut" }, 6.5);
+            tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 2, ease: "power2.inOut" }, 6.5);
+
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.1, y: Math.PI / 4, z: 0.1, duration: 2.5, ease: "power2.out" },
+                8.0
+            );
+        });
+
+        btnReset.addEventListener('click', () => {
+            if (animationRunning) return;
+
+            animationRunning = true;
+            btnFold.disabled = true;
+            btnReset.disabled = true;
+
             const hinges = [
                 cF0R.hinge, cF0L.hinge,
                 cF1R.hinge, cF1L.hinge,
@@ -449,94 +672,27 @@ scene.updateMatrixWorld(true);
                 cCenterR.hinge, cCenterL.hinge,
                 cWingR.hinge, cWingL.hinge
             ];
-            hinges.forEach(hinge => hinge.rotation.y = 0);
-            mainAssembly.rotation.set(-0.5, 0, -0.2);
-            mainAssembly.position.set(0, 0, 0);
-            mainAssembly.scale.set(1, 1, 1);
-        }
-
-        function startFlight() {
-            if (animationRunning) return;
-            animationRunning = true;
-            controls.enabled = false;
-            resetAssembly();
 
             const tl = gsap.timeline({
                 onComplete: () => {
-                    // Keep the plane parked visibly in the galaxy. The user
-                    // should still be able to see it before pressing Landing.
                     animationRunning = false;
-                    window.parent.postMessage({ type: 'RESUME_FLIGHT_COMPLETE' }, '*');
+                    btnFold.disabled = false;
                 }
             });
 
-            // Fold the resume into a small paper-plane shape.
-            tl.to(mainAssembly.rotation, { x: -0.8, z: 0.6, y: 0.5, duration: 2.4, ease: 'power1.inOut' }, 0);
-            tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 1.1, ease: 'power2.inOut' }, 0.25);
-            tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 1.1, ease: 'power2.inOut' }, 0.25);
-            tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 1.1, ease: 'power2.inOut' }, 1.2);
-            tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 1.1, ease: 'power2.inOut' }, 1.2);
-            tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 1.1, ease: 'power2.inOut' }, 1.2);
-            tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 1.1, ease: 'power2.inOut' }, 1.2);
-            tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 1.1, ease: 'power2.inOut' }, 2.2);
-            tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 1.1, ease: 'power2.inOut' }, 2.2);
-            tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 1.1, ease: 'power2.inOut' }, 3.1);
-            tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 1.1, ease: 'power2.inOut' }, 3.1);
-
-            // Take off and fly through the galaxy. Keep the plane in the
-            // visual center of the popup: the motion is deliberately subtle
-            // and it returns to the exact origin before the flight ends.
-            // The Y rotation is exactly one full 360° turn.
-            tl.to(mainAssembly.rotation, { x: -0.2, y: 0, z: 0.35, duration: 1.2, ease: 'power2.out' }, 4.1);
-            tl.to(mainAssembly.position, { x: 0.65, y: 0.35, z: -0.7, duration: 1.25, ease: 'power2.inOut' }, 4.1);
-            tl.to(mainAssembly.scale, { x: 0.72, y: 0.72, z: 0.72, duration: 1.25, ease: 'power2.inOut' }, 4.1);
-            tl.to(mainAssembly.position, { x: -0.45, y: 0.18, z: -0.9, duration: 1.8, ease: 'sine.inOut' }, 5.35);
-            tl.to(mainAssembly.rotation, { x: -0.05, y: Math.PI * 2, z: 0.12, duration: 3.2, ease: 'none' }, 5.35);
-            tl.to(starGroup.rotation, { y: starGroup.rotation.y + Math.PI * 1.15, duration: 3.2, ease: 'none' }, 5.35);
-
-            // Finish dead-center so the plane never disappears outside the
-            // popup. The last moment is eased gently to avoid a visual snap.
-            tl.to(mainAssembly.position, { x: 0, y: 0, z: 0, duration: 1.25, ease: 'power3.out' }, 7.15);
-            tl.to(mainAssembly.scale, { x: 0.72, y: 0.72, z: 0.72, duration: 1.25, ease: 'power2.out' }, 7.15);
-        }
-
-        function landResume() {
-            if (animationRunning) return;
-            animationRunning = true;
-            controls.enabled = false;
-
-            // Return the visible paper plane to the center first, then unfold
-            // every crease in reverse order so the original A4 resume is
-            // restored smoothly instead of simply switching screens.
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    animationRunning = false;
-                    window.parent.postMessage({ type: 'RESUME_LANDING_COMPLETE' }, '*');
-                }
+            hinges.forEach(hinge => {
+                tl.to(
+                    hinge.rotation,
+                    { y: 0, duration: 1.7, ease: "power2.inOut" },
+                    0
+                );
             });
 
-            tl.to(mainAssembly.position, { x: 0, y: 0, z: 0, duration: 1.8, ease: 'power2.inOut' }, 0);
-            tl.to(mainAssembly.rotation, { x: -0.5, y: 0, z: -0.2, duration: 1.8, ease: 'power2.inOut' }, 0);
-            tl.to(mainAssembly.scale, { x: 1, y: 1, z: 1, duration: 1.8, ease: 'power2.out' }, 0);
-
-            // Reverse the folding sequence: outer wings first, then the
-            // center and inner folds, ending with a completely flat sheet.
-            tl.to(cWingR.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.15);
-            tl.to(cWingL.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.15);
-            tl.to(cCenterR.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.8);
-            tl.to(cCenterL.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.8);
-            tl.to(cF0R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.45);
-            tl.to(cF0L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.45);
-            tl.to(cF2R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.95);
-            tl.to(cF2L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.95);
-            tl.to(cF1R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 3.45);
-            tl.to(cF1L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 3.45);
-        }
-
-        window.addEventListener('message', (event) => {
-            if (event.source !== window.parent) return;
-            if (event.data?.type === 'START_FLIGHT') startFlight();
-            if (event.data?.type === 'LAND_RESUME') landResume();
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.5, y: 0, z: -0.2, duration: 2.0, ease: "power2.inOut" },
+                0
+            );
         });
 
         function animate() {

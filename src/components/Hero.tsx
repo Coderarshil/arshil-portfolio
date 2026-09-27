@@ -11,7 +11,7 @@ function getAge() {
   return age;
 }
 
-export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () => void; onResume: () => void }) {
+export const Hero = React.memo(function Hero({ onPlay }: { onPlay: () => void }) {
   const theme = useAppStore(s => s.theme);
   const isEspresso = theme === 'espresso';
   const [artworkReady, setArtworkReady] = useState(false);
@@ -171,12 +171,6 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
               <path d="M75,35 L90,40 L85,55" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#b89574] dark:text-[#d4af8c]" />
             </svg>
           </div>
-        </div>
-
-        <div className="hidden md:flex absolute left-0 bottom-0 lg:bottom-1 z-40 items-center gap-3">
-          <button type="button" onClick={onResume} className="inline-flex items-center gap-2 bg-[var(--accent-primary)] text-white px-5 py-2.5 rounded-xl font-serif text-[0.95rem] font-bold hover:bg-[var(--accent-hover)] transition-all shadow-sm">
-            View my resume →
-          </button>
         </div>
 
         <div className="block md:hidden w-full text-center -mt-9 mb-4 relative z-30 select-none">
