@@ -31,6 +31,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
     };
     preload('/arshil-cappuccino.webp');
     preload('/arshil-espresso.webp');
+    preload('/arshil-real.webp');
   }, []);
 
   return (
@@ -117,20 +118,29 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-cappuccino.webp"
               alt="Arshil integrated into cappuccino latte art"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isEspresso ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || isEspresso ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
-              fetchPriority={isEspresso ? 'auto' : 'high'}
+              fetchPriority={!isEspresso && !showPlayInvite ? 'high' : 'auto'}
             />
             <img
               src="/arshil-espresso.webp"
               alt="Arshil reflected in espresso"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.015]'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || !isEspresso ? 'opacity-0 scale-[1.015]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
-              fetchPriority={isEspresso ? 'high' : 'auto'}
+              fetchPriority={isEspresso && !showPlayInvite ? 'high' : 'auto'}
+            />
+            <img
+              src="/arshil-real.webp"
+              alt="Arshil portrait"
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.985]'}`}
+              style={{ objectPosition: 'center center' }}
+              loading="eager"
+              decoding="async"
+              fetchPriority={showPlayInvite ? 'high' : 'auto'}
             />
           </motion.button>
 
