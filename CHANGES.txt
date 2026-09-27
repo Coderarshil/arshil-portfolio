@@ -1,7 +1,7 @@
-Latest full portfolio package
+Latest full portfolio build
 
-- Full portfolio source based on the supplied arshil-portfolio-main project.
-- Integrated the latest resume viewer modal with zoom, page navigation, download and close controls.
-- Integrated the latest folding-resume / Wanna fly HTML.
-- Included resume PDF and resume page assets.
-- Included recommendation WebP assets.
+- Restored the Resume CTA in the header/hero.
+- Restored the Letters of Recommendation section and its WebP viewer.
+- Restored the Resume viewer modal with page controls, zoom controls, download, close, and Wanna fly flow.
+- Included the latest folding resume HTML and resume PDF/page assets.
+- Kept the portfolio project/demo content and existing site structure.
