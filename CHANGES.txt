@@ -1,1 +1,9 @@
-Resume integration: added public/resume.pdf, Resume navigation link, and hero View my resume CTA. Latest recommendation viewer and desktop-right navigation preserved.
+Resume popup update — 2026-09-27
+
+- Resume CTA now opens a centered animated resume chooser instead of navigating away.
+- Added two options: Interactive 3D Resume and Download PDF.
+- Embedded the folding 3D resume inside the popup.
+- Disabled 3D zoom (scroll/pinch); drag-to-rotate remains available.
+- Added Back and Close controls with smooth modal/view transitions.
+- Resume navigation in the desktop/mobile header now opens the same chooser.
+- Preserved the existing recommendation WebP viewer and added its required image assets.

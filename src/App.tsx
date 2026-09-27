@@ -6,6 +6,7 @@ import { PortfolioSections } from './components/PortfolioSections';
 import { Footer } from './components/Footer';
 import { BottomNav } from './components/BottomNav';
 import { TicTacToeWidget } from './components/TicTacToeWidget';
+import { ResumeModal } from './components/ResumeModal';
 import { useAppStore } from './lib/store';
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
   const animations = useAppStore(s => s.animations);
   const showTicTacToe = useAppStore(s => s.showTicTacToe);
   const setShowTicTacToe = useAppStore(s => s.setShowTicTacToe);
+  const [resumeOpen, setResumeOpen] = React.useState(false);
 
   useEffect(() => {
     document.title = 'Mohammad Arshil Siddiqui — Portfolio';
@@ -24,13 +26,14 @@ export default function App() {
   return (
     <MotionConfig reducedMotion={animations === 'calmer' ? 'always' : 'user'}>
       <div className="min-h-screen font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 overflow-x-hidden pb-[84px] md:pb-0">
-        <Header />
+        <Header onResume={() => setResumeOpen(true)} />
         <main className="flex flex-col items-center relative w-full min-h-[60vh] overflow-x-hidden md:overflow-visible">
-          <Hero onPlay={() => setShowTicTacToe(true)} />
+          <Hero onPlay={() => setShowTicTacToe(true)} onResume={() => setResumeOpen(true)} />
           <PortfolioSections />
         </main>
         <Footer />
         <BottomNav />
+        <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
         <AnimatePresence>
           {showTicTacToe && <TicTacToeWidget onClose={() => setShowTicTacToe(false)} />}
         </AnimatePresence>

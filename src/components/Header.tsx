@@ -5,7 +5,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { ProfileSummary } from './ProfileSummary';
 import { useAppStore } from '../lib/store';
 
-export function Header() {
+export function Header({ onResume }: { onResume: () => void }) {
   const theme = useAppStore(s => s.theme);
   const isEspresso = theme === 'espresso';
   const [scrolled, setScrolled] = useState(false);
@@ -29,7 +29,7 @@ export function Header() {
     { label: 'About', href: '#about', external: false },
     { label: 'Projects', href: '#projects', external: false },
     { label: 'Recommendations', href: '#recommendations', external: false },
-    { label: 'Resume', href: '/resume.pdf', external: true },
+    { label: 'Resume', href: '#resume', external: false },
     { label: 'Contact', href: '#contact', external: false },
   ];
 
@@ -54,7 +54,14 @@ export function Header() {
 
           <nav className="hidden md:flex ml-auto mr-6 lg:mr-10 justify-end flex-1 items-center gap-5 lg:gap-8 shrink-0 mt-1" aria-label="Main navigation">
             {nav.map((link, i) => (
-              <a key={link.label} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined} className={`text-[13px] lg:text-[14.5px] font-semibold transition-colors relative group ${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'}`}>
+              <a
+                key={link.label}
+                href={link.external ? link.href : link.href}
+                target={link.external ? '_blank' : undefined}
+                rel={link.external ? 'noreferrer' : undefined}
+                onClick={link.label === 'Resume' ? (event) => { event.preventDefault(); onResume(); } : undefined}
+                className={`text-[13px] lg:text-[14.5px] font-semibold transition-colors relative group ${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'}`}
+              >
                 {link.label}
                 <span className={`absolute -bottom-[6px] left-0 h-[2px] bg-[var(--accent-primary)] transition-all ${i === 0 ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </a>
@@ -84,7 +91,22 @@ export function Header() {
 
             <div className="flex-1 flex flex-col items-center justify-center gap-8 text-3xl font-serif">
               {nav.map((link, i) => (
-                <a key={link.label} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined} className={`${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'} transition-colors`} onClick={() => setMobileMenuOpen(false)}>
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.external ? '_blank' : undefined}
+                  rel={link.external ? 'noreferrer' : undefined}
+                  className={`${i === 0 ? 'text-[var(--accent-primary)]' : 'text-[var(--text-primary)] hover:text-[var(--accent-primary)]'} transition-colors`}
+                  onClick={(event) => {
+                    if (link.label === 'Resume') {
+                      event.preventDefault();
+                      setMobileMenuOpen(false);
+                      onResume();
+                    } else {
+                      setMobileMenuOpen(false);
+                    }
+                  }}
+                >
                   {link.label}
                 </a>
               ))}
