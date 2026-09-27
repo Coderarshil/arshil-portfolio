@@ -1,9 +1,9 @@
-Resume viewer update — A4 popup + visible plane + landing/unfold
+Resume viewer v3 patch
 
-1. Resume viewer popup is now A4 proportion (210:297) instead of a wide desktop dialog.
-2. The resume pages remain shown as the original high-resolution WebP renders.
-3. The Galaxy flight no longer flies the paper completely out of view; the folded plane remains visible at the end of the flight.
-4. Landing is now a real second animation: the visible plane returns to the center and the folds reverse one by one until the resume is flat again.
-5. The Landing button changes to “Unfolding…” while the landing animation is running.
-6. Parent/iframe messaging now supports START_FLIGHT, RESUME_FLIGHT_COMPLETE, LAND_RESUME, and RESUME_LANDING_COMPLETE.
-7. Original PDF download remains unchanged.
+- Kept the centered A4 portrait popup.
+- Smoothed the paper-plane flight timeline and reduced abrupt motion.
+- Paper plane now remains inside the popup and finishes exactly at the visual center.
+- Added an exact 360-degree Y-axis rotation during flight.
+- Increased plane visibility slightly while flying.
+- Landing continues to start from the centered plane and reverse the fold sequence.
+- Added a mobile-friendly renderer color-space setting for more consistent rendering.
