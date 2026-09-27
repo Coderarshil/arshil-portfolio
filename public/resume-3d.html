@@ -463,6 +463,8 @@ scene.updateMatrixWorld(true);
 
             const tl = gsap.timeline({
                 onComplete: () => {
+                    // Keep the plane parked visibly in the galaxy. The user
+                    // should still be able to see it before pressing Landing.
                     animationRunning = false;
                     window.parent.postMessage({ type: 'RESUME_FLIGHT_COMPLETE' }, '*');
                 }
@@ -485,14 +487,48 @@ scene.updateMatrixWorld(true);
             tl.to(mainAssembly.rotation, { x: -0.2, y: Math.PI * 0.85, z: 0.35, duration: 1.3, ease: 'power2.out' }, 4.1);
             tl.to(mainAssembly.position, { x: 2.2, y: 1.8, z: -1.5, duration: 1.4, ease: 'power2.inOut' }, 4.1);
             tl.to(mainAssembly.scale, { x: 0.58, y: 0.58, z: 0.58, duration: 1.4, ease: 'power2.inOut' }, 4.1);
-            tl.to(mainAssembly.position, { x: -5.8, y: 4.2, z: -3.2, duration: 2.8, ease: 'power2.in' }, 5.45);
+            tl.to(mainAssembly.position, { x: 2.65, y: 1.35, z: -1.8, duration: 2.8, ease: 'power2.inOut' }, 5.45);
             tl.to(mainAssembly.rotation, { x: -0.05, y: Math.PI * 2.2, z: 0.12, duration: 2.8, ease: 'power2.inOut' }, 5.45);
             tl.to(starGroup.rotation, { y: starGroup.rotation.y + Math.PI * 1.4, duration: 2.8, ease: 'none' }, 5.45);
+        }
+
+        function landResume() {
+            if (animationRunning) return;
+            animationRunning = true;
+            controls.enabled = false;
+
+            // Return the visible paper plane to the center first, then unfold
+            // every crease in reverse order so the original A4 resume is
+            // restored smoothly instead of simply switching screens.
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    animationRunning = false;
+                    window.parent.postMessage({ type: 'RESUME_LANDING_COMPLETE' }, '*');
+                }
+            });
+
+            tl.to(mainAssembly.position, { x: 0, y: 0, z: 0, duration: 1.8, ease: 'power2.inOut' }, 0);
+            tl.to(mainAssembly.rotation, { x: -0.5, y: 0, z: -0.2, duration: 1.8, ease: 'power2.inOut' }, 0);
+            tl.to(mainAssembly.scale, { x: 1, y: 1, z: 1, duration: 1.8, ease: 'power2.out' }, 0);
+
+            // Reverse the folding sequence: outer wings first, then the
+            // center and inner folds, ending with a completely flat sheet.
+            tl.to(cWingR.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.15);
+            tl.to(cWingL.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.15);
+            tl.to(cCenterR.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.8);
+            tl.to(cCenterL.hinge.rotation, { y: 0, duration: 0.85, ease: 'power2.inOut' }, 1.8);
+            tl.to(cF0R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.45);
+            tl.to(cF0L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.45);
+            tl.to(cF2R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.95);
+            tl.to(cF2L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 2.95);
+            tl.to(cF1R.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 3.45);
+            tl.to(cF1L.hinge.rotation, { y: 0, duration: 0.75, ease: 'power2.inOut' }, 3.45);
         }
 
         window.addEventListener('message', (event) => {
             if (event.source !== window.parent) return;
             if (event.data?.type === 'START_FLIGHT') startFlight();
+            if (event.data?.type === 'LAND_RESUME') landResume();
         });
 
         function animate() {

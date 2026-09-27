@@ -17,7 +17,7 @@ interface ResumeModalProps {
   onClose: () => void;
 }
 
-type FlightState = 'idle' | 'flying' | 'landed';
+type FlightState = 'idle' | 'flying' | 'landed' | 'landing';
 
 const pages = [
   '/resume-pages/page-1.webp',
@@ -64,6 +64,11 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       if (event.data?.type === 'RESUME_FLIGHT_COMPLETE') {
         setFlightState('landed');
       }
+      if (event.data?.type === 'RESUME_LANDING_COMPLETE') {
+        setFlightState('idle');
+        setFrameReady(false);
+        setZoom(1);
+      }
     };
 
     window.addEventListener('keydown', onKeyDown);
@@ -85,9 +90,9 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   };
 
   const land = () => {
-    setFlightState('idle');
-    setFrameReady(false);
-    setZoom(1);
+    if (flightState !== 'landed') return;
+    setFlightState('landing');
+    flightFrameRef.current?.contentWindow?.postMessage({ type: 'LAND_RESUME' }, '*');
   };
 
   const changeZoom = (delta: number) => {
@@ -117,7 +122,8 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-5xl h-[min(94vh,980px)] overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
+            className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
+            style={{ width: 'min(92vw, 794px)', height: 'min(94vh, 1123px)' }}
           >
             <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-3 sm:px-5 py-2.5 bg-[var(--bg-primary)]/95 backdrop-blur-md border-b border-[var(--border-color)]">
               <div className="min-w-0">
@@ -262,7 +268,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     disabled={flightState !== 'landed'}
                     className="absolute left-1/2 bottom-5 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-[var(--accent-primary)] text-white px-5 py-3 text-sm font-bold shadow-[0_10px_35px_rgba(0,0,0,.35)] disabled:opacity-0 disabled:pointer-events-none transition-all"
                   >
-                    Landing <Plane size={15} className="rotate-180" />
+                    {flightState === 'landing' ? 'Unfolding…' : 'Landing'} <Plane size={15} className="rotate-180" />
                   </button>
                 </motion.div>
               )}
