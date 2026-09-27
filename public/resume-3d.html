@@ -42,10 +42,6 @@
     <div id="canvas-container"></div>
 
     <script type="module">
-        import * as pdfjsLib from '/pdfjs/pdf.mjs';
-
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.mjs';
-
         const container = document.getElementById('canvas-container');
 
 
@@ -287,27 +283,32 @@
         cF2L.hinge.attach(cF1L.pivot);
         cF1L.hinge.attach(cF0L.pivot);
 
-        // Render the actual public PDF once and reuse the resulting page canvases
-        // for both sides of the 3D sheet. No embedded/base64 resume copies.
-        async function renderPdfPage(pdf, pageNumber, scale = 2) {
-            const page = await pdf.getPage(pageNumber);
-            const viewport = page.getViewport({ scale });
+        // Render the single public resume.pdf into WebGL textures. This removes the
+        // old embedded base64 artwork while keeping the physical folding model
+        // and its animations unchanged. Page 1 is the front; page 2 is the reverse.
+        const pdfjs = await import('/pdfjs/pdf.mjs');
+        pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.mjs';
+
+        const resumePdf = await pdfjs.getDocument('/resume.pdf').promise;
+
+        async function renderPdfPage(pageNumber) {
+            const page = await resumePdf.getPage(pageNumber);
+            const viewport = page.getViewport({ scale: 2.4 });
             const canvas = document.createElement('canvas');
             canvas.width = Math.ceil(viewport.width);
             canvas.height = Math.ceil(viewport.height);
-            const context = canvas.getContext('2d', { alpha: false });
-            if (!context) throw new Error('Unable to create PDF canvas');
-            await page.render({ canvasContext: context, viewport }).promise;
+            const ctx = canvas.getContext('2d', { alpha: false });
+            if (!ctx) throw new Error('Unable to create resume PDF canvas');
+            await page.render({ canvasContext: ctx, viewport }).promise;
             return canvas;
         }
 
-        const resumePdf = await pdfjsLib.getDocument('/resume.pdf').promise;
-        const [resumeCanvas, backCanvas] = await Promise.all([
-            renderPdfPage(resumePdf, 1),
-            renderPdfPage(resumePdf, 2),
+        const [frontCanvas, backCanvas] = await Promise.all([
+            renderPdfPage(1),
+            renderPdfPage(2),
         ]);
 
-        const resumeTexture = new THREE.CanvasTexture(resumeCanvas);
+        const resumeTexture = new THREE.CanvasTexture(frontCanvas);
         resumeTexture.encoding = THREE.sRGBEncoding;
         resumeTexture.center.set(0.5, 0.5);
         resumeTexture.rotation = Math.PI;
@@ -343,6 +344,7 @@
 
         const matYellow = new THREE.MeshBasicMaterial({
             map: backTexture,
+            // Back artwork belongs ONLY to the reverse face.
             side: THREE.BackSide,
             transparent: false,
             depthWrite: true,

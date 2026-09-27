@@ -1,16 +1,12 @@
-import { access, cp, mkdir } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { mkdir, copyFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const root = process.cwd();
 const sourceDir = resolve(root, 'node_modules/pdfjs-dist/build');
 const targetDir = resolve(root, 'public/pdfjs');
 
-await access(sourceDir);
 await mkdir(targetDir, { recursive: true });
+await copyFile(resolve(sourceDir, 'pdf.mjs'), resolve(targetDir, 'pdf.mjs'));
+await copyFile(resolve(sourceDir, 'pdf.worker.mjs'), resolve(targetDir, 'pdf.worker.mjs'));
 
-for (const file of ['pdf.mjs', 'pdf.worker.mjs']) {
-  await cp(resolve(sourceDir, file), resolve(targetDir, file));
-}
-
-console.log('PDF.js assets prepared in public/pdfjs/');
+console.log('Prepared local PDF.js runtime in public/pdfjs');

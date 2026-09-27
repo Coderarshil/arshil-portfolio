@@ -50,7 +50,7 @@ export function ProfileSummary({ onClose }: { onClose: () => void }) {
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-5 items-center">
           <div className="polaroid-card-container relative p-3 pb-9 bg-[#fdfbf6] dark:bg-[#cdb190] shadow-[0_8px_24px_rgba(0,0,0,0.08),_0_2px_4px_rgba(0,0,0,0.04)] -rotate-3 hover:rotate-0 transition-transform duration-300">
             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-14 h-5 bg-white/45 dark:bg-white/20 shadow-sm rotate-2 border border-black/5" />
-            <img src={polaroid} alt="Coffee polaroid" className="w-full aspect-square object-cover" />
+            <img src={polaroid} alt="Coffee polaroid" className="w-full aspect-square object-cover" loading="lazy" decoding="async" />
             <p className="absolute bottom-2 left-0 right-0 text-center font-handwriting text-lg text-[#6d523e] dark:text-[#f3d7bd]">still brewing ♡</p>
           </div>
           <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 sm:p-6 text-center overflow-hidden">

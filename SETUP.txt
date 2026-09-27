@@ -1,14 +1,14 @@
-Portfolio setup
+Arshil Portfolio — optimized build
 
-1. Install dependencies:
-   npm install
+1. npm install
+2. npm run dev
+3. npm run build
 
-2. Start development:
-   npm run dev
-
-3. Production build:
-   npm run build
-
-PDF.js is included as a build-time dependency and is copied into public/pdfjs automatically by the prepare:pdfjs script. The resume viewer and the 3D folding resume both use the single public/resume.pdf file.
-
-The public/resume.pdf file is the optimized A4 resume and is also the file downloaded by the Resume viewer.
+Optimization notes:
+- public/resume.pdf is the single resume source for the normal viewer, download, and 3D folding view.
+- PDF.js is copied into public/pdfjs at dev/build time and loaded only when the resume viewer is opened.
+- The 3D folding renderer keeps the original Three.js/GSAP model and animations but renders textures from resume.pdf instead of shipping embedded base64 artwork.
+- Portfolio WebP images are recompressed at high quality with metadata removed; displayed dimensions and composition are preserved.
+- Recommendation letters and certificates remain the original visual images, with lazy loading used for below-the-fold views.
+- The legacy standalone folding-resume source is retained, but its embedded image data is also optimized rather than deleted.
+- Vite sourcemaps remain disabled for smaller production output.

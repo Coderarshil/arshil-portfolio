@@ -1,11 +1,6 @@
 let pdfJsPromise: Promise<any> | null = null;
 let resumePdfPromise: Promise<any> | null = null;
 
-/**
- * PDF.js is loaded only when the resume viewer is opened.
- * The build step copies PDF.js into /public/pdfjs so the viewer has no
- * third-party network dependency at runtime.
- */
 const PDFJS_MODULE = '/pdfjs/pdf.mjs';
 
 export async function loadPdfJs(): Promise<any> {
@@ -20,9 +15,7 @@ export async function loadPdfJs(): Promise<any> {
 
 export function loadResumePdf(): Promise<any> {
   if (!resumePdfPromise) {
-    resumePdfPromise = loadPdfJs().then((pdfjs) =>
-      pdfjs.getDocument('/resume.pdf').promise,
-    );
+    resumePdfPromise = loadPdfJs().then((pdfjs) => pdfjs.getDocument('/resume.pdf').promise);
   }
   return resumePdfPromise;
 }
