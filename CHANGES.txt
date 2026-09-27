@@ -19,3 +19,12 @@ Runtime performance
 - Added lazy/async image loading for below-the-fold recommendation/certificate/polaroid images.
 - Added Google Fonts preconnect hints without changing the typography.
 - Resume and game features can remain interactive without being placed on the critical image payload path.
+
+2026-09-28 — profile artwork interaction / fluidity fix
+- Tapping the hero artwork hides the two original sticky notes and shows the “Yep, that’s me.” note with the existing underlined “Wanna play??” play button intact.
+- Tapping the artwork again restores the two original sticky notes and removes the play note, with smooth enter/exit animations on both states.
+- Kept the existing artwork mask, light/espresso assets, and interaction behavior intact.
+- Predecoded both hero theme images so the light/espresso crossfade does not hitch while an image is being decoded.
+- Kept the image transition compositor-friendly with GPU promotion and a tighter opacity/transform easing curve.
+- Tuned the theme view transition to a quicker 560ms fluid fade/scale while preserving the existing visual style.
+- Added a high-priority preload for the light artwork.

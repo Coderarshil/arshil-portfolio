@@ -14,13 +14,24 @@ function getAge() {
 export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () => void; onResume: () => void }) {
   const theme = useAppStore(s => s.theme);
   const isEspresso = theme === 'espresso';
-  const [artworkReady, setArtworkReady] = useState(false);
   const [showPlayInvite, setShowPlayInvite] = useState(false);
   const age = useMemo(getAge, []);
 
-  useEffect(() => setArtworkReady(false), [theme]);
 
   const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+
+  // Keep both theme artworks decoded before a theme switch so the crossfade stays
+  // on the compositor instead of stalling for image decoding mid-transition.
+  useEffect(() => {
+    const preload = (src: string) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = src;
+      void image.decode?.().catch(() => undefined);
+    };
+    preload('/arshil-cappuccino.webp');
+    preload('/arshil-espresso.webp');
+  }, []);
 
   return (
     <motion.section
@@ -106,50 +117,67 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-cappuccino.webp"
               alt="Arshil integrated into cappuccino latte art"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] ${isEspresso ? 'opacity-0 scale-[0.96]' : 'opacity-100 scale-100'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isEspresso ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
-              loading={isEspresso ? 'lazy' : 'eager'}
+              loading="eager"
               decoding="async"
               fetchPriority={isEspresso ? 'auto' : 'high'}
-              onLoad={() => !isEspresso && setArtworkReady(true)}
             />
             <img
               src="/arshil-espresso.webp"
               alt="Arshil reflected in espresso"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] ${isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.015]'}`}
               style={{ objectPosition: 'center center' }}
-              loading={isEspresso ? 'eager' : 'lazy'}
+              loading="eager"
               decoding="async"
               fetchPriority={isEspresso ? 'high' : 'auto'}
-              onLoad={() => isEspresso && setArtworkReady(true)}
             />
           </motion.button>
 
-          <div className="absolute top-[5%] right-[5%] lg:right-[14%] lg:top-[12%] bg-[#f4ebd0] dark:bg-[#D4C3A3] text-[#4a331a] p-3 md:p-3 w-28 md:w-32 rounded shadow-lg transform rotate-[3deg] border border-[#e8dfc8] scale-[0.85] lg:scale-[0.85] z-40 transition-transform hover:rotate-[5deg] hover:scale-95 hover:z-50">
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-[40px] h-[16px] bg-white/50 shadow-sm rotate-[4deg] border border-black/5 backdrop-blur-[1px]" />
-            <p className="font-handwriting text-[0.95rem] md:text-[1.1rem] font-bold leading-tight m-0 relative z-10">learn.<br />build. ★</p>
-          </div>
+          <AnimatePresence initial={false} mode="popLayout">
+            {!showPlayInvite && (
+              <>
+                <motion.div
+                  key="learn-note"
+                  initial={{ opacity: 0, y: -10, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute top-[5%] right-[5%] lg:right-[14%] lg:top-[12%] bg-[#f4ebd0] dark:bg-[#D4C3A3] text-[#4a331a] p-3 md:p-3 w-28 md:w-32 rounded shadow-lg transform rotate-[3deg] border border-[#e8dfc8] scale-[0.85] lg:scale-[0.85] z-40 transition-transform hover:rotate-[5deg] hover:scale-95 hover:z-50 transform-gpu will-change-[transform,opacity]"
+                >
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-[40px] h-[16px] bg-white/50 shadow-sm rotate-[4deg] border border-black/5 backdrop-blur-[1px]" />
+                  <p className="font-handwriting text-[0.95rem] md:text-[1.1rem] font-bold leading-tight m-0 relative z-10">learn.<br />build. ★</p>
+                </motion.div>
 
-          <div className="absolute bottom-[10%] left-[5%] md:left-[0%] lg:bottom-[15%] lg:left-[-20%] xl:left-[-15%] bg-[#f4ebd0] dark:bg-[#D4C3A3] text-[#4a331a] p-3 lg:p-4 w-[140px] md:w-[150px] lg:w-[180px] rounded shadow-lg transform -rotate-[3deg] border border-[#e8dfc8] dark:border-[#b8a88c] scale-90 lg:scale-[0.95] z-40 transition-transform hover:-rotate-[1deg] hover:scale-[0.98] hover:z-50">
-            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-[40px] h-[16px] bg-white/60 dark:bg-white/20 shadow-sm rotate-[2deg] border border-black/5 dark:border-white/10" />
-            <p className="font-handwriting text-[1.05rem] lg:text-[1.25rem] font-bold leading-tight m-0 transform -rotate-[1deg] relative z-10 antialiased">
-              curious
-              <br />
-              by default
-              <br />♡
-            </p>
-          </div>
+                <motion.div
+                  key="curious-note"
+                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.28, delay: 0.03, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute bottom-[10%] left-[5%] md:left-[0%] lg:bottom-[15%] lg:left-[-20%] xl:left-[-15%] bg-[#f4ebd0] dark:bg-[#D4C3A3] text-[#4a331a] p-3 lg:p-4 w-[140px] md:w-[150px] lg:w-[180px] rounded shadow-lg transform -rotate-[3deg] border border-[#e8dfc8] dark:border-[#b8a88c] scale-90 lg:scale-[0.95] z-40 transition-transform hover:-rotate-[1deg] hover:scale-[0.98] hover:z-50 transform-gpu will-change-[transform,opacity]"
+                >
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-[40px] h-[16px] bg-white/60 dark:bg-white/20 shadow-sm rotate-[2deg] border border-black/5 dark:border-white/10" />
+                  <p className="font-handwriting text-[1.05rem] lg:text-[1.25rem] font-bold leading-tight m-0 transform -rotate-[1deg] relative z-10 antialiased">
+                    curious
+                    <br />
+                    by default
+                    <br />♡
+                  </p>
+                </motion.div>
+              </>
+            )}
 
-          <AnimatePresence mode="wait">
             {showPlayInvite && (
               <motion.div
+                key="play-note"
                 initial={{ opacity: 0, y: 8, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 5, scale: 0.98 }}
-                transition={{ duration: 0.22 }}
-                className="absolute z-50 right-[0%] bottom-[3%] sm:right-[-1%] sm:bottom-[1%] lg:right-[2%] lg:bottom-[3%] bg-[var(--sticky-bg)] border border-[var(--sticky-border)] shadow-lg rounded-xl px-4 py-3 rotate-[2deg] max-w-[190px] text-center"
+                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute z-50 right-[0%] bottom-[3%] sm:right-[-1%] sm:bottom-[1%] lg:right-[2%] lg:bottom-[3%] bg-[var(--sticky-bg)] border border-[var(--sticky-border)] shadow-lg rounded-xl px-4 py-3 rotate-[2deg] max-w-[210px] text-center transform-gpu will-change-[transform,opacity]"
               >
-                <p className="font-handwriting text-xl text-[var(--sticky-text)] leading-tight">Yep, that’s me. ♡</p>
+                <p className="font-handwriting text-xl text-[var(--sticky-text)] leading-tight">Yep, that’s me.</p>
                 <button type="button" onClick={onPlay} className="font-handwriting text-lg text-[var(--sticky-text)] underline underline-offset-2 decoration-2 hover:opacity-75 transition-opacity">
                   Wanna play??
                 </button>
