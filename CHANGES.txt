@@ -13,3 +13,5 @@ UI update: single compact 3D action button
 - After unfolding, the same control returns to the PDF view on the next click.
 - Removed canvas tap-to-fold behavior so the canvas is only for 360° rotation.
 - Added the supplied paper-plane and fold SVG icons for the compact stateful control.
+
+- Added directional 3D page-flip transitions to the PDF resume viewer. Right arrow flips the sheet toward the right; left arrow flips it toward the left, with the new page rotating in from the opposite face.

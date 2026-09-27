@@ -24,6 +24,7 @@ const pages = [
 
 export function ResumeModal({ open, onClose }: ResumeModalProps) {
   const [page, setPage] = useState(0);
+  const [flipDirection, setFlipDirection] = useState<1 | -1>(1);
   const [zoom, setZoom] = useState(1);
   const [mode, setMode] = useState<ResumeMode>('pdf');
   const [frameReady, setFrameReady] = useState(false);
@@ -33,6 +34,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   useEffect(() => {
     if (!open) {
       setPage(0);
+      setFlipDirection(1);
       setZoom(1);
       setMode('pdf');
       setFrameReady(false);
@@ -53,10 +55,16 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
       if (event.key === 'ArrowLeft' && mode === 'pdf') {
-        setPage((current) => Math.max(0, current - 1));
+        if (page > 0) {
+          setFlipDirection(-1);
+          setPage((current) => Math.max(0, current - 1));
+        }
       }
       if (event.key === 'ArrowRight' && mode === 'pdf') {
-        setPage((current) => Math.min(pages.length - 1, current + 1));
+        if (page < pages.length - 1) {
+          setFlipDirection(1);
+          setPage((current) => Math.min(pages.length - 1, current + 1));
+        }
       }
     };
 
@@ -81,7 +89,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('message', onMessage);
     };
-  }, [open, onClose, mode]);
+  }, [open, onClose, mode, page]);
 
   const changeZoom = (delta: number) => {
     setZoom((current) => Math.min(2.4, Math.max(1, Number((current + delta).toFixed(1)))));
@@ -215,21 +223,43 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  <div className="absolute inset-0 overflow-auto p-0">
-                    <div className="w-full h-full flex items-start justify-center">
-                      <img
-                        src={pages[page]}
-                        alt={`Resume page ${page + 1}`}
-                        className="block w-full h-full object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
-                        draggable={false}
-                        style={{ transform: `scale(${zoom})`, transformOrigin: 'center top', marginBottom: `${Math.max(0, (zoom - 1) * 40)}px` }}
-                      />
-                    </div>
+                  <div
+                    className="absolute inset-0 overflow-hidden p-0"
+                    style={{ perspective: '1800px' }}
+                  >
+                    <AnimatePresence initial={false} custom={flipDirection} mode="popLayout">
+                      <motion.div
+                        key={page}
+                        custom={flipDirection}
+                        className="absolute inset-0 flex items-start justify-center"
+                        style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                        initial={{ rotateY: flipDirection * 180, opacity: 1 }}
+                        animate={{ rotateY: 0, opacity: 1 }}
+                        exit={{ rotateY: flipDirection * -180, opacity: 1 }}
+                        transition={{ duration: 0.62, ease: [0.22, 0.75, 0.25, 1] }}
+                      >
+                        <img
+                          src={pages[page]}
+                          alt={`Resume page ${page + 1}`}
+                          className="block w-full h-full object-contain rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none"
+                          draggable={false}
+                          style={{
+                            transform: `scale(${zoom})`,
+                            transformOrigin: 'center center',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => setPage((current) => Math.max(0, current - 1))}
+                    onClick={() => {
+                      if (page === 0) return;
+                      setFlipDirection(-1);
+                      setPage((current) => Math.max(0, current - 1));
+                    }}
                     disabled={page === 0}
                     className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] disabled:opacity-25 hover:border-[var(--accent-primary)] transition-all"
                     aria-label="Previous resume page"
@@ -239,7 +269,11 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 
                   <button
                     type="button"
-                    onClick={() => setPage((current) => Math.min(pages.length - 1, current + 1))}
+                    onClick={() => {
+                      if (page === pages.length - 1) return;
+                      setFlipDirection(1);
+                      setPage((current) => Math.min(pages.length - 1, current + 1));
+                    }}
                     disabled={page === pages.length - 1}
                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] disabled:opacity-25 hover:border-[var(--accent-primary)] transition-all"
                     aria-label="Next resume page"
