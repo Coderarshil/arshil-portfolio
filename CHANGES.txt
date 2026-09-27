@@ -1,7 +1,12 @@
-Latest full portfolio build
+Resume 3D flow update
 
-- Restored the Resume CTA in the header/hero.
-- Restored the Letters of Recommendation section and its WebP viewer.
-- Restored the Resume viewer modal with page controls, zoom controls, download, close, and Wanna fly flow.
-- Included the latest folding resume HTML and resume PDF/page assets.
-- Kept the portfolio project/demo content and existing site structure.
+PDF viewer -> 3D Resume -> Let's fly -> Landing -> Land -> PDF
+
+- 3D Resume button opens the galaxy/3D resume.
+- 3D button initially reads "Let's fly".
+- Let's fly folds the resume into the paper plane.
+- After folding, the same button becomes "Landing".
+- Landing unfolds the resume.
+- After unfolding, the button becomes "Land".
+- Land sends RESUME_SHOW_PDF to the parent viewer and returns to the PDF.
+- 3D zoom controls remain removed; drag rotation remains 360°.

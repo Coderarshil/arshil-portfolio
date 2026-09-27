@@ -129,7 +129,7 @@
         <button id="btn-close" aria-label="Close" title="Close">×</button>
     </div>
 
-    <button id="btn-fold" aria-label="Start folding animation">Let's fly ✈</button>
+    <button id="btn-fold" aria-label="Start folding animation">Wanna fly ✈</button>
     <button id="btn-reset" disabled>Reset</button>
 
     <div id="canvas-container"></div>
@@ -563,13 +563,59 @@ scene.updateMatrixWorld(true);
 
         let animationRunning = false;
 
-        let flightState = 'ready';
+        btnFold.addEventListener('click', () => {
+            if (animationRunning) return;
 
-        function post(type) {
-            if (window.parent !== window) window.parent.postMessage({ type }, '*');
-        }
+            animationRunning = true;
+            btnFold.disabled = true;
+            btnReset.disabled = true;
 
-        function resetHinges(tl) {
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    animationRunning = false;
+                    btnReset.disabled = false;
+                }
+            });
+
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.8, z: 0.6, y: 0.5, duration: 10, ease: "power1.inOut" },
+                0
+            );
+
+            // Step 1: fold top corners
+            tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 2, ease: "power2.inOut" }, 0.5);
+            tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 2, ease: "power2.inOut" }, 0.5);
+
+            // Step 2: sharpening fold + hidden tuck
+            tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+            tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+
+            tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+            tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 2, ease: "power2.inOut" }, 2.5);
+
+            // Step 3: center fold
+            tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 2, ease: "power2.inOut" }, 4.5);
+            tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 2, ease: "power2.inOut" }, 4.5);
+
+            // Step 4: wings
+            tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 2, ease: "power2.inOut" }, 6.5);
+            tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 2, ease: "power2.inOut" }, 6.5);
+
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.1, y: Math.PI / 4, z: 0.1, duration: 2.5, ease: "power2.out" },
+                8.0
+            );
+        });
+
+        btnReset.addEventListener('click', () => {
+            if (animationRunning) return;
+
+            animationRunning = true;
+            btnFold.disabled = true;
+            btnReset.disabled = true;
+
             const hinges = [
                 cF0R.hinge, cF0L.hinge,
                 cF1R.hinge, cF1L.hinge,
@@ -577,63 +623,27 @@ scene.updateMatrixWorld(true);
                 cCenterR.hinge, cCenterL.hinge,
                 cWingR.hinge, cWingL.hinge
             ];
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    animationRunning = false;
+                    btnFold.disabled = false;
+                }
+            });
+
             hinges.forEach(hinge => {
-                tl.to(hinge.rotation, { y: 0, duration: 1.55, ease: 'power2.inOut' }, 0);
-            });
-            tl.to(mainAssembly.rotation, { x: -0.5, y: 0, z: -0.2, duration: 1.9, ease: 'power2.inOut' }, 0);
-        }
-
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'ready') return;
-            animationRunning = true;
-            btnFold.disabled = true;
-
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    animationRunning = false;
-                    flightState = 'folded';
-                    btnFold.disabled = false;
-                    btnFold.textContent = 'Landing';
-                    btnFold.setAttribute('aria-label', 'Unfold the resume');
-                }
+                tl.to(
+                    hinge.rotation,
+                    { y: 0, duration: 1.7, ease: "power2.inOut" },
+                    0
+                );
             });
 
-            tl.to(mainAssembly.rotation,
-                { x: -0.8, z: 0.6, y: 0.5, duration: 2.2, ease: 'power1.inOut' }, 0);
-            tl.to(cF1R.hinge.rotation, { y: F1R_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
-            tl.to(cF1L.hinge.rotation, { y: F1L_ANG, duration: 1.35, ease: 'power2.inOut' }, 0.35);
-            tl.to(cF2R.hinge.rotation, { y: F2R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF2L.hinge.rotation, { y: F2L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF0R.hinge.rotation, { y: F0R_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cF0L.hinge.rotation, { y: F0L_ANG, duration: 1.35, ease: 'power2.inOut' }, 1.45);
-            tl.to(cCenterR.hinge.rotation, { y: CTR_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
-            tl.to(cCenterL.hinge.rotation, { y: CTL_ANG, duration: 1.35, ease: 'power2.inOut' }, 2.7);
-            tl.to(cWingR.hinge.rotation, { y: WGR_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
-            tl.to(cWingL.hinge.rotation, { y: WGL_ANG, duration: 1.35, ease: 'power2.inOut' }, 3.8);
-            tl.to(mainAssembly.rotation,
-                { x: -0.12, y: Math.PI * 2 + Math.PI / 4, z: 0.1, duration: 2.4, ease: 'power2.out' }, 4.7);
-        });
-
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'folded') return;
-            animationRunning = true;
-            btnFold.disabled = true;
-
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    animationRunning = false;
-                    flightState = 'unfolded';
-                    btnFold.disabled = false;
-                    btnFold.textContent = 'Land';
-                    btnFold.setAttribute('aria-label', 'Return to PDF resume');
-                }
-            });
-            resetHinges(tl);
-        });
-
-        btnFold.addEventListener('click', () => {
-            if (animationRunning || flightState !== 'unfolded') return;
-            post('RESUME_SHOW_PDF');
+            tl.to(
+                mainAssembly.rotation,
+                { x: -0.5, y: 0, z: -0.2, duration: 2.0, ease: "power2.inOut" },
+                0
+            );
         });
 
         function animate() {

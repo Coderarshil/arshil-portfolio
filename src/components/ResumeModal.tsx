@@ -3,9 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Download,
-  Minus,
   Plane,
-  Plus,
   X,
   ZoomIn,
   ZoomOut,
@@ -17,7 +15,7 @@ interface ResumeModalProps {
   onClose: () => void;
 }
 
-type FlightState = 'idle' | 'flying' | 'landed' | 'landing';
+type ResumeMode = 'pdf' | '3d';
 
 const pages = [
   '/resume-pages/page-1.webp',
@@ -27,7 +25,7 @@ const pages = [
 export function ResumeModal({ open, onClose }: ResumeModalProps) {
   const [page, setPage] = useState(0);
   const [zoom, setZoom] = useState(1);
-  const [flightState, setFlightState] = useState<FlightState>('idle');
+  const [mode, setMode] = useState<ResumeMode>('pdf');
   const [frameReady, setFrameReady] = useState(false);
   const flightFrameRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -35,7 +33,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
     if (!open) {
       setPage(0);
       setZoom(1);
-      setFlightState('idle');
+      setMode('pdf');
       setFrameReady(false);
       return;
     }
@@ -52,20 +50,17 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
-      if (event.key === 'ArrowLeft' && flightState === 'idle') {
+      if (event.key === 'ArrowLeft' && mode === 'pdf') {
         setPage((current) => Math.max(0, current - 1));
       }
-      if (event.key === 'ArrowRight' && flightState === 'idle') {
+      if (event.key === 'ArrowRight' && mode === 'pdf') {
         setPage((current) => Math.min(pages.length - 1, current + 1));
       }
     };
 
     const onMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'RESUME_FLIGHT_COMPLETE') {
-        setFlightState('landed');
-      }
-      if (event.data?.type === 'RESUME_LANDING_COMPLETE') {
-        setFlightState('idle');
+      if (event.data?.type === 'RESUME_SHOW_PDF') {
+        setMode('pdf');
         setFrameReady(false);
         setZoom(1);
       }
@@ -77,29 +72,12 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('message', onMessage);
     };
-  }, [open, onClose, flightState]);
+  }, [open, onClose, mode]);
 
-  useEffect(() => {
-    if (flightState !== 'flying' || !frameReady) return;
-    flightFrameRef.current?.contentWindow?.postMessage({ type: 'START_FLIGHT' }, '*');
-  }, [flightState, frameReady]);
-
-  const startFlight = () => {
-    setFlightState('flying');
+  const open3D = () => {
+    setMode('3d');
     setFrameReady(false);
   };
-
-  const land = () => {
-    if (flightState !== 'landed') return;
-    setFlightState('landing');
-    flightFrameRef.current?.contentWindow?.postMessage({ type: 'LAND_RESUME' }, '*');
-  };
-
-  const changeZoom = (delta: number) => {
-    setZoom((current) => Math.min(2.4, Math.max(1, Number((current + delta).toFixed(2)))));
-  };
-
-  const isFlying = flightState !== 'idle';
 
   return (
     <AnimatePresence>
@@ -122,17 +100,16 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
-            style={{ width: 'min(92vw, 794px)', height: 'min(94vh, 1123px)' }}
+            className="relative w-full max-w-5xl h-[min(94vh,980px)] overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
           >
             <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-3 sm:px-5 py-2.5 bg-[var(--bg-primary)]/95 backdrop-blur-md border-b border-[var(--border-color)]">
               <div className="min-w-0">
                 <p className="font-serif font-bold text-sm sm:text-base text-[var(--text-primary)]">Mohammad Arshil Siddiqui</p>
-                <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">Resume · {isFlying ? 'Wanna fly' : `Page ${page + 1} of ${pages.length}`}</p>
+                <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">Resume · {mode === '3d' ? '3D Resume' : `Page ${page + 1} of ${pages.length}`}</p>
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                {!isFlying && (
+                {mode === 'pdf' && (
                   <div className="hidden sm:flex items-center gap-1 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] p-1">
                     <button
                       type="button"
@@ -176,7 +153,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             </div>
 
             <AnimatePresence mode="wait" initial={false}>
-              {!isFlying ? (
+              {mode === 'pdf' ? (
                 <motion.div
                   key="pdf"
                   className="absolute inset-0 pt-[58px] pb-2 bg-[var(--bg-secondary)] overflow-hidden"
@@ -217,37 +194,19 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     <ArrowRight size={19} />
                   </button>
 
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg px-2 py-1.5">
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg px-2 py-1.5">
                     <button
                       type="button"
-                      onClick={() => changeZoom(-0.1)}
-                      disabled={zoom <= 1}
-                      className="sm:hidden w-8 h-8 rounded-full grid place-items-center text-[var(--text-primary)] disabled:opacity-30"
-                      aria-label="Zoom out"
+                      onClick={open3D}
+                      className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-primary)] text-white px-5 py-2.5 text-sm font-bold shadow-md hover:bg-[var(--accent-hover)] transition-all"
                     >
-                      <Minus size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={startFlight}
-                      className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-primary)] text-white px-4 py-2.5 text-sm font-bold shadow-md hover:bg-[var(--accent-hover)] transition-all"
-                    >
-                      Wanna fly <Plane size={15} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => changeZoom(0.1)}
-                      disabled={zoom >= 2.4}
-                      className="sm:hidden w-8 h-8 rounded-full grid place-items-center text-[var(--text-primary)] disabled:opacity-30"
-                      aria-label="Zoom in"
-                    >
-                      <Plus size={16} />
+                      3D Resume <Plane size={15} />
                     </button>
                   </div>
                 </motion.div>
               ) : (
                 <motion.div
-                  key="flight"
+                  key="3d"
                   className="absolute inset-0 pt-[58px] bg-black overflow-hidden"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -261,15 +220,6 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                     onLoad={() => setFrameReady(true)}
                     className="w-full h-full border-0 bg-[#03040a]"
                   />
-
-                  <button
-                    type="button"
-                    onClick={flightState === 'landed' ? land : undefined}
-                    disabled={flightState !== 'landed'}
-                    className="absolute left-1/2 bottom-5 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-[var(--accent-primary)] text-white px-5 py-3 text-sm font-bold shadow-[0_10px_35px_rgba(0,0,0,.35)] disabled:opacity-0 disabled:pointer-events-none transition-all"
-                  >
-                    {flightState === 'landing' ? 'Unfolding…' : 'Landing'} <Plane size={15} className="rotate-180" />
-                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
