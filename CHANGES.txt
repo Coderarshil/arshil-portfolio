@@ -1,15 +1,8 @@
-Resume 3D flow update — A4 fixed
+A4 top-crop fix
 
-PDF viewer -> 3D Resume -> Let's fly -> Landing -> Land -> PDF
-
-- Viewer popup is now true A4 portrait ratio (210:297).
-- Popup scales down based on viewport height so the A4 sheet is never cropped.
-- Resume image preserves A4 proportions and uses contain-style sizing instead of cropping.
-- 3D Resume button opens the galaxy/3D resume.
-- 3D button initially reads "Let's fly".
-- Let's fly folds the resume into the paper plane.
-- After folding, the same button becomes "Landing".
-- Landing unfolds the resume.
-- After unfolding, the button becomes "Land".
-- Land sends RESUME_SHOW_PDF to the parent viewer and returns to the PDF.
-- 3D zoom controls remain removed; drag rotation remains 360°.
+- The viewer toolbar no longer consumes part of an A4-proportioned popup.
+- The popup now reserves the toolbar separately from the A4 resume sheet.
+- At 100% zoom, the complete A4 page is constrained by the available viewer height,
+  so the top of the resume cannot disappear underneath the name/zoom/download bar.
+- Resume image remains A4 portrait (210:297) and centered.
+- Existing PDF page controls, zoom, download, close, and 3D flow are preserved.

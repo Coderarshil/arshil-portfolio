@@ -102,11 +102,12 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="relative overflow-hidden rounded-[28px] border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-[0_30px_100px_rgba(0,0,0,.42)]"
             style={{
-              // Keep the entire viewer at true A4 portrait proportions.
-              // The width is capped by both the viewport width and the
-              // available viewport height so the A4 sheet never gets cropped.
-              width: 'min(92vw, 62.22vh)',
-              aspectRatio: '210 / 297',
+              // The popup itself includes the toolbar, so it must NOT use
+              // the A4 ratio. The A4 ratio belongs to the resume sheet
+              // below the toolbar. Reserving the toolbar height here keeps
+              // the first rows of the resume from being hidden underneath it.
+              width: 'min(92vw, 57.5vh)',
+              height: '92vh',
               maxHeight: '92vh',
             }}
           >
@@ -164,18 +165,18 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
               {mode === 'pdf' ? (
                 <motion.div
                   key="pdf"
-                  className="absolute inset-0 pt-[58px] pb-2 bg-[var(--bg-secondary)] overflow-hidden"
+                  className="absolute inset-0 top-[58px] bottom-0 bg-[var(--bg-secondary)] overflow-hidden"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  <div className="absolute inset-0 overflow-auto px-2 sm:px-5 py-3 sm:py-5">
+                  <div className="absolute inset-0 overflow-auto px-2 sm:px-4 py-2 sm:py-3">
                     <div className="min-h-full flex items-start justify-center">
                       <img
                         src={pages[page]}
                         alt={`Resume page ${page + 1}`}
-                        className="block w-full max-w-[980px] h-auto aspect-[210/297] object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
+                        className="block w-auto max-w-full h-auto max-h-full aspect-[210/297] object-contain origin-top rounded-sm shadow-[0_8px_30px_rgba(0,0,0,.16)] select-none transition-transform duration-200 ease-out"
                         draggable={false}
                         style={{ transform: `scale(${zoom})`, transformOrigin: 'center top', marginBottom: `${Math.max(0, (zoom - 1) * 40)}px` }}
                       />
