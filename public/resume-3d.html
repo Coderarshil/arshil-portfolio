@@ -283,13 +283,13 @@
         cF2L.hinge.attach(cF1L.pivot);
         cF1L.hinge.attach(cF0L.pivot);
 
-        // Render the single public resume.pdf into WebGL textures. This removes the
+        // Render the single public Arshil's resume.pdf into WebGL textures. This removes the
         // old embedded base64 artwork while keeping the physical folding model
         // and its animations unchanged. Page 1 is the front; page 2 is the reverse.
         const pdfjs = await import('/pdfjs/pdf.mjs');
         pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.mjs';
 
-        const resumePdf = await pdfjs.getDocument('/resume.pdf').promise;
+        const resumePdf = await pdfjs.getDocument("/Arshil's resume.pdf").promise;
 
         async function renderPdfPage(pageNumber) {
             const page = await resumePdf.getPage(pageNumber);

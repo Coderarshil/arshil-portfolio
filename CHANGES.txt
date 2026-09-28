@@ -1,14 +1,14 @@
 Full portfolio optimization
 
 Assets
-- Optimized resume.pdf with Ghostscript while preserving A4 pages/content.
-- Removed duplicate resume-page WebPs because the live viewer now renders the same public/resume.pdf through PDF.js.
+- Optimized Arshil's resume.pdf with Ghostscript while preserving A4 pages/content.
+- Removed duplicate resume-page WebPs because the live viewer now renders the same public/Arshil's resume.pdf through PDF.js.
 - Recompressed portrait, polaroid, certificate, and recommendation WebPs at high quality with metadata stripped.
 - Kept recommendation-letter imagery unfiltered/unaltered in the UI; the source WebPs remain the privacy-masked letters.
 - Optimized the legacy source/Arshil_Folding_Resume.html embedded image data without deleting its code.
 
 Resume viewer
-- Normal PDF viewer and 3D folding renderer use the same public/resume.pdf.
+- Normal PDF viewer and 3D folding renderer use the same public/Arshil's resume.pdf.
 - PDF.js is loaded lazily and copied to public/pdfjs at build/dev time.
 - Page navigation keeps the existing physical directional flip animation and wraps between the two pages.
 - Zoom, download, 3D launch, fold/unfold, return-to-PDF, and close controls remain.

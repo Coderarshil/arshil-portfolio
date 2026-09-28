@@ -207,7 +207,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                 )}
 
                 <a
-                  href="/resume.pdf"
+                  href="/Arshil's resume.pdf"
                   download="Arshil's resume.pdf"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] grid place-items-center hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-colors"
                   aria-label="Download resume PDF"

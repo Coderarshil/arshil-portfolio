@@ -5,9 +5,9 @@ Arshil Portfolio — optimized build
 3. npm run build
 
 Optimization notes:
-- public/resume.pdf is the single resume source for the normal viewer, download, and 3D folding view.
+- public/Arshil's resume.pdf is the single resume source for the normal viewer, download, and 3D folding view.
 - PDF.js is copied into public/pdfjs at dev/build time and loaded only when the resume viewer is opened.
-- The 3D folding renderer keeps the original Three.js/GSAP model and animations but renders textures from resume.pdf instead of shipping embedded base64 artwork.
+- The 3D folding renderer keeps the original Three.js/GSAP model and animations but renders textures from Arshil's resume.pdf instead of shipping embedded base64 artwork.
 - Portfolio WebP images are recompressed at high quality with metadata removed; displayed dimensions and composition are preserved.
 - Recommendation letters and certificates remain the original visual images, with lazy loading used for below-the-fold views.
 - The legacy standalone folding-resume source is retained, but its embedded image data is also optimized rather than deleted.

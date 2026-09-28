@@ -22,7 +22,7 @@ export async function loadPdfJs(): Promise<any> {
 
 export function loadResumePdf(): Promise<any> {
   if (!resumePdfPromise) {
-    resumePdfPromise = loadPdfJs().then((pdfjs) => pdfjs.getDocument('/resume.pdf').promise);
+    resumePdfPromise = loadPdfJs().then((pdfjs) => pdfjs.getDocument("/Arshil's resume.pdf").promise);
   }
   return resumePdfPromise;
 }
