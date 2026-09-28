@@ -9,7 +9,7 @@ import {
   ZoomOut,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { loadResumePdf } from '../lib/pdfjs';
+import { clearResumePageCache, getCachedResumePage, loadResumePdf, preloadResumePages } from '../lib/pdfjs';
 
 interface ResumeModalProps {
   open: boolean;
@@ -38,11 +38,20 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       setMode('pdf');
       setFrameReady(false);
       setFlightState('ready');
+      clearResumePageCache();
       return;
     }
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    // Start loading and rendering both PDF pages immediately. We intentionally
+    // keep them cached for the lifetime of this popup so page flips are
+    // animation-only rather than waiting on PDF.js.
+    void preloadResumePages().catch(() => {
+      // PdfPageCanvas still has its normal fallback/error handling.
+    });
+
     return () => {
       document.body.style.overflow = previousOverflow;
     };
@@ -292,6 +301,19 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   );
 }
 
+async function loadAndRenderPage(pageNumber: number): Promise<HTMLCanvasElement> {
+  const pdf = await loadResumePdf();
+  const page = await pdf.getPage(pageNumber);
+  const viewport = page.getViewport({ scale: 2.5 });
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(viewport.width);
+  canvas.height = Math.ceil(viewport.height);
+  const ctx = canvas.getContext('2d', { alpha: false });
+  if (!ctx) throw new Error('Canvas context unavailable');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  return canvas;
+}
+
 function PdfPageCanvas({ pageNumber, zoom }: { pageNumber: number; zoom: number }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -301,23 +323,19 @@ function PdfPageCanvas({ pageNumber, zoom }: { pageNumber: number; zoom: number 
 
     (async () => {
       try {
-        const pdf = await loadResumePdf();
-        const page = await pdf.getPage(pageNumber);
-        const baseViewport = page.getViewport({ scale: 1 });
-        const renderScale = 2.5;
-        const viewport = page.getViewport({ scale: renderScale });
+        // The modal preloads both pages. If this page is already warm, this is
+        // just a cheap canvas copy; otherwise it falls back to loading it now.
+        const sourceCanvas = getCachedResumePage(pageNumber) ?? await loadAndRenderPage(pageNumber);
         const canvas = canvasRef.current;
         if (!canvas || cancelled) return;
 
-        canvas.width = Math.ceil(viewport.width);
-        canvas.height = Math.ceil(viewport.height);
+        canvas.width = sourceCanvas.width;
+        canvas.height = sourceCanvas.height;
         const ctx = canvas.getContext('2d', { alpha: false });
         if (!ctx) throw new Error('Canvas context unavailable');
 
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        if (cancelled) return;
-
-        canvas.style.aspectRatio = `${baseViewport.width} / ${baseViewport.height}`;
+        ctx.drawImage(sourceCanvas, 0, 0);
+        canvas.style.aspectRatio = `${sourceCanvas.width} / ${sourceCanvas.height}`;
         setStatus('ready');
       } catch {
         if (!cancelled) setStatus('error');
