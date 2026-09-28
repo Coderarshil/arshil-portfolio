@@ -28,3 +28,4 @@ Runtime performance
 - Kept the image transition compositor-friendly with GPU promotion and a tighter opacity/transform easing curve.
 - Tuned the theme view transition to a quicker 560ms fluid fade/scale while preserving the existing visual style.
 - Added a high-priority preload for the light artwork.
+- Real portrait now switches between arshil-real-light.webp and arshil-real-dark.webp with theme-aware crossfade and preloading.

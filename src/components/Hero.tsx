@@ -31,7 +31,8 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
     };
     preload('/arshil-cappuccino.webp');
     preload('/arshil-espresso.webp');
-    preload('/arshil-real.webp');
+    preload('/arshil-real-light.webp');
+    preload('/arshil-real-dark.webp');
   }, []);
 
   return (
@@ -134,13 +135,22 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
               fetchPriority={isEspresso && !showPlayInvite ? 'high' : 'auto'}
             />
             <img
-              src="/arshil-real.webp"
-              alt="Arshil portrait"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.985]'}`}
+              src="/arshil-real-light.webp"
+              alt="Arshil portrait in light mode"
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && !isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.985]'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
-              fetchPriority={showPlayInvite ? 'high' : 'auto'}
+              fetchPriority={showPlayInvite && !isEspresso ? 'high' : 'auto'}
+            />
+            <img
+              src="/arshil-real-dark.webp"
+              alt="Arshil portrait in dark mode"
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.015]'}`}
+              style={{ objectPosition: 'center center' }}
+              loading="eager"
+              decoding="async"
+              fetchPriority={showPlayInvite && isEspresso ? 'high' : 'auto'}
             />
           </motion.button>
 
