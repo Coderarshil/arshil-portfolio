@@ -29,11 +29,33 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
       image.src = src;
       void image.decode?.().catch(() => undefined);
     };
-    preload('/arshil-cappuccino.webp');
-    preload('/arshil-espresso.webp');
-    preload('/arshil-real-light.webp');
-    preload('/arshil-real-dark.webp');
-  }, []);
+
+    // Warm only the artwork needed for the current theme immediately. The
+    // opposite theme is prefetched during idle time so first paint does not
+    // compete with four image decodes at once.
+    const current = isEspresso
+      ? ['/arshil-espresso.webp', '/arshil-real-dark.webp']
+      : ['/arshil-cappuccino.webp', '/arshil-real-light.webp'];
+    current.forEach(preload);
+
+    let cancelPrefetch = () => {};
+    const prefetchSecondary = () => {
+      const secondary = isEspresso
+        ? ['/arshil-cappuccino.webp', '/arshil-real-light.webp']
+        : ['/arshil-espresso.webp', '/arshil-real-dark.webp'];
+      secondary.forEach(preload);
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(prefetchSecondary, { timeout: 1500 });
+      cancelPrefetch = () => window.cancelIdleCallback(idleId);
+    } else {
+      const timeoutId = window.setTimeout(prefetchSecondary, 900);
+      cancelPrefetch = () => window.clearTimeout(timeoutId);
+    }
+
+    return cancelPrefetch;
+  }, [isEspresso]);
 
   return (
     <motion.section
@@ -119,7 +141,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-cappuccino.webp"
               alt="Arshil integrated into cappuccino latte art"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || isEspresso ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || isEspresso ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
@@ -128,7 +150,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-espresso.webp"
               alt="Arshil reflected in espresso"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || !isEspresso ? 'opacity-0 scale-[1.015]' : 'opacity-100 scale-100'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite || !isEspresso ? 'opacity-0 scale-[1.015]' : 'opacity-100 scale-100'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
@@ -137,7 +159,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-real-light.webp"
               alt="Arshil portrait in light mode"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && !isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.985]'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && !isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.985]'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"
@@ -146,7 +168,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
             <img
               src="/arshil-real-dark.webp"
               alt="Arshil portrait in dark mode"
-              className={`absolute inset-0 w-full h-full object-cover transform-gpu will-change-[opacity,transform] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.015]'}`}
+              className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${showPlayInvite && isEspresso ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.015]'}`}
               style={{ objectPosition: 'center center' }}
               loading="eager"
               decoding="async"

@@ -8,7 +8,7 @@ const resumePageCache = new Map<number, HTMLCanvasElement>();
 const resumePagePromiseCache = new Map<number, Promise<HTMLCanvasElement>>();
 
 const PDFJS_MODULE = '/pdfjs/pdf.mjs';
-const RESUME_RENDER_SCALE = 2.5;
+const RESUME_RENDER_SCALE = 2.2;
 
 export async function loadPdfJs(): Promise<any> {
   if (!pdfJsPromise) {

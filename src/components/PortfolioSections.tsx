@@ -41,7 +41,7 @@ const certificates = [
   { title: 'Hyperspectral Data for Land and Coastal Systems', org: 'NASA ARSET', date: 'Aug 31, 2026', image: '/certificates/NASA Hyperspectral Data for Land and Coastal Systems.webp', full: '/certificates/NASA Hyperspectral Data for Land and Coastal Systems.webp' },
 ];
 
-export function PortfolioSections() {
+export const PortfolioSections = React.memo(function PortfolioSections() {
   return <>
     <About />
     <Experiments />
@@ -53,7 +53,7 @@ export function PortfolioSections() {
     <Interests />
     <Contact />
   </>;
-}
+});
 
 function Wrap({ id, eyebrow, title, children, className='' }: { id:string; eyebrow:string; title:string; children:React.ReactNode; className?:string }) {
   return <section id={id} className={`max-w-[1400px] mx-auto px-4 sm:px-6 py-12 sm:py-16 ${className}`}><div className="text-center mb-8 sm:mb-10"><p className="font-handwriting text-xl text-[var(--accent-primary)]">{eyebrow}</p><h2 className="font-serif text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mt-1">{title}</h2></div>{children}</section>;
@@ -209,6 +209,45 @@ function ThingsDone() {
   return <Wrap id="done" eyebrow="a few pages from the notebook" title="Things I’ve Done"><div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">{done.map(([text,date],i) => <motion.div key={text} whileHover={{ x:i%2?2:-2 }} className="relative bg-[var(--sticky-bg)] border border-[var(--sticky-border)] rounded-xl p-5 shadow-sm"><div className="absolute -top-2 left-1/2 -translate-x-1/2 w-14 h-5 bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10 rotate-2"/><div className="flex items-start justify-between gap-3"><p className="font-handwriting text-xl text-[var(--sticky-text)]">{text}</p><span className="text-xs font-medium text-[var(--sticky-text)]/70 mt-1 whitespace-nowrap">{date}</span></div></motion.div>)}</div></Wrap>;
 }
 
+function AsyncImage({
+  src,
+  alt,
+  className,
+  wrapperClassName = '',
+  loading = 'lazy',
+  decoding = 'async',
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  wrapperClassName?: string;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'sync' | 'async' | 'auto';
+}) {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className={`relative overflow-hidden ${wrapperClassName}`} aria-busy={!loaded && !failed}>
+      {!loaded && !failed && <span className="image-skeleton" aria-hidden="true" />}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className ?? ''} relative z-[1] transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        loading={loading}
+        decoding={decoding}
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+      />
+      {failed && (
+        <span className="absolute inset-0 z-[2] grid place-items-center px-4 text-center text-sm text-[var(--text-muted)] bg-[var(--bg-secondary)]">
+          Image unavailable
+        </span>
+      )}
+    </div>
+  );
+}
+
 function Recommendations() {
   const letters = [
     {
@@ -271,7 +310,7 @@ function Recommendations() {
           <button type="button" onClick={() => setOpen(null)} className="shrink-0 px-3 py-1.5 rounded-full border border-black/15 text-sm text-black hover:bg-black/5">Close</button>
         </div>
         {/* The WebP already contains the privacy masking; no extra phone-number overlay/filter is applied. */}
-        <img src={open.file} alt={`${open.name} letter of recommendation`} className="block w-full h-auto" loading="lazy" decoding="async" />
+        <AsyncImage src={open.file} alt={`${open.name} letter of recommendation`} className="block w-full h-auto" wrapperClassName="w-full min-h-[260px] bg-[var(--bg-secondary)]" loading="eager" />
       </motion.div>
     </motion.div>}
   </>;
@@ -279,9 +318,9 @@ function Recommendations() {
 
 function Certifications() {
   const [open,setOpen]=useState<(typeof certificates)[number] | null>(null);
-  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications"><div className="grid md:grid-cols-2 gap-5">{certificates.map(c => <motion.button type="button" key={c.title} onClick={()=>setOpen(c)} whileHover={{ y:-5, rotate:c.title.length%2?-0.4:0.4 }} className="text-left bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm"><div className="bg-[var(--bg-secondary)] p-3 border-b border-[var(--border-color)]"><img src={c.image} alt={`${c.title} certificate`} className="w-full aspect-[4/3] object-contain rounded-xl bg-white/50 dark:bg-black/10" loading="lazy" decoding="async"/></div><div className="p-5"><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{c.org}</p><h3 className="font-serif font-bold text-xl text-[var(--text-primary)] mt-1">{c.title}</h3><p className="text-sm text-[var(--text-muted)] mt-2">{c.date}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-3">view certificate →</p></div></motion.button>)}</div><AnimateCert open={open} onClose={()=>setOpen(null)}/></Wrap>;
+  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications"><div className="grid md:grid-cols-2 gap-5">{certificates.map(c => <motion.button type="button" key={c.title} onClick={()=>setOpen(c)} whileHover={{ y:-5, rotate:c.title.length%2?-0.4:0.4 }} className="text-left bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm"><div className="bg-[var(--bg-secondary)] p-3 border-b border-[var(--border-color)]"><AsyncImage src={c.image} alt={`${c.title} certificate`} className="w-full h-full object-contain rounded-xl" wrapperClassName="w-full aspect-[4/3] rounded-xl bg-white/50 dark:bg-black/10" /></div><div className="p-5"><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{c.org}</p><h3 className="font-serif font-bold text-xl text-[var(--text-primary)] mt-1">{c.title}</h3><p className="text-sm text-[var(--text-muted)] mt-2">{c.date}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-3">view certificate →</p></div></motion.button>)}</div><AnimateCert open={open} onClose={()=>setOpen(null)}/></Wrap>;
 }
-function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{<img src={open.full} alt={open.title} className="w-full rounded-xl" loading="eager" decoding="async"/>}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
+function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{<AsyncImage src={open.full} alt={open.title} className="w-full rounded-xl" wrapperClassName="w-full min-h-[320px] rounded-xl bg-[var(--bg-secondary)]" loading="eager" />}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
 
 function Interests() { return <Wrap id="interests" eyebrow="things that pull my attention" title="Interests"><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{interests.map(([title,body],i)=><motion.div key={title} whileHover={{ y:-4 }} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 shadow-sm relative overflow-hidden"><div className="absolute -right-8 -top-8 w-20 h-20 rounded-full bg-[var(--accent-primary)]/5"/><p className="font-serif text-xl font-bold text-[var(--text-primary)]">{title}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-1">{body}</p></motion.div>)}</div></Wrap>; }
 

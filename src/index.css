@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@400;600&display=swap');
 @import "tailwindcss";
 
 html {
@@ -200,6 +199,52 @@ html.view-transition-active *::after {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+
+
+/* Generic async-image skeleton. It reserves the same box as the eventual asset,
+   avoiding layout shifts while keeping the shimmer GPU-cheap. */
+.image-skeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg-secondary) 78%, transparent) 0%,
+      color-mix(in srgb, var(--bg-card) 92%, white 8%) 45%,
+      color-mix(in srgb, var(--bg-secondary) 78%, transparent) 88%
+    );
+  background-size: 220% 100%;
+  animation: image-skeleton-shimmer 1.25s ease-in-out infinite;
+}
+
+@keyframes image-skeleton-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -20% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-skeleton { animation: none; }
+}
+
+/* Lightweight skeleton used only while a genuinely async document/image is rendering. */
+.resume-skeleton {
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--bg-card) 84%, transparent) 0%,
+      color-mix(in srgb, var(--bg-card) 96%, white 4%) 42%,
+      color-mix(in srgb, var(--bg-card) 84%, transparent) 84%);
+  background-size: 220% 100%;
+  animation: resume-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+@keyframes resume-skeleton-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -20% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .resume-skeleton { animation: none; }
 }
 
 /* --- Theme View Transition --- */
@@ -501,7 +546,7 @@ footer {
     width: min(100%, 39rem);
     min-height: 3.5rem;
     padding: 0.75rem 1.25rem;
-    font-size: 0.84rem;
+    font-size: 0.74rem;
     gap: 0.55rem;
     white-space: nowrap;
   }

@@ -304,7 +304,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 async function loadAndRenderPage(pageNumber: number): Promise<HTMLCanvasElement> {
   const pdf = await loadResumePdf();
   const page = await pdf.getPage(pageNumber);
-  const viewport = page.getViewport({ scale: 2.5 });
+  const viewport = page.getViewport({ scale: 2.2 });
   const canvas = document.createElement('canvas');
   canvas.width = Math.ceil(viewport.width);
   canvas.height = Math.ceil(viewport.height);
@@ -350,7 +350,7 @@ function PdfPageCanvas({ pageNumber, zoom }: { pageNumber: number; zoom: number 
   return (
     <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
       {status === 'loading' && (
-        <div className="absolute inset-0 grid place-items-center text-xs text-[var(--text-muted)]">Loading resume…</div>
+        <div className="resume-skeleton absolute inset-0" aria-label="Loading resume page" role="status" />
       )}
       {status === 'error' && (
         <div className="absolute inset-0 grid place-items-center px-8 text-center text-sm text-[var(--text-muted)]">
