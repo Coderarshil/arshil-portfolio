@@ -298,112 +298,6 @@ html { scroll-padding-top: 90px; }
 section[id] { scroll-margin-top: 90px; }
 .portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* Skills interaction: desktop orbit stays open; mobile becomes a compact tap-to-reveal skill wheel. */
-.skills-section .skills-center-label { font-size: 1.45rem; }
-.skills-section .skill-chip { will-change: transform; }
-.skills-mobile-center { display: none; }
-@media (max-width: 639px) {
-  .skills-section { padding-top: 2rem; padding-bottom: 3.5rem; }
-  .skills-section > div:first-child { display: none; }
-  .skills-section > div:last-child { margin-top: 0; width: min(92vw, 330px); }
-  .skills-section .skills-desktop-center { display: none; }
-  .skills-section .skills-mobile-center { display: block; }
-  .skills-section .skill-chip { width: 86px; min-height: 38px; }
-}
-
-
-/* Final mobile polish: never split words and never let fixed UI cover the contact card. */
-.skills-section { overflow: visible; }
-.skill-orbit-item { overflow: visible; }
-.skill-chip { box-sizing: border-box; }
-
-@media (max-width: 639px) {
-  .skills-section {
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-bottom: 110px;
-  }
-
-  .skills-section > div:last-child {
-    width: min(96vw, 350px);
-    max-width: 350px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .skills-section .skill-chip {
-    width: 104px;
-    min-height: 42px;
-    padding: 6px 8px;
-  }
-
-  .skills-section .skill-chip > div {
-    width: 100%;
-  }
-
-  .skills-section .skill-chip span {
-    max-width: 88px;
-    overflow-wrap: normal;
-    word-break: normal;
-    hyphens: none;
-  }
-
-  .contact-section {
-    scroll-margin-top: 105px;
-    padding-top: 105px;
-    padding-bottom: 165px;
-  }
-
-  .contact-section > div:last-child {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .contact-section .font-handwriting {
-    white-space: normal;
-    overflow-wrap: normal;
-    word-break: normal;
-  }
-}
-
-
-/* Mobile skills: chips size to their words and use a fixed collision-free orbit. */
-@media (max-width: 639px) {
-  .skills-section > div:last-child {
-    width: min(96vw, 350px);
-    height: min(96vw, 350px);
-    aspect-ratio: 1 / 1;
-    overflow: visible;
-  }
-
-  .skills-section .skill-chip {
-    width: max-content !important;
-    min-width: 88px;
-    max-width: 132px;
-    min-height: 42px;
-    padding: 8px 12px;
-    white-space: nowrap;
-  }
-
-  .skills-section .skill-chip > div {
-    width: max-content;
-    max-width: none;
-  }
-
-  .skills-section .skill-chip span {
-    max-width: none;
-    white-space: nowrap;
-    overflow: visible;
-    overflow-wrap: normal;
-    word-break: keep-all;
-    hyphens: none;
-  }
-}
-
-
 /* Mobile stability pass: keep the contact card inside the viewport, keep the header above hero controls, and give the five-slot bottom nav explicit columns. */
 @media (max-width: 639px) {
   .contact-section {
@@ -420,40 +314,6 @@ section[id] { scroll-margin-top: 90px; }
     margin-left: 0 !important;
     margin-right: 0 !important;
     box-sizing: border-box;
-  }
-
-  .skills-section > div:last-child {
-    width: min(100%, 330px) !important;
-    max-width: 330px !important;
-    height: min(100vw - 30px, 330px) !important;
-    max-height: 330px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  .skills-section .skill-chip {
-    min-width: 80px !important;
-    max-width: 118px !important;
-    min-height: 30px !important;
-    padding: 5px 9px !important;
-    line-height: 1 !important;
-  }
-
-  .skills-section .skill-chip > div {
-    gap: 5px !important;
-    font-size: 10px !important;
-    line-height: 1 !important;
-  }
-
-  .skills-section .skill-chip span {
-    white-space: nowrap !important;
-    word-break: keep-all !important;
-    overflow-wrap: normal !important;
-  }
-
-  .skills-section .skill-chip svg {
-    width: 13px !important;
-    height: 13px !important;
   }
 }
 
@@ -563,196 +423,96 @@ footer {
   }
 }
 
-/* Folder Float — React Bits-inspired micro interaction, tuned to the supplied settings. */
-.folder-float-section > div:first-child { margin-bottom: 0 !important; }
-.folder-float-section > div:first-child p:empty { display: none; }
+/* React Bits Folder Float — tuned to the supplied 256×148 reference. */
+.folder-skills-section > div:first-child:has(> p:empty) { display: none; }
+.folder-skills-section { padding-top: 2.5rem; padding-bottom: 4.5rem; }
+.folder-float { width: 100%; display: flex; justify-content: center; overflow: visible; }
 .folder-float-stage {
   position: relative;
-  width: min(100%, 430px);
-  height: 430px;
+  width: 256px;
+  height: 250px;
   margin: 0 auto;
-  display: grid;
-  place-items: center;
+  perspective: 900px;
   overflow: visible;
 }
-.folder-float {
-  position: relative;
-  width: var(--folder-width);
-  height: var(--folder-height);
-  perspective: 900px;
-  isolation: isolate;
-  transform: translateY(30px);
+.folder-float-items { position: absolute; inset: 0; pointer-events: none; z-index: 30; }
+.folder-float-pill {
+  position: absolute;
+  left: 50%;
+  top: 146px;
+  transform: translate(-50%, -50%);
+  min-height: 30px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fcf3cc;
+  color: #18181b;
+  border: 1px solid rgba(24,24,27,.055);
+  box-shadow: 0 5px 13px rgba(75,58,35,.14), 0 1px 2px rgba(24,24,27,.08);
+  font: 500 11px/1.05 Inter, sans-serif;
+  white-space: nowrap;
+  transform-origin: center;
+  will-change: transform, opacity;
 }
 .folder-float-button {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: var(--folder-width);
-  height: var(--folder-height);
+  left: 50%;
+  top: 92px;
+  width: 256px;
+  height: 148px;
+  transform: translateX(-50%);
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  transform-style: preserve-3d;
-  z-index: 20;
   appearance: none;
+  overflow: visible;
+  filter: drop-shadow(0 15px 17px rgba(50,36,25,.15));
+  z-index: 20;
 }
-.folder-float-button:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--folder-front) 72%, white);
-  outline-offset: 7px;
-  border-radius: var(--folder-radius);
-}
-.folder-float-tab,
+.folder-float-button:focus-visible { outline: 2px solid rgba(139,69,19,.45); outline-offset: 5px; border-radius: 18px; }
 .folder-float-back,
 .folder-float-paper,
-.folder-float-flap {
-  position: absolute;
-  left: 0;
-  width: var(--folder-width);
-  border-radius: var(--folder-radius);
-  transform-style: preserve-3d;
-}
-.folder-float-tab {
-  left: 0;
-  top: -10px;
-  width: 82px;
-  height: 28px;
-  border-radius: 16px 16px 0 0;
-  background: var(--folder-color);
-  box-shadow: 0 -2px 4px rgba(24,24,27,.05), 0 10px 20px rgba(24,24,27,.10);
-  z-index: 1;
-}
+.folder-float-flap,
+.folder-float-front { position: absolute; display: block; }
 .folder-float-back {
-  inset: 0;
-  background: var(--folder-color);
-  border: 1px solid rgba(24,24,27,.07);
-  border-radius: var(--folder-radius);
-  box-shadow: 0 18px 34px rgba(24,24,27,.16);
-  z-index: 3;
+  left: 18px; top: 14px; width: 220px; height: 108px;
+  background: #fff;
+  border-radius: 16px 16px 12px 12px;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.035);
 }
 .folder-float-paper {
-  left: 5px;
-  bottom: 8px;
-  width: calc(100% - 10px);
-  height: calc(100% - 22px);
-  background: var(--folder-paper);
-  border-radius: calc(var(--folder-radius) - 2px);
-  transform-origin: 50% 100%;
-  transform: translateY(7px) rotateX(82deg);
-  opacity: .98;
-  z-index: 4;
-  transition: transform var(--folder-open-duration) cubic-bezier(.22,1.3,.36,1);
+  left: 27px; top: 30px; width: 202px; height: 98px;
+  background: #f5f5f5;
+  border-radius: 10px 10px 8px 8px;
+  box-shadow: 0 3px 9px rgba(20,20,20,.07);
+  transform-origin: 22% 100%;
 }
 .folder-float-flap {
-  inset: 0;
-  background: var(--folder-front);
-  border-radius: var(--folder-radius);
-  transform-origin: 50% 100%;
-  transform: rotateX(var(--folder-flap-rest));
-  box-shadow: 0 13px 22px rgba(24,24,27,.16);
-  z-index: 8;
-  transition: transform var(--folder-open-duration) cubic-bezier(.22,1.3,.36,1), box-shadow var(--folder-open-duration) ease;
+  left: 0; top: 20px; width: 256px; height: 92px;
+  background: #d4956a;
+  border-radius: 16px 16px 13px 13px;
+  transform-origin: 18% 0%;
+  backface-visibility: hidden;
+  z-index: 3;
+}
+.folder-float-front {
+  left: 0; top: 49px; width: 256px; height: 99px;
+  background: #d4956a;
+  border-radius: 16px;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  text-align: left;
-  padding: 0 18px 17px;
-  color: var(--folder-label);
+  padding: 0 0 28px 34px;
+  box-sizing: border-box;
+  color: #f5f5f5;
+  transform-origin: 50% 100%;
 }
-.folder-float-label {
-  font: 700 15px/1.05 Inter, sans-serif;
-  letter-spacing: -.01em;
-}
-.folder-float-sublabel {
-  margin-top: 4px;
-  font: 500 9px/1.15 Inter, sans-serif;
-  opacity: .78;
-}
-.folder-float-cloud {
-  position: absolute;
-  left: 50%;
-  bottom: calc(var(--folder-height) - 4px);
-  width: 0;
-  height: 0;
-  z-index: 12;
-  pointer-events: none;
-}
-.folder-float-pill {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: max-content;
-  min-height: 34px;
-  padding: 8px 13px;
-  border: 1px solid rgba(24,24,27,.08);
-  border-radius: 999px;
-  background: var(--folder-item);
-  color: var(--folder-item-text);
-  box-shadow: 0 6px 13px rgba(24,24,27,.12), inset 0 1px 0 rgba(255,255,255,.65);
-  font: 600 11px/1 Inter, sans-serif;
-  white-space: nowrap;
-  transform: translate(-50%, 0) translate(var(--pill-x), calc(var(--pill-y) + 22px)) rotate(var(--pill-rotation)) scale(.78);
-  transform-origin: center;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    transform var(--folder-open-duration) cubic-bezier(.22,1.3,.36,1) var(--pill-delay),
-    opacity 180ms ease var(--pill-delay),
-    box-shadow 180ms ease;
-}
-.folder-float.is-open .folder-float-pill {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, 0) translate(var(--pill-x), var(--pill-y)) rotate(var(--pill-rotation)) scale(1);
-}
-.folder-float-pill:hover,
-.folder-float-pill:focus-visible {
-  transform: translate(-50%, 0) translate(var(--pill-x), var(--pill-y)) rotate(0deg) scale(1.045);
-  box-shadow: 0 9px 17px rgba(24,24,27,.16), inset 0 1px 0 rgba(255,255,255,.75);
-  outline: none;
-}
-.folder-float.is-open .folder-float-paper {
-  transform: translateY(-10px) rotateX(0deg);
-}
-.folder-float.is-open .folder-float-flap {
-  transform: rotateX(var(--folder-flap-open));
-  box-shadow: 0 20px 30px rgba(24,24,27,.12);
-}
-.folder-float.is-open .folder-float-button {
-  z-index: 15;
-}
+.folder-float-label { font: 600 16px/1.1 Inter, sans-serif; letter-spacing: -.02em; }
+.folder-float-sublabel { margin-top: 5px; font: 500 13px/1.1 Inter, sans-serif; opacity: .82; }
 
 @media (max-width: 639px) {
-  .folder-float-stage {
-    width: 100%;
-    height: 390px;
-  }
-  .folder-float {
-    transform: translateY(38px) scale(.66);
-    transform-origin: 50% 50%;
-  }
-  .folder-float-section > div:first-child { margin-bottom: 0 !important; }
-}
-
-/* Override the previous mobile orbit rules now that Skills uses Folder Float. */
-.folder-float-section > div:first-child {
-  display: block !important;
-  width: auto !important;
-  max-width: none !important;
-  margin-top: 0 !important;
-}
-.folder-float-section > div:last-child {
-  width: min(100%, 430px) !important;
-  max-width: 430px !important;
-  height: 430px !important;
-  max-height: 430px !important;
-}
-@media (max-width: 639px) {
-  .folder-float-section > div:last-child {
-    width: min(100%, 390px) !important;
-    max-width: 390px !important;
-    height: 390px !important;
-    max-height: 390px !important;
-  }
+  .folder-skills-section { padding-top: 1.5rem; padding-bottom: 4rem; }
+  .folder-float-stage { transform: scale(.72); transform-origin: top center; height: 188px; margin-bottom: -62px; }
 }
