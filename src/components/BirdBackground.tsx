@@ -54,7 +54,7 @@ export const BirdBackground = React.memo(function BirdBackground() {
 
     const backgroundColor = isEspresso ? 0x0f0a06 : 0xfaf6f1;
     const birdColor = isEspresso ? 0xffffff : 0xc89568;
-    const birdColor2 = isEspresso ? 0xffffff : 0x91450e;
+    const birdColor2 = isEspresso ? 0x808080 : 0x91450e;
 
     effectRef.current = VANTA.BIRDS({
       el: host,
@@ -68,6 +68,8 @@ export const BirdBackground = React.memo(function BirdBackground() {
       backgroundColor,
       color1: birdColor,
       color2: birdColor2,
+      quantity: 3,
+      birdSize: 0.8,
     });
 
     return () => {
