@@ -644,8 +644,9 @@ html.lenis body {
 .folder-float-stage {
   position: relative;
   width: min(100%, 620px);
-  height: 440px;
+  height: 460px;
   perspective: 1100px;
+  overflow: visible;
 }
 
 .folder-float-papers {
@@ -657,9 +658,11 @@ html.lenis body {
 
 .folder-float-paper {
   position: absolute;
-  left: calc(50% - (clamp(92px, 16vw, 142px) / 2));
-  top: calc(50% - 26px);
-  width: clamp(92px, 16vw, 142px);
+  left: 50%;
+  top: 50%;
+  margin-left: -71px;
+  margin-top: -26px;
+  width: 142px;
   min-height: 52px;
   padding: 0.72rem 0.82rem;
   transform: translate(-50%, -50%);
@@ -789,14 +792,16 @@ html.lenis body {
   }
 
   .folder-float-stage {
-    width: min(100%, 360px);
-    height: 400px;
+    width: min(100%, 380px);
+    height: 430px;
   }
 
   .folder-float-paper {
-    left: calc(50% - 56px);
-    top: calc(50% - 24px);
-    width: 112px;
+    left: 50%;
+    top: 50%;
+    margin-left: -59px;
+    margin-top: -24px;
+    width: 118px;
     min-height: 48px;
     padding: 0.58rem 0.6rem;
     font-size: 0.68rem;
@@ -819,4 +824,37 @@ html.lenis body {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* FolderFloat reference: layered paper sheets peeking out behind the folder. */
+.folder-float-back::before,
+.folder-float-back::after {
+  content: '';
+  position: absolute;
+  left: 9%;
+  width: 82%;
+  height: 55%;
+  background: var(--folder-paper);
+  border: 1px solid color-mix(in srgb, var(--folder-item-text) 8%, transparent);
+  border-radius: 10px 12px 4px 4px;
+  box-shadow: 0 5px 12px rgba(25, 16, 8, 0.08);
+  transform-origin: bottom center;
+  z-index: 1;
+}
+
+.folder-float-back::before {
+  top: -20%;
+  transform: rotate(-1.5deg);
+}
+
+.folder-float-back::after {
+  top: -14%;
+  left: 13%;
+  width: 74%;
+  transform: rotate(1.2deg);
+}
+
+.espresso-mode .folder-float-back::before,
+.espresso-mode .folder-float-back::after {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
 }

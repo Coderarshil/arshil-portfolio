@@ -75,23 +75,29 @@ export default function FolderFloat({
   const shouldAnimate = !(prefersReducedMotion ?? false);
 
   const positions = useMemo(() => {
-    // A deliberate burst layout gives the impression that the papers are
-    // being launched from the folder instead of forming a rigid orbit.
-    const count = Math.max(items.length, 1);
-    const mobileSpread = Math.min(spread, 138);
-    const effectiveSpread = isMobile ? mobileSpread : spread;
-    const stageWidth = isMobile ? 320 : 560;
-    const stageHeight = isMobile ? 350 : 410;
-    const rx = Math.min(effectiveSpread * 1.15, stageWidth / 2 - 34);
-    const ry = Math.min(effectiveSpread * 0.72, stageHeight / 2 - 38);
+    // FolderFloat-style burst: papers fan upward and outward from the
+    // folder instead of forming a circular orbit. This mirrors the
+    // reference interaction while keeping all ten portfolio skills readable.
+    const desktop = [
+      [-132, -116, -8], [-42, -150, 3], [48, -154, 7], [138, -112, 10],
+      [-158, -48, -6], [-55, -58, -2], [58, -56, 4], [158, -46, 8],
+      [-105, 18, -5], [105, 16, 6],
+    ] as const;
+    const mobile = [
+      [-92, -112, -8], [0, -138, 2], [92, -112, 8],
+      [-116, -54, -7], [-38, -66, -2], [40, -66, 3], [116, -54, 7],
+      [-92, 2, -5], [0, -4, 1], [92, 2, 5],
+    ] as const;
 
+    const base = isMobile ? mobile : desktop;
+    const scale = Math.min(1, spread / 180);
     return items.map((_, index) => {
-      const angle = -Math.PI / 2 + (index / count) * Math.PI * 2;
-      const horizontalSkew = index % 2 === 0 ? 1.04 : 0.96;
-      const x = Math.cos(angle) * rx * horizontalSkew;
-      const y = Math.sin(angle) * ry - lift * 0.28;
-      const rotation = Math.sin(angle * 1.6) * tilt;
-      return { x, y, rotation };
+      const [x, y, rotation] = base[index % base.length];
+      return {
+        x: x * scale,
+        y: y * scale - lift * 0.08,
+        rotation: rotation * Math.min(1, tilt / 8),
+      };
     });
   }, [items, isMobile, lift, spread, tilt]);
 
@@ -107,7 +113,9 @@ export default function FolderFloat({
         ease: [0.22, 1, 0.36, 1] as const,
       };
 
-  const handleFolderClick = () => setOpen(value => !value);
+  const handleFolderClick = () => {
+    if (effectiveTrigger === 'click') setOpen(value => !value);
+  };
   const handleSelect = (value: string, index: number) => {
     setSelected(index);
     onSelect?.(value, index);
