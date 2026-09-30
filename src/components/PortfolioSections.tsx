@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Heart, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
-import FolderFloat from './FolderFloat';
-import { useAppStore } from '../lib/store';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
@@ -81,54 +79,109 @@ function Projects() {
 function ProjectPart({label,text}:{label:string;text:string}) { return <div className="mt-4"><p className="font-handwriting text-lg text-[var(--accent-primary)]">{label}</p><p className="text-sm text-[var(--text-secondary)] leading-relaxed">{text}</p></div>; }
 
 function Skills() {
-  const theme = useAppStore(s => s.theme);
-  const animations = useAppStore(s => s.animations);
-
-  const folderTheme = theme === 'espresso'
-    ? {
-        folderColor: '#1B1714',
-        frontColor: '#2B2420',
-        paperColor: '#302925',
-        itemColor: '#302925',
-        itemTextColor: '#F7F0E6',
-        labelColor: '#FFFFFF',
-      }
-    : {
-        folderColor: '#3F3F46',
-        frontColor: '#52525B',
-        paperColor: '#F5F5F5',
-        itemColor: '#F5F5F5',
-        itemTextColor: '#18181B',
-        labelColor: '#F5F5F5',
-      };
+  const [open, setOpen] = useState(false);
 
   return (
-    <Wrap id="skills" eyebrow="how I work ♡" title="Skills" className="skills-section">
-      <div className="skills-folder-wrap">
-        <FolderFloat
-          items={skills.map(([name]) => name)}
-          label="Skills"
-          sublabel="10 things I’m learning + using"
-          trigger="hover"
-          closeOnSelect
-          physics={animations !== 'calmer'}
-          drift={0.5}
-          onSelect={(value, index) => console.log(value, index)}
-          {...folderTheme}
-          width={200}
-          height={148}
-          radius={14}
-          spread={180}
-          lift={26}
-          tilt={8}
-          flapAngle={34}
-          restAngle={16}
-          openDuration={520}
-          stagger={45}
-          bounce={0.3}
-        />
+    <Wrap id="skills" eyebrow="" title="Skills" className="skills-section folder-float-section">
+      <div className="folder-float-stage">
+        <FolderFloat open={open} onToggle={() => setOpen(v => !v)} />
       </div>
     </Wrap>
+  );
+}
+
+const folderItems = [
+  'Creative',
+  'Design',
+  'Experimental',
+  'Communication',
+  'Extrovert',
+  'Adaptive',
+  'Fast learner',
+  'Team worker',
+  'Problem solver',
+  'Curious',
+] as const;
+
+const folderItemPositions = [
+  [-118, -150, -3],
+  [-32, -174, 2],
+  [68, -154, 3],
+  [-145, -91, -4],
+  [-47, -102, 2],
+  [45, -91, -3],
+  [145, -72, 4],
+  [-102, -26, -2],
+  [4, -38, 2],
+  [105, -28, -3],
+] as const;
+
+function FolderFloat({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  return (
+    <div
+      className={`folder-float ${open ? 'is-open' : ''}`}
+      style={{
+        '--folder-width': '256px',
+        '--folder-height': '148px',
+        '--folder-radius': '16px',
+        '--folder-spread': '195px',
+        '--folder-lift': '34px',
+        '--folder-tilt': '8deg',
+        '--folder-flap-open': '36deg',
+        '--folder-flap-rest': '16deg',
+        '--folder-open-duration': '520ms',
+        '--folder-stagger': '45ms',
+        '--folder-bounce': '0.3',
+        '--folder-color': '#ffffff',
+        '--folder-front': '#d4956a',
+        '--folder-paper': '#f5f5f5',
+        '--folder-item': '#fcf3cc',
+        '--folder-item-text': '#18181b',
+        '--folder-label': '#f5f5f5',
+      } as React.CSSProperties}
+    >
+      <div className="folder-float-cloud" aria-hidden={!open}>
+        {folderItems.map((item, index) => {
+          const [x, y, rotation] = folderItemPositions[index];
+          return (
+            <button
+              key={item}
+              type="button"
+              className="folder-float-pill"
+              style={{
+                '--pill-x': `${x}px`,
+                '--pill-y': `${y}px`,
+                '--pill-rotation': `${rotation}deg`,
+                '--pill-delay': `${index * 45}ms`,
+              } as React.CSSProperties}
+              tabIndex={open ? 0 : -1}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggle();
+              }}
+            >
+              {item}
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        className="folder-float-button"
+        aria-expanded={open}
+        aria-label={open ? 'Close skills folder' : 'Open skills folder'}
+        onClick={onToggle}
+      >
+        <span className="folder-float-tab" aria-hidden="true" />
+        <span className="folder-float-paper" aria-hidden="true" />
+        <span className="folder-float-back" aria-hidden="true" />
+        <span className="folder-float-flap">
+          <span className="folder-float-label">Skills</span>
+          <span className="folder-float-sublabel">10 things I’m learning + using</span>
+        </span>
+      </button>
+    </div>
   );
 }
 
