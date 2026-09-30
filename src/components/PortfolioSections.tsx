@@ -1,26 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Heart, ExternalLink } from 'lucide-react';
-import { FolderFloat } from './FolderFloat';
+import React, { useState } from 'react';
+import { Github, Instagram, Linkedin, Mail, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
+// @ts-ignore — FolderFloat is intentionally kept as the official JS-CSS React Bits variant.
+import FolderFloat from './FolderFloat';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
   { title: 'MiniCPM-V Apps', label: 'Contribution · Android', what: 'An English-localized, UI/UX-refined Android experience based on OpenBMB MiniCPM-V Apps.', why: 'I wanted the app to feel cleaner, softer and more at home on a modern Android device.', learned: 'Small visual decisions and usability refinements can completely change how a technical product feels.', github: 'https://github.com/Coderarshil/MiniCPM-V-Apps' },
   { title: 'Mosquito Risk', label: 'Open Source · Computational Project', what: 'A climate-informed mosquito risk assessment prototype using weather data and environmental modeling.', why: 'I wanted to turn environmental variables into something understandable and useful through computation.', learned: 'Mixing APIs, mathematical relationships, geospatial thinking and ML ideas is messy — and fun.', github: 'https://github.com/Coderarshil/Mosquito-risk', demo: 'https://mosquito-risk-zeta.vercel.app/', demoLabel: 'Demo' },
 ];
-
-const skills = [
-  ['Fast learner', Lightbulb],
-  ['Team worker', Users],
-  ['Problem solver', Zap],
-  ['Communication', Mail],
-  ['Extrovert', Heart],
-  ['Adaptive', Sparkles],
-  ['Creative', Palette],
-  ['Design', Code2],
-  ['Experimental', Lightbulb],
-  ['Curious', BookOpen],
-] as const;
 
 const done = [
   ['Built and open-sourced a Kotlin text-layout library.', '2026'],
@@ -57,7 +45,7 @@ export const PortfolioSections = React.memo(function PortfolioSections() {
 });
 
 function Wrap({ id, eyebrow, title, children, className='' }: { id:string; eyebrow:string; title:string; children:React.ReactNode; className?:string }) {
-  return <section id={id} className={`max-w-[1400px] mx-auto px-4 sm:px-6 py-12 sm:py-16 ${className}`}><div className={`text-center ${eyebrow ? 'mb-8 sm:mb-10' : 'mb-5 sm:mb-7'}`}>{eyebrow && <p className="font-handwriting text-xl text-[var(--accent-primary)]">{eyebrow}</p>}<h2 className="font-serif text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mt-1">{title}</h2></div>{children}</section>;
+  return <section id={id} className={`max-w-[1400px] mx-auto px-4 sm:px-6 py-12 sm:py-16 ${className}`}><div className="text-center mb-8 sm:mb-10">{eyebrow && <p className="font-handwriting text-xl text-[var(--accent-primary)]">{eyebrow}</p>}<h2 className="font-serif text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mt-1">{title}</h2></div>{children}</section>;
 }
 
 function About() {
@@ -81,12 +69,45 @@ function ProjectPart({label,text}:{label:string;text:string}) { return <div clas
 
 function Skills() {
   return (
-    <Wrap id="skills" eyebrow="" title="Skills" className="skills-section folder-skills-section">
-      <FolderFloat />
+    <Wrap id="skills" eyebrow="" title="Skills" className="skills-section">
+      <div className="skills-folder-float-stage">
+        {/* Official React Bits FolderFloat — JS-CSS variant. */}
+        <FolderFloat
+          items={[
+            'Try a warmer palette',
+            'Tighten the spacing',
+            'Logo feels small',
+            'Love the new hero'
+          ]}
+          label="Skills??"
+          sublabel="Just a student"
+          trigger="click"
+          closeOnSelect
+          physics
+          drift={0.5}
+          onSelect={(value, index) => console.log(value, index)}
+          folderColor="#ffffff"
+          frontColor="#d4956a"
+          paperColor="#f5f5f5"
+          itemColor="#fcf3cc"
+          itemTextColor="#18181b"
+          labelColor="#f5f5f5"
+          width={256}
+          height={148}
+          radius={16}
+          spread={195}
+          lift={34}
+          tilt={8}
+          flapAngle={36}
+          restAngle={16}
+          openDuration={520}
+          stagger={45}
+          bounce={0.3}
+        />
+      </div>
     </Wrap>
   );
 }
-
 function ThingsDone() {
   return <Wrap id="done" eyebrow="a few pages from the notebook" title="Things I’ve Done"><div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">{done.map(([text,date],i) => <motion.div key={text} whileHover={{ x:i%2?2:-2 }} className="relative bg-[var(--sticky-bg)] border border-[var(--sticky-border)] rounded-xl p-5 shadow-sm"><div className="absolute -top-2 left-1/2 -translate-x-1/2 w-14 h-5 bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10 rotate-2"/><div className="flex items-start justify-between gap-3"><p className="font-handwriting text-xl text-[var(--sticky-text)]">{text}</p><span className="text-xs font-medium text-[var(--sticky-text)]/70 mt-1 whitespace-nowrap">{date}</span></div></motion.div>)}</div></Wrap>;
 }

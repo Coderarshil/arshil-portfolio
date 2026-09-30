@@ -298,24 +298,31 @@ html { scroll-padding-top: 90px; }
 section[id] { scroll-margin-top: 90px; }
 .portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* Mobile stability pass: keep the contact card inside the viewport, keep the header above hero controls, and give the five-slot bottom nav explicit columns. */
-@media (max-width: 639px) {
-  .contact-section {
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    overflow: visible;
-  }
+/* FolderFloat placement: preserve the original section rhythm while allowing the official component to overflow for its floating notes. */
+.skills-section { overflow: visible; }
+.skills-folder-float-stage {
+  width: min(100%, 520px);
+  min-height: 330px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  padding: 36px 0 34px;
+  box-sizing: border-box;
+}
+.skills-folder-float-stage .folder-float {
+  flex: 0 0 auto;
+}
 
-  .contact-section .contact-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    box-sizing: border-box;
+@media (max-width: 639px) {
+  .skills-folder-float-stage {
+    width: 100%;
+    min-height: 330px;
+    padding: 36px 0 34px;
   }
 }
+
 
 /* Header must always sit above hero buttons and sticky artwork. */
 header { z-index: 70 !important; }
@@ -421,98 +428,4 @@ footer {
   footer > div {
     padding-bottom: 0.75rem !important;
   }
-}
-
-/* React Bits Folder Float — tuned to the supplied 256×148 reference. */
-.folder-skills-section > div:first-child:has(> p:empty) { display: none; }
-.folder-skills-section { padding-top: 2.5rem; padding-bottom: 4.5rem; }
-.folder-float { width: 100%; display: flex; justify-content: center; overflow: visible; }
-.folder-float-stage {
-  position: relative;
-  width: 256px;
-  height: 250px;
-  margin: 0 auto;
-  perspective: 900px;
-  overflow: visible;
-}
-.folder-float-items { position: absolute; inset: 0; pointer-events: none; z-index: 30; }
-.folder-float-pill {
-  position: absolute;
-  left: 50%;
-  top: 146px;
-  transform: translate(-50%, -50%);
-  min-height: 30px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #fcf3cc;
-  color: #18181b;
-  border: 1px solid rgba(24,24,27,.055);
-  box-shadow: 0 5px 13px rgba(75,58,35,.14), 0 1px 2px rgba(24,24,27,.08);
-  font: 500 11px/1.05 Inter, sans-serif;
-  white-space: nowrap;
-  transform-origin: center;
-  will-change: transform, opacity;
-}
-.folder-float-button {
-  position: absolute;
-  left: 50%;
-  top: 92px;
-  width: 256px;
-  height: 148px;
-  transform: translateX(-50%);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  appearance: none;
-  overflow: visible;
-  filter: drop-shadow(0 15px 17px rgba(50,36,25,.15));
-  z-index: 20;
-}
-.folder-float-button:focus-visible { outline: 2px solid rgba(139,69,19,.45); outline-offset: 5px; border-radius: 18px; }
-.folder-float-back,
-.folder-float-paper,
-.folder-float-flap,
-.folder-float-front { position: absolute; display: block; }
-.folder-float-back {
-  left: 18px; top: 14px; width: 220px; height: 108px;
-  background: #fff;
-  border-radius: 16px 16px 12px 12px;
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,.035);
-}
-.folder-float-paper {
-  left: 27px; top: 30px; width: 202px; height: 98px;
-  background: #f5f5f5;
-  border-radius: 10px 10px 8px 8px;
-  box-shadow: 0 3px 9px rgba(20,20,20,.07);
-  transform-origin: 22% 100%;
-}
-.folder-float-flap {
-  left: 0; top: 20px; width: 256px; height: 92px;
-  background: #d4956a;
-  border-radius: 16px 16px 13px 13px;
-  transform-origin: 18% 0%;
-  backface-visibility: hidden;
-  z-index: 3;
-}
-.folder-float-front {
-  left: 0; top: 49px; width: 256px; height: 99px;
-  background: #d4956a;
-  border-radius: 16px;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding: 0 0 28px 34px;
-  box-sizing: border-box;
-  color: #f5f5f5;
-  transform-origin: 50% 100%;
-}
-.folder-float-label { font: 600 16px/1.1 Inter, sans-serif; letter-spacing: -.02em; }
-.folder-float-sublabel { margin-top: 5px; font: 500 13px/1.1 Inter, sans-serif; opacity: .82; }
-
-@media (max-width: 639px) {
-  .folder-skills-section { padding-top: 1.5rem; padding-bottom: 4rem; }
-  .folder-float-stage { transform: scale(.72); transform-origin: top center; height: 188px; margin-bottom: -62px; }
 }
