@@ -302,13 +302,13 @@ section[id] { scroll-margin-top: 90px; }
 .skills-section { overflow: visible; }
 .skills-folder-float-stage {
   width: min(100%, 520px);
-  min-height: 330px;
+  min-height: 410px;
   margin: 0 auto;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   overflow: visible;
-  padding: 36px 0 34px;
+  padding: 210px 0 34px;
   box-sizing: border-box;
 }
 .skills-folder-float-stage .folder-float {
@@ -318,8 +318,8 @@ section[id] { scroll-margin-top: 90px; }
 @media (max-width: 639px) {
   .skills-folder-float-stage {
     width: 100%;
-    min-height: 330px;
-    padding: 36px 0 34px;
+    min-height: 430px;
+    padding: 225px 0 34px;
   }
 }
 

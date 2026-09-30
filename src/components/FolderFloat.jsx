@@ -81,6 +81,7 @@ export default function FolderFloat({
   const [popped, setPopped] = useState(-1);
   const [live, setLive] = useState(false);
   const [sizes, setSizes] = useState([]);
+  const [viewportWidth, setViewportWidth] = useState(() => (typeof window === 'undefined' ? 0 : window.innerWidth));
   const anchorRef = useRef(null);
   const pillRefs = useRef([]);
   const world = useRef({ engine: null, bodies: [], sizes: [], raf: 0, last: 0, t0: 0, drag: null, zone: null, live: false });
@@ -91,7 +92,18 @@ export default function FolderFloat({
   const list = items.map(item => (typeof item === 'string' ? { label: item, value: item } : item));
   const n = list.length;
   const sub = sublabel || `${n} ${n === 1 ? 'note' : 'notes'}`;
-  const pos = layout(list, spread, lift, tilt, sizes);
+  // Keep the official spread value on larger screens, but constrain the physical
+  // layout on narrow viewports so pills never run outside the mobile viewport.
+  const effectiveSpread = viewportWidth > 0 && viewportWidth < 680
+    ? Math.min(spread, Math.max(124, (viewportWidth - 40) / 2))
+    : spread;
+  const pos = layout(list, effectiveSpread, lift, tilt, sizes);
+
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const labelsKey = list.map(item => item.label).join('|');
   useLayoutEffect(() => {
@@ -136,7 +148,7 @@ export default function FolderFloat({
     w.engine = engine;
     w.sizes = els.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
     const ys = pos.map(p => p.y);
-    const zone = { left: -spread - ZONE_PAD, right: spread + ZONE_PAD, top: Math.min(...ys) - ZONE_PAD, bottom: -lift + Math.max(...w.sizes.map(s => s.h)) };
+    const zone = { left: -effectiveSpread - ZONE_PAD, right: effectiveSpread + ZONE_PAD, top: Math.min(...ys) - ZONE_PAD, bottom: -lift + Math.max(...w.sizes.map(s => s.h)) };
     w.zone = zone;
     w.bodies = els.map((el, i) => {
       const { w: bw, h: bh } = w.sizes[i];
@@ -178,7 +190,7 @@ export default function FolderFloat({
       s.raf = requestAnimationFrame(tick);
     };
     w.raf = requestAnimationFrame(tick);
-  }, [n, spread, lift, pos.map(p => `${p.x},${p.y}`).join('|')]);
+  }, [n, effectiveSpread, lift, pos.map(p => `${p.x},${p.y}`).join('|')]);
 
   const set = useCallback(next => {
     if (!next) stopPhysics();
@@ -188,6 +200,13 @@ export default function FolderFloat({
       return next;
     });
   }, [stopPhysics]);
+
+  useEffect(() => {
+    if (!open || !physics || !world.current.engine) return;
+    stopPhysics();
+    liveTimer.current = setTimeout(startPhysics, 40);
+    return () => clearTimeout(liveTimer.current);
+  }, [effectiveSpread]);
 
   useEffect(() => {
     clearTimeout(liveTimer.current);
@@ -272,7 +291,7 @@ export default function FolderFloat({
       onKeyDown={e => { if (e.key === 'Escape' && open) { e.stopPropagation(); set(false); } }}
       style={{
         '--ff-w': `${width}px`, '--ff-h': `${height}px`, '--ff-r': `${radius}px`, '--ff-back': folderColor, '--ff-front': frontColor,
-        '--ff-paper': paperColor, '--ff-item': itemColor, '--ff-item-ink': itemTextColor, '--ff-label': labelColor, '--ff-spread': `${spread}px`,
+        '--ff-paper': paperColor, '--ff-item': itemColor, '--ff-item-ink': itemTextColor, '--ff-label': labelColor, '--ff-spread': `${effectiveSpread}px`,
         '--ff-lift': `${lift}px`, '--ff-angle': `${flapAngle}deg`, '--ff-rest': `${restAngle}deg`, '--ff-open': `${openDuration}ms`,
         '--ff-close': `${Math.round(openDuration * 0.6)}ms`, '--ff-stagger': `${stagger}ms`, '--ff-n': n,
         '--ff-spring': `cubic-bezier(0.34, ${(1 + bounce * 1.9).toFixed(2)}, 0.64, 1)`
