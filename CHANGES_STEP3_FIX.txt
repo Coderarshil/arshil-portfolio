@@ -1,0 +1,7 @@
+STEP 3 FIX — SKILLS FOLDER CENTERING
+
+- Kept the supplied FolderFloat prop configuration: hover trigger, closeOnSelect, physics, drift 0.5, width 200, height 148, radius 14, spread 180, lift 26, tilt 8, flapAngle 34, restAngle 16, openDuration 520, stagger 45, bounce 0.3.
+- Preserved the portfolio's existing 10 skill labels.
+- Fixed the mobile/desktop centering bug caused by Motion's transform output overriding the CSS translate(-50%, -50%) centering transform.
+- Folder and papers now use CSS centering offsets that remain compatible with Motion x/y transforms.
+- No other portfolio section was changed.

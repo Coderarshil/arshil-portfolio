@@ -657,8 +657,8 @@ html.lenis body {
 
 .folder-float-paper {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: calc(50% - (clamp(92px, 16vw, 142px) / 2));
+  top: calc(50% - 26px);
   width: clamp(92px, 16vw, 142px);
   min-height: 52px;
   padding: 0.72rem 0.82rem;
@@ -707,11 +707,10 @@ html.lenis body {
 
 .folder-float-shell {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: calc(50% - (var(--folder-width) / 2));
+  top: calc(50% - (var(--folder-height) / 2));
   width: var(--folder-width);
   height: var(--folder-height);
-  transform: translate(-50%, -50%);
   z-index: 30;
   transform-style: preserve-3d;
 }
@@ -795,6 +794,8 @@ html.lenis body {
   }
 
   .folder-float-paper {
+    left: calc(50% - 56px);
+    top: calc(50% - 24px);
     width: 112px;
     min-height: 48px;
     padding: 0.58rem 0.6rem;
