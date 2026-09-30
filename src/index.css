@@ -590,7 +590,7 @@ html.lenis body {
   transition-behavior: allow-discrete;
 }
 
-/* Step 2: ambient Hero flock. The canvas is deliberately below all Hero UI. */
+/* Step 2: Vanta Birds lives only inside the Hero and stays below all Hero UI. */
 .hero-section {
   position: relative;
   isolation: isolate;
@@ -603,7 +603,13 @@ html.lenis body {
   height: 100%;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-birds canvas {
   display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .hero-content {
