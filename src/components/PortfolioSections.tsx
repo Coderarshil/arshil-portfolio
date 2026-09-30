@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Heart, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
+import FolderFloat from './FolderFloat';
+import { useAppStore } from '../lib/store';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
@@ -79,129 +81,54 @@ function Projects() {
 function ProjectPart({label,text}:{label:string;text:string}) { return <div className="mt-4"><p className="font-handwriting text-lg text-[var(--accent-primary)]">{label}</p><p className="text-sm text-[var(--text-secondary)] leading-relaxed">{text}</p></div>; }
 
 function Skills() {
-  const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const theme = useAppStore(s => s.theme);
+  const animations = useAppStore(s => s.animations);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 639px)');
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener?.('change', update);
-    return () => mq.removeEventListener?.('change', update);
-  }, []);
+  const folderTheme = theme === 'espresso'
+    ? {
+        folderColor: '#1B1714',
+        frontColor: '#2B2420',
+        paperColor: '#302925',
+        itemColor: '#302925',
+        itemTextColor: '#F7F0E6',
+        labelColor: '#FFFFFF',
+      }
+    : {
+        folderColor: '#3F3F46',
+        frontColor: '#52525B',
+        paperColor: '#F5F5F5',
+        itemColor: '#F5F5F5',
+        itemTextColor: '#18181B',
+        labelColor: '#F5F5F5',
+      };
 
   return (
     <Wrap id="skills" eyebrow="how I work ♡" title="Skills" className="skills-section">
-      <div className="relative mx-auto w-[min(96vw,700px)] aspect-square sm:mt-2">
-        <motion.div
-          className="absolute inset-0 rounded-full border border-[var(--border-color)]/35"
-          animate={{ opacity: isMobile ? (open ? 1 : 0) : 1 }}
-          transition={{ duration: 0.35 }}
-          aria-hidden="true"
+      <div className="skills-folder-wrap">
+        <FolderFloat
+          items={skills.map(([name]) => name)}
+          label="Skills"
+          sublabel="10 things I’m learning + using"
+          trigger="hover"
+          closeOnSelect
+          physics={animations !== 'calmer'}
+          drift={0.5}
+          onSelect={(value, index) => console.log(value, index)}
+          {...folderTheme}
+          width={200}
+          height={148}
+          radius={14}
+          spread={180}
+          lift={26}
+          tilt={8}
+          flapAngle={34}
+          restAngle={16}
+          openDuration={520}
+          stagger={45}
+          bounce={0.3}
         />
-
-        <motion.button
-          type="button"
-          onClick={() => setOpen(v => !v)}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-inner flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40 skills-center"
-          animate={{ width: isMobile ? (open ? 54 : 118) : 160, height: isMobile ? (open ? 54 : 118) : 160, rotate: isMobile && open ? 90 : 0 }}
-          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-          aria-expanded={isMobile ? open : undefined}
-          aria-label={isMobile ? (open ? 'Close skills' : 'Show skills') : 'Skills'}
-        >
-          <span className="skills-desktop-center text-center px-4">
-            <span className="block font-handwriting text-2xl text-[var(--accent-primary)]">me, in the middle</span>
-            <span className="block font-serif text-xl font-bold leading-tight text-[var(--text-primary)] mt-1">always figuring it out</span>
-          </span>
-          <motion.span
-            className="font-handwriting text-[var(--accent-primary)] skills-mobile-center"
-            animate={{ opacity: open ? 0 : 1, scale: open ? 0.65 : 1 }}
-            transition={{ duration: 0.2 }}
-          >Skills??</motion.span>
-          <motion.span
-            className="absolute text-2xl text-[var(--accent-primary)] skills-mobile-center"
-            animate={{ opacity: open ? 1 : 0, rotate: open ? -90 : 0, scale: open ? 1 : 0.6 }}
-            transition={{ duration: 0.22, delay: open ? 0.12 : 0 }}
-          >×</motion.span>
-        </motion.button>
-
-        {skills.map(([name, Icon], i) => {
-          const angle = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
-          return (
-            <SkillOrbitItem
-              key={name}
-              name={name}
-              Icon={Icon}
-              angle={angle}
-              index={i}
-              open={open}
-              isMobile={isMobile}
-            />
-          );
-        })}
       </div>
     </Wrap>
-  );
-}
-
-function SkillOrbitItem({
-  name,
-  Icon,
-  angle,
-  index,
-  open,
-  isMobile,
-}: {
-  name: string;
-  Icon: React.ComponentType<{ size?: number; className?: string }>;
-  angle: number;
-  index: number;
-  open: boolean;
-  isMobile: boolean;
-}) {
-  // Desktop keeps the original circular orbit. On mobile, use a single
-  // carefully spaced ring with positions chosen for the actual chip widths.
-  // This keeps every word intact instead of solving collisions by chopping
-  // words onto multiple lines.
-  const desktopRadius = 255;
-  // Mobile uses a collision-free 3-2-2-3 ring layout rather than a
-  // mathematically even orbit. This keeps long labels like
-  // \"Experimental\" and \"Communication\" intact on narrow screens.
-  const mobilePositions = [
-    [0, -140], [-105, -60], [105, -60], [110, 0], [110, 60],
-    [105, 110], [0, 150], [-105, 110], [-110, 60], [-110, 0],
-  ] as const;
-  const [mobileX, mobileY] = mobilePositions[index];
-  const x = isMobile ? mobileX : Math.cos(angle) * desktopRadius;
-  const y = isMobile ? mobileY : Math.sin(angle) * desktopRadius;
-
-  return (
-    <motion.div
-      className="skill-orbit-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      initial={false}
-      animate={{
-        opacity: isMobile ? (open ? 1 : 0) : 1,
-        scale: isMobile ? (open ? 1 : 0.35) : 1,
-        x: open ? x : 0,
-        y: open ? y : 0,
-      }}
-      transition={{
-        duration: 0.58,
-        delay: isMobile ? (open ? index * 0.025 : (skills.length - index) * 0.012) : index * 0.015,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      style={{ '--skill-x': `${x}px`, '--skill-y': `${y}px` } as React.CSSProperties}
-    >
-      <motion.div
-        whileHover={{ scale: 1.07 }}
-        className="skill-chip w-max min-w-[88px] max-w-[132px] min-h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-3 py-2 flex items-center justify-center text-center overflow-visible"
-      >
-        <div className="flex w-max items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-[1.15] text-[var(--text-primary)] whitespace-nowrap">
-          <Icon size={14} className="text-[var(--accent-primary)] shrink-0" />
-          <span className="whitespace-nowrap">{name}</span>
-        </div>
-      </motion.div>
-    </motion.div>
   );
 }
 
