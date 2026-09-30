@@ -430,7 +430,7 @@ footer {
   }
 }
 
-/* Hero flock background restored from the portfolio's bird version. */
+/* Vanta Birds lives only inside the Hero and stays below all Hero UI. */
 .hero-section {
   position: relative;
   isolation: isolate;
@@ -443,7 +443,13 @@ footer {
   height: 100%;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-birds canvas {
   display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .hero-content {
