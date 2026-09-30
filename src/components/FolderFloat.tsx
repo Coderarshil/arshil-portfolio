@@ -1,15 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+'use client';
+
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import * as Matter from 'matter-js';
+
+export type FolderFloatItem = string | { label: string; value: string };
+export type FolderFloatTrigger = 'hover' | 'click';
+
+type Size = { w: number; h: number };
+type Entry = { label: string; value: string };
 
 type FolderFloatProps = {
-  items: string[];
-  label: string;
-  sublabel: string;
-  trigger?: 'hover' | 'click';
+  items?: FolderFloatItem[];
+  label?: string;
+  sublabel?: string;
+  trigger?: FolderFloatTrigger;
+  defaultOpen?: boolean;
   closeOnSelect?: boolean;
   physics?: boolean;
   drift?: number;
   onSelect?: (value: string, index: number) => void;
+  onOpenChange?: (open: boolean) => void;
   folderColor?: string;
   frontColor?: string;
   paperColor?: string;
@@ -27,25 +37,71 @@ type FolderFloatProps = {
   openDuration?: number;
   stagger?: number;
   bounce?: number;
+  className?: string;
 };
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const DEFAULT_ITEMS: FolderFloatItem[] = ['Try a warmer palette', 'Tighten the spacing', 'Logo feels small', 'Love the new hero'];
+const PAD = 28;
+const CHAR = 6.8;
+const GAP = 12;
+const ROW = 52;
+
+const jitter = (i: number) => {
+  const x = Math.sin(i * 12.9898 + 4.1414) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+function layout(list: Entry[], spread: number, lift: number, tilt: number, sizes: (Size | null)[]) {
+  const rows: { items: { i: number; pw: number }[]; width: number }[] = [];
+  let row: { i: number; pw: number }[] = [];
+  let rowWidth = 0;
+
+  list.forEach((item, i) => {
+    const pw = sizes[i]?.w ?? PAD + item.label.length * CHAR;
+    if (row.length && rowWidth + GAP + pw > spread * 2) {
+      rows.push({ items: row, width: rowWidth });
+      row = [];
+      rowWidth = 0;
+    }
+    row.push({ i, pw });
+    rowWidth += (row.length > 1 ? GAP : 0) + pw;
+  });
+  if (row.length) rows.push({ items: row, width: rowWidth });
+
+  const pos: { x: number; y: number; r: number }[] = [];
+  rows.forEach((r, ri) => {
+    let x = -r.width / 2;
+    const shift = (ri % 2 ? 1 : -1) * Math.min(16, spread * 0.1);
+    r.items.forEach(({ i, pw }) => {
+      const j = jitter(i);
+      pos[i] = {
+        x: x + pw / 2 + shift + (j - 0.5) * 6,
+        y: -lift - ri * ROW - j * 6,
+        r: tilt * (j * 2 - 1),
+      };
+      x += pw + GAP;
+    });
+  });
+  return pos;
+}
 
 export default function FolderFloat({
-  items,
-  label,
-  sublabel,
+  items = DEFAULT_ITEMS,
+  label = 'Design feedback',
+  sublabel = '',
   trigger = 'hover',
+  defaultOpen = false,
   closeOnSelect = true,
   physics = true,
   drift = 0.5,
   onSelect,
-  folderColor = '#d5b08a',
-  frontColor = '#c89568',
-  paperColor = '#fffaf4',
-  itemColor = '#fffaf4',
-  itemTextColor = '#2c1810',
-  labelColor = '#fffaf4',
+  onOpenChange,
+  folderColor = '#3f3f46',
+  frontColor = '#52525b',
+  paperColor = '#f5f5f5',
+  itemColor = '#f5f5f5',
+  itemTextColor = '#18181b',
+  labelColor = '#f5f5f5',
   width = 200,
   height = 148,
   radius = 14,
@@ -57,183 +113,211 @@ export default function FolderFloat({
   openDuration = 520,
   stagger = 45,
   bounce = 0.3,
+  className = '',
 }: FolderFloatProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [open, setOpen] = useState(defaultOpen);
+  const [live, setLive] = useState(false);
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [reduce, setReduce] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const pillRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const world = useRef<{ engine: Matter.Engine | null; bodies: Matter.Body[]; raf: number; last: number; t0: number }>({ engine: null, bodies: [], raf: 0, last: 0, t0: 0 });
+  const list: Entry[] = items.map(item => (typeof item === 'string' ? { label: item, value: item } : item));
+  const n = list.length;
+  const sub = sublabel || `${n} ${n === 1 ? 'note' : 'notes'}`;
+  const pos = layout(list, spread, lift, tilt, sizes);
+
+  const hover = trigger === 'hover';
+  const [coarse, setCoarse] = useState(false);
+  const effectiveClick = !hover || coarse;
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 639px)');
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener?.('change', update);
-    return () => mq.removeEventListener?.('change', update);
+    const mq = window.matchMedia('(pointer: coarse)');
+    const sync = () => setCoarse(mq.matches);
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => mq.removeEventListener?.('change', sync);
   }, []);
 
-  const effectiveTrigger = isMobile ? 'click' : trigger;
-  const shouldAnimate = !(prefersReducedMotion ?? false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setReduce(mq.matches);
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => mq.removeEventListener?.('change', sync);
+  }, []);
 
-  const positions = useMemo(() => {
-    // FolderFloat-style burst: papers fan upward and outward from the
-    // folder instead of forming a circular orbit. This mirrors the
-    // reference interaction while keeping all ten portfolio skills readable.
-    const desktop = [
-      [-132, -116, -8], [-42, -150, 3], [48, -154, 7], [138, -112, 10],
-      [-158, -48, -6], [-55, -58, -2], [58, -56, 4], [158, -46, 8],
-      [-105, 18, -5], [105, 16, 6],
-    ] as const;
-    const mobile = [
-      [-92, -112, -8], [0, -138, 2], [92, -112, 8],
-      [-116, -54, -7], [-38, -66, -2], [40, -66, 3], [116, -54, 7],
-      [-92, 2, -5], [0, -4, 1], [92, 2, 5],
-    ] as const;
+  useLayoutEffect(() => {
+    const measure = () => {
+      const next = pillRefs.current.slice(0, n).map(el => (el ? { w: el.offsetWidth, h: el.offsetHeight } : null));
+      if (next.some(s => !s)) return;
+      const sized = next as Size[];
+      setSizes(prev => prev.length === sized.length && prev.every((s, i) => s.w === sized[i].w && s.h === sized[i].h) ? prev : sized);
+    };
+    measure();
+    document.fonts?.ready.then(measure);
+  }, [n, list.map(item => item.label).join('|')]);
 
-    const base = isMobile ? mobile : desktop;
-    const scale = Math.min(1, spread / 180);
-    return items.map((_, index) => {
-      const [x, y, rotation] = base[index % base.length];
-      return {
-        x: x * scale,
-        y: y * scale - lift * 0.08,
-        rotation: rotation * Math.min(1, tilt / 8),
-      };
+  const stopPhysics = useCallback(() => {
+    const w = world.current;
+    cancelAnimationFrame(w.raf);
+    w.raf = 0;
+    if (w.engine) {
+      Matter.Composite.clear(w.engine.world, false, true);
+      Matter.Engine.clear(w.engine);
+      w.engine = null;
+    }
+    w.bodies = [];
+    setLive(false);
+  }, []);
+
+  const startPhysics = useCallback(() => {
+    if (reduce || !physics || !open) return;
+    const w = world.current;
+    if (w.engine || pillRefs.current.slice(0, n).some(el => !el)) return;
+
+    const engine = Matter.Engine.create({ gravity: { x: 0, y: 0 } });
+    engine.enableSleeping = false;
+    w.engine = engine;
+    w.bodies = pillRefs.current.slice(0, n).map((el, i) => {
+      const size = { w: el!.offsetWidth, h: el!.offsetHeight };
+      const body = Matter.Bodies.rectangle(pos[i].x, pos[i].y + size.h / 2, size.w, size.h, {
+        chamfer: { radius: Math.min(size.h / 2 - 1, 16) },
+        restitution: 0.35 + bounce * 0.35,
+        friction: 0,
+        frictionAir: 0.08,
+        inertia: Infinity,
+      });
+      return body;
     });
-  }, [items, isMobile, lift, spread, tilt]);
 
-  const spring = physics && shouldAnimate
-    ? {
-        type: 'spring' as const,
-        stiffness: 210,
-        damping: clamp(28 - bounce * 10, 16, 30),
-        mass: 0.9,
-      }
-    : {
-        duration: openDuration / 1000,
-        ease: [0.22, 1, 0.36, 1] as const,
-      };
+    const zoneLeft = -spread - 8;
+    const zoneRight = spread + 8;
+    const zoneTop = Math.min(...pos.map(p => p.y)) - 16;
+    const zoneBottom = -lift + Math.max(...w.bodies.map((b, i) => sizes[i]?.h ?? 34));
+    const wall = 80;
+    Matter.Composite.add(engine.world, [
+      ...w.bodies,
+      Matter.Bodies.rectangle((zoneLeft + zoneRight) / 2, zoneTop - wall / 2, zoneRight - zoneLeft + wall * 2, wall, { isStatic: true }),
+      Matter.Bodies.rectangle((zoneLeft + zoneRight) / 2, zoneBottom + wall / 2, zoneRight - zoneLeft + wall * 2, wall, { isStatic: true }),
+      Matter.Bodies.rectangle(zoneLeft - wall / 2, (zoneTop + zoneBottom) / 2, wall, zoneBottom - zoneTop + wall * 2, { isStatic: true }),
+      Matter.Bodies.rectangle(zoneRight + wall / 2, (zoneTop + zoneBottom) / 2, wall, zoneBottom - zoneTop + wall * 2, { isStatic: true }),
+    ]);
 
-  const handleFolderClick = () => {
-    if (effectiveTrigger === 'click') setOpen(value => !value);
+    setLive(true);
+    w.last = performance.now();
+    w.t0 = w.last;
+    const tick = (now: number) => {
+      if (!world.current.engine) return;
+      const state = world.current;
+      const dt = Math.min(32, now - state.last || 16);
+      state.last = now;
+      const t = (now - state.t0) / 1000;
+      const force = Math.max(0.00001, drift * 0.00005);
+      state.bodies.forEach((body, i) => {
+        const phase = i * 1.37;
+        Matter.Body.applyForce(body, body.position, {
+          x: Math.sin(t * 0.9 + phase) * force * body.mass,
+          y: Math.cos(t * 1.2 + phase * 1.7) * force * body.mass,
+        });
+        const el = pillRefs.current[i];
+        if (el) {
+          el.style.setProperty('--x', `${body.position.x.toFixed(1)}px`);
+          el.style.setProperty('--y', `${(body.position.y - (sizes[i]?.h ?? 34) / 2).toFixed(1)}px`);
+          el.style.setProperty('--r', `${body.angle * 10 + pos[i].r}deg`);
+        }
+      });
+      Matter.Engine.update(state.engine, dt);
+      state.raf = requestAnimationFrame(tick);
+    };
+    w.raf = requestAnimationFrame(tick);
+  }, [reduce, physics, open, n, pos, spread, lift, sizes, bounce, drift]);
+
+  useEffect(() => {
+    if (!open) {
+      stopPhysics();
+      return;
+    }
+    if (!physics || reduce) return;
+    const timer = window.setTimeout(startPhysics, openDuration + Math.max(0, n - 1) * stagger + 80);
+    return () => window.clearTimeout(timer);
+  }, [open, physics, reduce, openDuration, n, stagger, startPhysics, stopPhysics]);
+
+  useEffect(() => () => stopPhysics(), [stopPhysics]);
+
+  const set = (next: boolean) => {
+    setOpen(prev => {
+      if (prev === next) return prev;
+      onOpenChange?.(next);
+      return next;
+    });
   };
-  const handleSelect = (value: string, index: number) => {
-    setSelected(index);
-    onSelect?.(value, index);
-    if (closeOnSelect) setOpen(false);
+
+  const pick = (item: Entry, i: number) => {
+    onSelect?.(item.value, i);
+    if (closeOnSelect) set(false);
   };
 
   const themeVars = {
-    '--folder-color': folderColor,
-    '--folder-front': frontColor,
-    '--folder-paper': paperColor,
-    '--folder-item': itemColor,
-    '--folder-item-text': itemTextColor,
-    '--folder-label': labelColor,
+    '--ff-w': `${width}px`,
+    '--ff-h': `${height}px`,
+    '--ff-r': `${radius}px`,
+    '--ff-back': folderColor,
+    '--ff-front': frontColor,
+    '--ff-paper': paperColor,
+    '--ff-item': itemColor,
+    '--ff-item-ink': itemTextColor,
+    '--ff-label': labelColor,
+    '--ff-spread': `${spread}px`,
+    '--ff-lift': `${lift}px`,
+    '--ff-angle': `${flapAngle}deg`,
+    '--ff-rest': `${restAngle}deg`,
+    '--ff-open': `${openDuration}ms`,
+    '--ff-stagger': `${stagger}ms`,
+    '--ff-n': n,
   } as React.CSSProperties;
 
   return (
     <div
-      className="folder-float"
-      style={{
-        ...themeVars,
-        '--folder-width': `${width}px`,
-        '--folder-height': `${height}px`,
-        '--folder-radius': `${radius}px`,
-        '--folder-open-duration': `${openDuration}ms`,
-      } as React.CSSProperties}
-      onMouseEnter={() => effectiveTrigger === 'hover' && setOpen(true)}
-      onMouseLeave={() => effectiveTrigger === 'hover' && setOpen(false)}
+      className={`folder-float${className ? ` ${className}` : ''}`}
+      style={themeVars}
+      data-open={open ? '' : undefined}
+      data-live={live ? '' : undefined}
+      data-physics={physics ? '' : undefined}
+      data-trigger={trigger}
+      onPointerEnter={hover && !coarse ? () => set(true) : undefined}
+      onPointerLeave={hover && !coarse ? () => set(false) : undefined}
     >
-      <div className="folder-float-stage" aria-label={`${label}, ${sublabel}`}>
-        <div className="folder-float-papers" aria-hidden={!open}>
-          {items.map((item, index) => {
-            const { x, y, rotation } = positions[index];
-            const targetX = open ? x : 0;
-            const targetY = open ? y : 16;
-            const targetRotate = open ? rotation : 0;
-            const driftAmount = shouldAnimate ? Math.max(0, drift) * (index % 2 === 0 ? 1 : -1) : 0;
-            const isSelected = selected === index;
-
-            return (
-              <motion.button
-                key={`${item}-${index}`}
-                type="button"
-                className="folder-float-paper"
-                initial={false}
-                animate={
-                  open
-                    ? {
-                        x: targetX,
-                        y: targetY,
-                        rotate: targetRotate,
-                        opacity: 1,
-                        scale: isSelected ? 1.04 : 1,
-                      }
-                    : {
-                        x: targetX,
-                        y: targetY,
-                        rotate: targetRotate,
-                        opacity: 0,
-                        scale: 0.72,
-                      }
-                }
-                transition={{
-                  ...spring,
-                  delay: shouldAnimate ? (open ? index * (stagger / 1000) : (items.length - index) * 0.018) : 0,
-                }}
-                whileHover={shouldAnimate ? { scale: 1.06, rotate: targetRotate + (index % 2 ? 1 : -1) } : undefined}
-                onClick={() => handleSelect(item, index)}
-                style={{
-                  '--paper-drift': `${driftAmount}px`,
-                  '--paper-index': index,
-                  pointerEvents: open ? 'auto' : 'none',
-                } as React.CSSProperties}
-                tabIndex={open ? 0 : -1}
-              >
-                <span className="folder-float-paper-tape" aria-hidden="true" />
-                <span className="folder-float-paper-text">{item}</span>
-              </motion.button>
-            );
-          })}
-        </div>
-
-        <motion.div
-          className="folder-float-shell"
-          initial={false}
-          animate={
-            shouldAnimate
-              ? {
-                  y: open ? -lift * 0.14 : 0,
-                  rotate: open ? -tilt * 0.12 : 0,
-                }
-              : undefined
-          }
-          transition={spring}
-        >
-          <motion.div
-            className="folder-float-back"
-            animate={shouldAnimate ? { rotateX: open ? 0 : 0 } : undefined}
-            transition={{ duration: openDuration / 1000 }}
-          />
-          <motion.div
-            className="folder-float-flap"
-            animate={shouldAnimate ? { rotateX: open ? flapAngle : restAngle } : { rotateX: restAngle }}
-            transition={{
-              ...(physics && shouldAnimate ? spring : { duration: openDuration / 1000, ease: [0.22, 1, 0.36, 1] as const }),
-            }}
-          />
-          <motion.button
+      <div ref={anchorRef} className="folder-float__items" aria-hidden={!open}>
+        {list.map((item, i) => (
+          <button
+            key={`${item.value}-${i}`}
+            ref={el => { pillRefs.current[i] = el; }}
             type="button"
-            className="folder-float-front"
-            onClick={handleFolderClick}
-            aria-expanded={open}
-            aria-label={open ? `Close ${label}` : `Open ${label}`}
-            whileTap={shouldAnimate ? { scale: 0.985 } : undefined}
+            className="folder-float__item"
+            style={{ '--i': i, '--x': `${pos[i]?.x ?? 0}px`, '--y': `${pos[i]?.y ?? 0}px`, '--r': `${pos[i]?.r ?? 0}deg` } as React.CSSProperties}
+            onClick={() => pick(item, i)}
+            tabIndex={open ? 0 : -1}
           >
-            <span className="folder-float-label">{label}</span>
-            <span className="folder-float-sublabel">{sublabel}</span>
-          </motion.button>
-        </motion.div>
+            <span className="folder-float__drift">{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="folder-float__folder">
+        <span className="folder-float__back" aria-hidden="true" />
+        <span className="folder-float__paper" aria-hidden="true" />
+        <div className="folder-float__front" aria-hidden="true">
+          <span className="folder-float__label">{label}</span>
+          <span className="folder-float__sub">{sub}</span>
+        </div>
+        <button
+          type="button"
+          className="folder-float__trigger"
+          aria-label={open ? `Close ${label}` : `Open ${label}`}
+          aria-expanded={open}
+          onClick={() => effectiveClick && set(!open)}
+        />
       </div>
     </div>
   );
