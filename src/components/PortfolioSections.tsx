@@ -69,15 +69,21 @@ function ProjectPart({label,text}:{label:string;text:string}) { return <div clas
 
 function Skills() {
   return (
-    <Wrap id="skills" eyebrow="" title="Skills" className="skills-section">
+    <section id="skills" className="skills-section max-w-[1400px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
       <div className="skills-folder-float-stage">
         {/* Official React Bits FolderFloat — JS-CSS variant. */}
         <FolderFloat
           items={[
-            'Try a warmer palette',
-            'Tighten the spacing',
-            'Logo feels small',
-            'Love the new hero'
+            'Fast learner',
+            'Team worker',
+            'Problem solver',
+            'Communication',
+            'Extrovert',
+            'Adaptive',
+            'Creative',
+            'Design',
+            'Experimental',
+            'Curious'
           ]}
           label="Skills??"
           sublabel="Just a student"
@@ -105,7 +111,7 @@ function Skills() {
           bounce={0.3}
         />
       </div>
-    </Wrap>
+    </section>
   );
 }
 function ThingsDone() {
