@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '../lib/store';
 import { motion, AnimatePresence } from 'motion/react';
+import { smoothScrollTo } from '../lib/smoothScroll';
 
 function getAge() {
   const dob = new Date(2008, 8, 24);
@@ -18,7 +19,7 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
   const age = useMemo(getAge, []);
 
 
-  const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (id: string) => smoothScrollTo(id, { offset: -8 });
 
   // Keep both theme artworks decoded before a theme switch so the crossfade stays
   // on the compositor instead of stalling for image decoding mid-transition.

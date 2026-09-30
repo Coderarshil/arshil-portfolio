@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Home, UserRound, FolderOpen, Mail } from 'lucide-react';
 import { useAppStore } from '../lib/store';
 import { ProfileSummary } from './ProfileSummary';
+import { smoothScrollTo } from '../lib/smoothScroll';
 
 export function BottomNav() {
   const [summaryOpen, setSummaryOpen] = useState(false);
   const theme = useAppStore(s => s.theme);
   const avatar = theme === 'espresso' ? '/arshil-espresso.webp' : '/arshil-cappuccino.webp';
-  const go = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  const go = (id: string) => smoothScrollTo(id, { offset: -8 });
   const items = [
     { label: 'Home', icon: Home, target: '#home' },
     { label: 'About', icon: UserRound, target: '#about' },
