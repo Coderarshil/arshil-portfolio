@@ -279,7 +279,7 @@ function Contact() {
           imageAlt=""
           stub={
             <div className="contact-ticket-qr-stub">
-              <img src="/arshil-contact.webp" alt="Arshil Siddiqui" />
+              <img src="/arshil-contact.png" alt="Arshil Siddiqui" />
               <span>Tap to connect</span>
             </div>
           }
@@ -323,7 +323,7 @@ function Contact() {
                   className="contact-ticket-link"
                   aria-label={label}
                 >
-                  <span className="contact-ticket-link-icon"><Icon size={28} strokeWidth={2.1} /></span>
+                  <span className="contact-ticket-link-icon" aria-hidden="true"><Icon size={34} strokeWidth={2.1} /></span>
                   <span className="contact-ticket-link-text">{label}</span>
                 </a>
               ))}
