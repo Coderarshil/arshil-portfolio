@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  ArrowLeft,
+  ArrowRight,
   Download,
   Box,
   X,
@@ -8,7 +10,6 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { clearResumePageCache, getCachedResumePage, loadResumePdf, preloadResumePages } from '../lib/pdfjs';
-import FlipCard from './FlipCard';
 
 interface ResumeModalProps {
   open: boolean;
@@ -22,6 +23,7 @@ const PAGE_COUNT = 2;
 
 export function ResumeModal({ open, onClose }: ResumeModalProps) {
   const [page, setPage] = useState(0);
+  const [flipDirection, setFlipDirection] = useState<1 | -1>(1);
   const [zoom, setZoom] = useState(1);
   const [mode, setMode] = useState<ResumeMode>('pdf');
   const [frameReady, setFrameReady] = useState(false);
@@ -31,6 +33,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
   useEffect(() => {
     if (!open) {
       setPage(0);
+      setFlipDirection(1);
       setZoom(1);
       setMode('pdf');
       setFrameReady(false);
@@ -59,6 +62,14 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
+      if (event.key === 'ArrowLeft' && mode === 'pdf') {
+        setFlipDirection(-1);
+        setPage((current) => (current - 1 + PAGE_COUNT) % PAGE_COUNT);
+      }
+      if (event.key === 'ArrowRight' && mode === 'pdf') {
+        setFlipDirection(1);
+        setPage((current) => (current + 1) % PAGE_COUNT);
+      }
     };
 
     const onMessage = (event: MessageEvent) => {
@@ -224,35 +235,46 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  <div className="absolute inset-0 flex items-stretch justify-center">
-                    <FlipCard
-                      front={<PdfPageCanvas pageNumber={1} zoom={zoom} />}
-                      back={<PdfPageCanvas pageNumber={2} zoom={zoom} />}
-                      flipped={page === 1}
-                      flipOnClick
-                      draggable
-                      dragDistance={0}
-                      tilt
-                      tiltMax={12}
-                      glare
-                      glareOpacity={0.22}
-                      hoverScale={1.03}
-                      perspective={1100}
-                      stiffness={170}
-                      damping={20}
-                      width={300}
-                      height={400}
-                      radius={0}
-                      background="var(--bg-secondary)"
-                      color="var(--text-primary)"
-                      shadow
-                      shadowColor="#000000"
-                      shadowOpacity={0.18}
-                      ariaLabel="Flip resume page"
-                      className="resume-flip-card"
-                      onFlipChange={(flipped) => setPage(flipped ? 1 : 0)}
-                    />
+                  <div className="absolute inset-0 overflow-hidden p-0" style={{ perspective: '1800px' }}>
+                    <AnimatePresence initial={false} custom={flipDirection} mode="popLayout">
+                      <motion.div
+                        key={page}
+                        custom={flipDirection}
+                        className="absolute inset-0 flex items-start justify-center"
+                        style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                        initial={{ rotateY: flipDirection * 180, opacity: 1 }}
+                        animate={{ rotateY: 0, opacity: 1 }}
+                        exit={{ rotateY: flipDirection * -180, opacity: 1 }}
+                        transition={{ duration: 0.62, ease: [0.22, 0.75, 0.25, 1] }}
+                      >
+                        <PdfPageCanvas pageNumber={page + 1} zoom={zoom} />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFlipDirection(-1);
+                      setPage((current) => (current - 1 + PAGE_COUNT) % PAGE_COUNT);
+                    }}
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] hover:border-[var(--accent-primary)] transition-all"
+                    aria-label="Previous resume page"
+                  >
+                    <ArrowLeft size={19} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFlipDirection(1);
+                      setPage((current) => (current + 1) % PAGE_COUNT);
+                    }}
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)]/95 shadow-lg grid place-items-center text-[var(--text-primary)] hover:border-[var(--accent-primary)] transition-all"
+                    aria-label="Next resume page"
+                  >
+                    <ArrowRight size={19} />
+                  </button>
                 </motion.div>
               ) : (
                 <motion.div

@@ -298,70 +298,164 @@ html { scroll-padding-top: 90px; }
 section[id] { scroll-margin-top: 90px; }
 .portfolio-link-underline { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* FolderFloat placement: preserve the original section rhythm while allowing the official component to overflow for its floating notes. */
+/* Skills interaction: desktop orbit stays open; mobile becomes a compact tap-to-reveal skill wheel. */
+.skills-section .skills-center-label { font-size: 1.45rem; }
+.skills-section .skill-chip { will-change: transform; }
+.skills-mobile-center { display: none; }
+@media (max-width: 639px) {
+  .skills-section { padding-top: 2rem; padding-bottom: 3.5rem; }
+  .skills-section > div:first-child { display: none; }
+  .skills-section > div:last-child { margin-top: 0; width: min(92vw, 330px); }
+  .skills-section .skills-desktop-center { display: none; }
+  .skills-section .skills-mobile-center { display: block; }
+  .skills-section .skill-chip { width: 86px; min-height: 38px; }
+}
+
+
+/* Final mobile polish: never split words and never let fixed UI cover the contact card. */
 .skills-section { overflow: visible; }
-
-/* Certification carousel: the center certificate uses the full viewport width.
-   No decorative border or frame is added around the carousel. */
-.certification-carousel-shell {
-  width: 100vw;
-  max-width: none;
-  height: clamp(520px, 75vw + 180px, 1180px);
-  position: relative;
-  overflow: hidden;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: 0;
-  box-sizing: border-box;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-/* The center certificate reaches the viewport edges instead of sitting inside a card/frame. */
-.certification-carousel-shell .circular-carousel {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-}
-
-/* Preserve the React Bits panorama geometry without fading the center certificate away at the screen edges. */
-.certification-carousel-shell .circular-carousel[data-shape='panorama'] .circular-carousel__view {
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-
-@media (max-width: 640px) {
-  .certification-carousel-shell {
-    height: calc(75vw + 300px);
-    min-height: 570px;
-  }
-}
-
-.skills-folder-float-stage {
-  width: min(100%, 520px);
-  min-height: 410px;
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: visible;
-  padding: 210px 0 34px;
-  box-sizing: border-box;
-}
-.skills-folder-float-stage .folder-float {
-  flex: 0 0 auto;
-}
+.skill-orbit-item { overflow: visible; }
+.skill-chip { box-sizing: border-box; }
 
 @media (max-width: 639px) {
-  .skills-folder-float-stage {
+  .skills-section {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 110px;
+  }
+
+  .skills-section > div:last-child {
+    width: min(96vw, 350px);
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .skills-section .skill-chip {
+    width: 104px;
+    min-height: 42px;
+    padding: 6px 8px;
+  }
+
+  .skills-section .skill-chip > div {
     width: 100%;
-    min-height: 430px;
-    padding: 225px 0 34px;
+  }
+
+  .skills-section .skill-chip span {
+    max-width: 88px;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+
+  .contact-section {
+    scroll-margin-top: 105px;
+    padding-top: 105px;
+    padding-bottom: 165px;
+  }
+
+  .contact-section > div:last-child {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-section .font-handwriting {
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 }
 
+
+/* Mobile skills: chips size to their words and use a fixed collision-free orbit. */
+@media (max-width: 639px) {
+  .skills-section > div:last-child {
+    width: min(96vw, 350px);
+    height: min(96vw, 350px);
+    aspect-ratio: 1 / 1;
+    overflow: visible;
+  }
+
+  .skills-section .skill-chip {
+    width: max-content !important;
+    min-width: 88px;
+    max-width: 132px;
+    min-height: 42px;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+
+  .skills-section .skill-chip > div {
+    width: max-content;
+    max-width: none;
+  }
+
+  .skills-section .skill-chip span {
+    max-width: none;
+    white-space: nowrap;
+    overflow: visible;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    hyphens: none;
+  }
+}
+
+
+/* Mobile stability pass: keep the contact card inside the viewport, keep the header above hero controls, and give the five-slot bottom nav explicit columns. */
+@media (max-width: 639px) {
+  .contact-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    overflow: visible;
+  }
+
+  .contact-section .contact-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .skills-section > div:last-child {
+    width: min(100%, 330px) !important;
+    max-width: 330px !important;
+    height: min(100vw - 30px, 330px) !important;
+    max-height: 330px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .skills-section .skill-chip {
+    min-width: 80px !important;
+    max-width: 118px !important;
+    min-height: 30px !important;
+    padding: 5px 9px !important;
+    line-height: 1 !important;
+  }
+
+  .skills-section .skill-chip > div {
+    gap: 5px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+  }
+
+  .skills-section .skill-chip span {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+
+  .skills-section .skill-chip svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+}
 
 /* Header must always sit above hero buttons and sticky artwork. */
 header { z-index: 70 !important; }
@@ -469,329 +563,222 @@ footer {
   }
 }
 
-/* Vanta Birds lives only inside the Hero and stays below all Hero UI. */
-.hero-section {
-  position: relative;
-  isolation: isolate;
-}
-
-.hero-birds {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
+/* Contact ticket — compact horizontal business-card layout at every viewport.
+   The portrait is a transparent PNG, so no extra image background is added. */
+.contact-section .contact-ticket {
+  width: min(100%, 780px);
+  min-height: 218px;
+  margin: 0 auto;
+  padding: 22px 24px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px 190px;
+  align-items: center;
+  gap: 22px;
   overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border-color) 78%, var(--accent-primary) 22%);
+  border-radius: 22px;
+  background: var(--bg-card);
+  box-shadow: 0 14px 32px var(--shadow);
+  text-align: left;
+  transform-origin: center;
 }
 
-.hero-birds canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-birds {
-    display: none;
-  }
-}
-
-/* Step 4: keep React Bits FlipCard inside the existing A4 resume viewer. */
-.resume-flip-card {
-  --fc-w: 100% !important;
-  --fc-h: 100% !important;
-  --fc-radius: 0px !important;
-}
-.resume-flip-card .flip-card__face { border-radius: 0; }
-.resume-flip-card .flip-card__shadow { display: none; }
-
-/* Step 6 — TearTicket contact card */
-.contact-ticket-wrap {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 12px 0 18px;
-}
-.contact-ticket-content {
-  width: 100%;
-  height: 100%;
+.contact-ticket__links {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px;
-  gap: 18px;
-  align-items: center;
-  color: #f5f5f5;
-}
-.contact-ticket-copy { min-width: 0; }
-.contact-ticket-kicker {
-  margin: 0;
-  font-family: 'Gochi Hand', 'Comic Sans MS', cursive;
-  font-size: 1.25rem;
-  color: #d4af8c;
-}
-.contact-ticket-copy h3 {
-  margin: 4px 0 0;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
-  line-height: 1.05;
-  color: #f5f5f5;
-}
-.contact-ticket-message {
-  margin: 9px 0 0;
-  max-width: 42rem;
-  color: rgba(245,245,245,.72);
-  font-size: .82rem;
-  line-height: 1.45;
-}
-.contact-ticket-email {
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  max-width: 100%;
-  color: #f5f5f5;
-  text-decoration: none;
-  font-size: .74rem;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-}
-.contact-ticket-email:hover { color: #d4af8c; }
-.contact-ticket-socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 11px;
-}
-.contact-ticket-socials a {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 8px;
-  border: 1px solid rgba(245,245,245,.18);
-  border-radius: 999px;
-  color: #f5f5f5;
-  font-size: .68rem;
-  text-decoration: none;
-  background: rgba(255,255,255,.035);
-}
-.contact-ticket-socials a:hover { border-color: #d4af8c; color: #d4af8c; }
-.contact-ticket-qr {
-  width: 100px;
-  justify-self: end;
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  padding: 7px;
-  border-radius: 10px;
-  background: #f5f5f5;
-  color: #18181b;
-  box-sizing: border-box;
-}
-.contact-ticket-qr img {
-  display: block;
-  width: 86px;
-  height: 86px;
-  object-fit: contain;
-  background: #fff;
-}
-.contact-ticket-qr span { font-size: .56rem; font-weight: 800; letter-spacing: .02em; }
-.tear-ticket--vertical .contact-ticket-content {
-  grid-template-columns: minmax(0, 1fr) 94px;
-  gap: 12px;
-  align-items: start;
-}
-.tear-ticket--vertical .contact-ticket-copy h3 { font-size: 1.18rem; }
-.tear-ticket--vertical .contact-ticket-message { font-size: .72rem; }
-.tear-ticket--vertical .contact-ticket-email { font-size: .65rem; }
-.tear-ticket--vertical .contact-ticket-socials { gap: 5px; }
-.tear-ticket--vertical .contact-ticket-socials a { padding: 4px 6px; font-size: .6rem; }
-.tear-ticket--vertical .contact-ticket-qr { width: 88px; }
-.tear-ticket--vertical .contact-ticket-qr img { width: 74px; height: 74px; }
-
-@media (max-width: 767px) {
-  .contact-ticket-reference {
-    padding: 14px 0 30px;
-  }
-  .contact-ticket-reference .tear-ticket {
-    width: 100%;
-    max-width: 900px;
-  }
-  .contact-ticket-paper-content {
-    padding: 24px 34px 22px 22px;
-  }
-  .contact-ticket-link-text {
-    overflow-wrap: anywhere;
-  }
-}
-
-@media (max-width: 390px) {
-  .tear-ticket--vertical .contact-ticket-content { grid-template-columns: minmax(0, 1fr) 78px; gap: 8px; }
-  .tear-ticket--vertical .contact-ticket-qr { width: 76px; padding: 5px; }
-  .tear-ticket--vertical .contact-ticket-qr img { width: 64px; height: 64px; }
-  .tear-ticket--vertical .contact-ticket-copy h3 { font-size: 1.05rem; }
-  .tear-ticket--vertical .contact-ticket-kicker { font-size: 1.05rem; }
-}
-.contact-ticket-stub { display:flex; flex-direction:column; gap:5px; text-align:center; }
-.contact-ticket-stub strong { font-family:'Playfair Display',Georgia,serif; font-size:1rem; }
-.contact-ticket-stub span { font-size:.65rem; line-height:1.35; color:rgba(245,245,245,.72); }
-.contact-ticket-stub small { margin-top:5px; font-size:.55rem; letter-spacing:.12em; opacity:.58; }
-.tear-ticket--vertical .contact-ticket-stub strong { font-size:.95rem; }
-
-
-/* Step 6 — reference-inspired TearTicket contact card. */
-.contact-ticket-reference {
-  width: 100%;
-  padding: 20px 0 28px;
-  display: flex;
-  justify-content: center;
-  overflow: visible;
-}
-.contact-ticket-reference .tear-ticket {
-  width: min(900px, 92vw);
-  flex: 0 1 auto;
-  margin-inline: auto;
-}
-.contact-ticket-reference .tear-ticket__stage {
-  filter: drop-shadow(0 18px 28px rgba(63, 42, 24, 0.10));
-}
-.contact-ticket-paper-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  padding: 24px 34px 22px 22px;
-  overflow: hidden;
-}
-.contact-ticket-links {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: grid;
-  align-content: center;
   gap: 10px;
 }
-.contact-ticket-link {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  align-items: center;
-  column-gap: 12px;
+
+.contact-ticket__link {
   min-width: 0;
-  color: var(--tt-ink);
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
   text-decoration: none;
-  font: 700 clamp(1.04rem, 1.75vw, 1.34rem)/1.08 Inter, system-ui, sans-serif;
-  letter-spacing: -0.025em;
+  border-radius: 10px;
+  transition: color 180ms ease, transform 180ms ease, background-color 180ms ease;
 }
-.contact-ticket-link:hover .contact-ticket-link-text {
-  text-decoration: underline;
-  text-underline-offset: 5px;
+
+.contact-ticket__link:hover,
+.contact-ticket__link:focus-visible {
+  color: var(--accent-primary);
+  transform: translateX(3px);
+  outline: none;
 }
-.contact-ticket-link-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
+
+.contact-ticket__icon {
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--tt-ink) 10%, transparent);
-  color: var(--tt-ink);
-  border: 1px solid color-mix(in srgb, var(--tt-ink) 18%, transparent);
+  color: var(--text-primary);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  transition: color 180ms ease, background-color 180ms ease;
 }
-.contact-ticket-link-text {
+
+.contact-ticket__link:hover .contact-ticket__icon,
+.contact-ticket__link:focus-visible .contact-ticket__icon {
+  color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+}
+
+.contact-ticket__link-text {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: Inter, sans-serif;
+  font-size: clamp(0.74rem, 1.35vw, 0.92rem);
+  line-height: 1.2;
+  font-weight: 650;
 }
-.contact-ticket-qr-stub {
-  position: relative;
-  z-index: 2;
-  height: 100%;
+
+.contact-ticket__divider {
+  align-self: stretch;
+  width: 1px;
+  min-height: 150px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--border-color) 0 5px,
+    transparent 5px 10px
+  );
+  opacity: 0.9;
+}
+
+.contact-ticket__portrait {
+  min-width: 0;
+  min-height: 170px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 20px 14px;
-  box-sizing: border-box;
-  color: var(--tt-ink);
+  gap: 6px;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: 14px;
+  transition: transform 180ms ease, color 180ms ease;
 }
-.contact-ticket-qr-stub::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 3px;
-  background: repeating-linear-gradient(to bottom, currentColor 0 4px, transparent 4px 9px);
-  opacity: .82;
+
+.contact-ticket__portrait:hover,
+.contact-ticket__portrait:focus-visible {
+  color: var(--accent-primary);
+  transform: scale(1.035);
+  outline: none;
 }
-.contact-ticket-qr-stub img {
+
+.contact-ticket__portrait-image {
   display: block;
-  width: min(170px, 78%);
-  aspect-ratio: 1;
-  height: auto;
+  width: 150px;
+  height: 150px;
   object-fit: contain;
-  background: #fff;
-  padding: 8px;
-  box-sizing: border-box;
-  border-radius: 7px;
-}
-.contact-ticket-qr-stub span {
-  font: 600 1.5rem/1 'Caveat', cursive;
-  color: var(--tt-ink);
+  object-position: center;
+  background: transparent;
+  border-radius: 12px;
 }
 
-.espresso-mode .contact-ticket-reference .tear-ticket__stage {
-  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
+.contact-ticket__portrait-label {
+  font-family: var(--font-handwriting, cursive);
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--accent-primary);
 }
 
-@media (max-width: 767px) {
-  .contact-ticket-reference {
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    padding: 8px 0 24px;
+@media (max-width: 639px) {
+  .contact-section {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
   }
-  .contact-ticket-reference .tear-ticket {
-    width: 100vw;
-    max-width: 100vw;
-    margin: 0;
+
+  .contact-section .contact-ticket {
+    width: calc(100vw - 22px);
+    max-width: 720px;
+    min-height: 188px;
+    padding: 15px 13px;
+    grid-template-columns: minmax(0, 1fr) 1px 126px;
+    gap: 11px;
+    border-radius: 18px;
   }
-  .contact-ticket-reference .tear-ticket__stage {
-    left: 0;
-  }
-  .contact-ticket-paper-content {
-    padding: 20px 28px 18px 18px;
-  }
-  .contact-ticket-link-text {
-    overflow-wrap: anywhere;
-    font-size: clamp(.82rem, 3.3vw, 1rem);
-  }
-  .contact-ticket-link {
-    grid-template-columns: 34px minmax(0, 1fr);
-    column-gap: 9px;
-  }
-  .contact-ticket-link-icon {
-    width: 34px;
-    height: 34px;
-  }
-  .contact-ticket-qr-stub {
-    padding: 13px 8px;
+
+  .contact-ticket__links {
     gap: 6px;
   }
-  .contact-ticket-qr-stub img {
-    width: min(132px, 88%);
-    max-width: 132px;
-    padding: 0;
-    border-radius: 10px;
-    object-fit: cover;
-    object-position: 50% 42%;
-    background: transparent;
+
+  .contact-ticket__link {
+    min-height: 32px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 7px;
   }
-  .contact-ticket-qr-stub span {
-    font-size: 1rem;
+
+  .contact-ticket__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .contact-ticket__icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .contact-ticket__link-text {
+    font-size: clamp(0.61rem, 2.25vw, 0.72rem);
+    font-weight: 650;
+  }
+
+  .contact-ticket__divider {
+    min-height: 142px;
+  }
+
+  .contact-ticket__portrait {
+    min-height: 150px;
+    gap: 4px;
+  }
+
+  .contact-ticket__portrait-image {
+    width: 112px;
+    height: 112px;
+  }
+
+  .contact-ticket__portrait-label {
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .contact-section .contact-ticket {
+    width: calc(100vw - 28px);
+    grid-template-columns: minmax(0, 1fr) 1px 112px;
+    gap: 9px;
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .contact-ticket__link {
+    grid-template-columns: 29px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .contact-ticket__icon {
+    width: 29px;
+    height: 29px;
+  }
+
+  .contact-ticket__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact-ticket__link-text {
+    font-size: 0.58rem;
+  }
+
+  .contact-ticket__portrait-image {
+    width: 100px;
+    height: 100px;
   }
 }
