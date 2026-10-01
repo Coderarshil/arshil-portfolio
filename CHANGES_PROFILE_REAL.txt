@@ -1,7 +1,0 @@
-Profile tap update
-
-- Tapping the profile artwork crossfades to public/arshil-real-light.webp / public/arshil-real-dark.webp.
-- The existing "Yep, that’s me." / "Wanna play??" note remains intact.
-- Tapping the artwork again crossfades back to the current cappuccino/espresso artwork.
-- Added preload/decode for the real portrait so the tap transition does not wait for image decoding.
-- Existing Tic-Tac-Toe play-button behavior is unchanged.

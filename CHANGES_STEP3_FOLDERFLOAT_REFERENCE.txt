@@ -1,8 +1,0 @@
-Step 3 — FolderFloat reference alignment
-
-- Reworked the Skills FolderFloat burst to match the supplied React Bits reference interaction: papers fan upward/outward from the folder instead of forming a circular orbit.
-- Preserved the supplied FolderFloat parameters: width 200, height 148, radius 14, spread 180, lift 26, tilt 8, flapAngle 34, restAngle 16, openDuration 520ms, stagger 45ms, bounce 0.3, physics and drift 0.5.
-- Preserved hover trigger on desktop and uses click on touch/mobile as a practical interaction fallback.
-- Kept all 10 portfolio skills as individual selectable papers.
-- Fixed paper centering so Motion transforms do not push the folder/papers off-center on narrow screens.
-- Light theme uses the supplied FolderFloat palette. Espresso keeps a custom dark palette with readable light paper text.

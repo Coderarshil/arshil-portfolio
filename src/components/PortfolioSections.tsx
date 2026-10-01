@@ -233,11 +233,11 @@ function Certifications() {
     <div style={{ width: '100%', height: '560px', position: 'relative' }}>
       <CircularCarousel
         items={items}
-        preset="panorama" intro="spin" cardWidth={294} aspectRatio={1.333} speed={14} captions={false}
+        preset="panorama" intro="spin" cardWidth={268} aspectRatio={1.333} speed={14} captions={false}
         gap={25} tilt={0} curve={1} perspective={1800} autoplay="drift" interval={3} direction="left"
         momentum={0.6} snap pauseOnHover focusOnClick draggable parallax={0.3} stretch={0.5}
-        fadeColor="#000000" depthFade={0.55} innerShade={0.6} cornerRadius={12}
-        onSelect={(item) => setOpen(item?.certificate ?? null)}
+        fadeColor="#ffffff" depthFade={0.55} innerShade={0.6} cornerRadius={12}
+        onItemClick={(item) => setOpen(item?.certificate ?? null)}
       />
     </div>
     <AnimateCert open={open} onClose={() => setOpen(null)} />
