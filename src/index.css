@@ -301,52 +301,41 @@ section[id] { scroll-margin-top: 90px; }
 /* FolderFloat placement: preserve the original section rhythm while allowing the official component to overflow for its floating notes. */
 .skills-section { overflow: visible; }
 
-/* Certification carousel presentation: larger cards while keeping the official React Bits geometry intact. */
+/* Certification carousel: the center certificate uses the full viewport width.
+   No decorative border or frame is added around the carousel. */
 .certification-carousel-shell {
-  width: 100%;
-  max-width: 1180px;
-  height: 640px;
+  width: 100vw;
+  max-width: none;
+  height: clamp(520px, 75vw + 180px, 1180px);
   position: relative;
   overflow: hidden;
-  margin: 0 auto;
-  padding: 12px;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 0;
   box-sizing: border-box;
-  border: 1px solid color-mix(in srgb, var(--border-color) 92%, transparent);
-  border-radius: 32px;
-  background: var(--bg-primary);
-  isolation: isolate;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 7%, transparent);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-/* The inner frame keeps the dark carousel area cleanly clipped at rounded corners. */
-.certification-carousel-shell::before {
-  content: '';
-  position: absolute;
-  inset: 12px;
-  border: 1px solid color-mix(in srgb, var(--border-color) 75%, transparent);
-  border-radius: 24px;
-  pointer-events: none;
-  z-index: 5;
-}
-
+/* The center certificate reaches the viewport edges instead of sitting inside a card/frame. */
 .certification-carousel-shell .circular-carousel {
-  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+/* Preserve the React Bits panorama geometry without fading the center certificate away at the screen edges. */
+.certification-carousel-shell .circular-carousel[data-shape='panorama'] .circular-carousel__view {
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 @media (max-width: 640px) {
   .certification-carousel-shell {
-    height: 590px;
-    padding: 10px;
-    border-radius: 28px;
-  }
-
-  .certification-carousel-shell::before {
-    inset: 10px;
-    border-radius: 22px;
-  }
-
-  .certification-carousel-shell .circular-carousel {
-    border-radius: 22px;
+    height: calc(75vw + 300px);
+    min-height: 570px;
   }
 }
 
