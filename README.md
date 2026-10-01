@@ -162,3 +162,13 @@ Optimization notes:
 - Added `src/components/TearTicket.jsx` and `src/components/TearTicket.css`.
 - `motion` was already present in `package.json`, so no duplicate dependency was added.
 - Existing Resume, Birds, FolderFloat, CircularCarousel, navigation, and other sections are preserved.
+
+## Step 6 FIX — TearTicket Contact Layout
+
+- Refined the TearTicket contact card so the portrait is a dedicated identity panel instead of sitting as a full-card image behind the contact copy.
+- Added a compact, readable contact-information layout with the existing email and social links.
+- Kept the existing `public/resumeQR.svg` source unchanged and displayed it as a sharp SVG QR code.
+- Kept the TearTicket interaction settings unchanged: tear angle 30, stretch 30, resistance 0.45, rotate 4, tilt max 9, parallax 6, perspective 1000, recentering, and keyboard/touch interaction.
+- Preserved vertical mobile and horizontal tablet/desktop orientations.
+- Added responsive spacing so the ticket remains contained without horizontal page overflow.
+- No unrelated portfolio section or navigation styling was changed.
