@@ -1,3 +1,11 @@
+## CHANGES_STEP5_FIX_2
+
+- Increased the certification CircularCarousel card width from 300px to 340px so certificates read larger on mobile and desktop.
+- Increased the carousel presentation area to 640px desktop / 590px mobile.
+- Added a subtle outer border and an inset inner border around the carousel stage.
+- Added rounded clipping so the dark carousel area terminates cleanly at the corners instead of visually bleeding into the page.
+- Kept the React Bits panorama geometry, autoplay, drag, snap, parallax, depth fade, and certificate click behavior unchanged.
+
 # Arshil Portfolio
 
 ## CHANGES

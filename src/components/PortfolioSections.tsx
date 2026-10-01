@@ -233,7 +233,7 @@ function Certifications() {
     <div className="certification-carousel-shell">
       <CircularCarousel
         items={items}
-        preset="panorama" intro="spin" cardWidth={300} aspectRatio={1.333} speed={14} captions={false}
+        preset="panorama" intro="spin" cardWidth={340} aspectRatio={1.333} speed={14} captions={false}
         gap={25} tilt={0} curve={1} perspective={1800} autoplay="drift" interval={3} direction="left"
         momentum={0.6} snap pauseOnHover focusOnClick draggable parallax={0.3} stretch={0.5}
         fadeColor="#ffffff" depthFade={0.55} innerShade={0.6} cornerRadius={12}
