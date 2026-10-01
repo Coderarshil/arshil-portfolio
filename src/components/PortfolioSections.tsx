@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Github, Instagram, Linkedin, Mail, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 // @ts-ignore — FolderFloat is intentionally kept as the official JS-CSS React Bits variant.
 import FolderFloat from './FolderFloat';
 import CircularCarousel from './CircularCarousel';
+import TearTicket from './TearTicket';
+import { useAppStore } from '../lib/store';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
@@ -256,4 +258,90 @@ function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;o
 
 function Interests() { return <Wrap id="interests" eyebrow="things that pull my attention" title="Interests"><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{interests.map(([title,body],i)=><motion.div key={title} whileHover={{ y:-4 }} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 shadow-sm relative overflow-hidden"><div className="absolute -right-8 -top-8 w-20 h-20 rounded-full bg-[var(--accent-primary)]/5"/><p className="font-serif text-xl font-bold text-[var(--text-primary)]">{title}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-1">{body}</p></motion.div>)}</div></Wrap>; }
 
-function Contact() { return <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section"><div className="contact-card w-full max-w-3xl mx-auto box-border rounded-3xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-6 sm:p-10 text-center relative overflow-visible"><div className="absolute -top-3 left-[22%] w-16 h-7 bg-white/30 dark:bg-white/10 rotate-[-4deg] border border-black/5 dark:border-white/10"/><p className="font-handwriting text-3xl text-[var(--accent-primary)]">Grab a cup and say hello.</p><p className="mt-3 text-[var(--text-secondary)]">Ideas, collaborations, questions, or just a good conversation — my inbox is open.</p><a href="mailto:mohammadarshilsiddiqui.2008@gmail.com" className="flex w-full max-w-[36rem] min-h-[3.5rem] mx-auto items-center justify-center gap-3 mt-6 bg-[var(--accent-primary)] text-white px-6 sm:px-8 py-3 rounded-full font-serif font-bold whitespace-nowrap box-border">mohammadarshilsiddiqui.2008@gmail.com <Mail size={16} className="shrink-0"/></a><div className="mt-6 flex justify-center gap-3">{[[Github,'https://github.com/Coderarshil','GitHub'],[Instagram,'https://instagram.com/arshil7474','Instagram'],[Linkedin,'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5','LinkedIn']].map(([Icon,href,label])=> <a key={label as string} href={href as string} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] flex items-center justify-center text-[var(--text-primary)] hover:text-[var(--accent-primary)]" aria-label={label as string}><Icon size={17}/></a>)}</div></div></Wrap>; }
+function Contact() {
+  const theme = useAppStore(s => s.theme);
+  const [vertical, setVertical] = useState(() => typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+    const update = () => setVertical(media.matches);
+    update();
+    media.addEventListener?.('change', update);
+    return () => media.removeEventListener?.('change', update);
+  }, []);
+
+  const social = [
+    [Github, 'https://github.com/Coderarshil', 'GitHub'],
+    [Instagram, 'https://instagram.com/arshil7474', 'Instagram'],
+    [Linkedin, 'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', 'LinkedIn'],
+  ] as const;
+
+  return (
+    <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section">
+      <div className="contact-ticket-wrap">
+        <TearTicket
+          image={theme === 'espresso' ? '/arshil-real-dark.webp' : '/arshil-real-light.webp'}
+          imageAlt="Arshil"
+          stub={
+            <div className="contact-ticket-stub">
+              <strong>Stay in touch</strong>
+              <span>Ideas welcome · inbox open</span>
+              <small>ARSHIL · 2026</small>
+            </div>
+          }
+          orientation={vertical ? 'vertical' : 'horizontal'}
+          scrim
+          imageRadius={8}
+          width={460}
+          height={250}
+          stubSize={150}
+          radius={16}
+          holes={12}
+          holeSize={6}
+          notch={3}
+          roughness={0}
+          tearAngle={30}
+          stretch={30}
+          resistance={0.45}
+          rotate={4}
+          tilt
+          tiltMax={9}
+          tiltReach={260}
+          parallax={6}
+          perspective={1000}
+          background="#27272a"
+          color="#f5f5f5"
+          border
+          borderWidth={1}
+          recenter
+          onTear={() => undefined}
+          ariaLabel="Tear off contact stub"
+        >
+          <div className="contact-ticket-content">
+            <div className="contact-ticket-copy">
+              <p className="contact-ticket-kicker">Mohammad Arshil Siddiqui</p>
+              <h3>Student · Creative Developer · AI Enthusiast</h3>
+              <p className="contact-ticket-message">Ideas, collaborations, questions, or just a good conversation — my inbox is open.</p>
+              <a className="contact-ticket-email" href="mailto:mohammadarshilsiddiqui.2008@gmail.com">
+                <Mail size={15} />
+                <span>mohammadarshilsiddiqui.2008@gmail.com</span>
+              </a>
+              <div className="contact-ticket-socials">
+                {social.map(([Icon, href, label]) => (
+                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                    <Icon size={15} />
+                    <span>{label}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div className="contact-ticket-qr">
+              <img src="/resumeQR.svg" alt="Contact QR code" />
+              <span>Scan to connect</span>
+            </div>
+          </div>
+        </TearTicket>
+      </div>
+    </Wrap>
+  );
+}

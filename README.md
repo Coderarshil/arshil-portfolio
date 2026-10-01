@@ -151,3 +151,14 @@ Optimization notes:
 - Recommendation letters and certificates remain the original visual images, with lazy loading used for below-the-fold views.
 - The legacy standalone folding-resume source is retained, but its embedded image data is also optimized rather than deleted.
 - Vite sourcemaps remain disabled for smaller production output.
+
+## Step 6 — TearTicket Contact Card
+
+- Replaced the existing Contact card presentation with a responsive TearTicket contact card.
+- Mobile uses the vertical orientation; tablet/desktop uses the horizontal orientation.
+- Preserved the existing portfolio contact information and social destinations.
+- Uses the supplied `public/resumeQR.svg` source directly; it is not rasterized or regenerated.
+- Uses the existing theme-specific Arshil portrait assets for the ticket artwork.
+- Added `src/components/TearTicket.jsx` and `src/components/TearTicket.css`.
+- `motion` was already present in `package.json`, so no duplicate dependency was added.
+- Existing Resume, Birds, FolderFloat, CircularCarousel, navigation, and other sections are preserved.
