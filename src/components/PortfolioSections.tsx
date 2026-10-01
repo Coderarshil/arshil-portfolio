@@ -270,31 +270,35 @@ function Contact() {
     return () => media.removeEventListener?.('change', update);
   }, []);
 
-  const social = [
-    [Github, 'https://github.com/Coderarshil', 'GitHub'],
-    [Instagram, 'https://instagram.com/arshil7474', 'Instagram'],
-    [Linkedin, 'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', 'LinkedIn'],
+  const contactLinks = [
+    { icon: Mail, href: 'mailto:mohammadarshilsiddiqui.2008@gmail.com', label: 'mohammadarshilsiddiqui.2008@gmail.com', external: false },
+    { icon: Github, href: 'https://github.com/Coderarshil', label: 'github.com/Coderarshil', external: true },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', label: 'linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', external: true },
+    { icon: Instagram, href: 'https://instagram.com/arshil7474', label: 'instagram.com/arshil7474', external: true },
   ] as const;
+
+  const palette = theme === 'espresso'
+    ? { bg: '#2a190f', stubBg: '#2f1d11', ink: '#f5ecd7', border: '#8f7055' }
+    : { bg: '#fff6d8', stubBg: '#fff8df', ink: '#18120e', border: '#7d6447' };
 
   return (
     <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section">
-      <div className="contact-ticket-wrap">
+      <div className={`contact-ticket-wrap contact-ticket-reference${vertical ? ' is-vertical' : ' is-horizontal'}`}>
         <TearTicket
-          image={theme === 'espresso' ? '/arshil-real-dark.webp' : '/arshil-real-light.webp'}
-          imageAlt="Arshil"
+          image=""
+          imageAlt=""
           stub={
-            <div className="contact-ticket-stub">
-              <strong>Stay in touch</strong>
-              <span>Ideas welcome · inbox open</span>
-              <small>ARSHIL · 2026</small>
+            <div className="contact-ticket-qr-stub">
+              <img src="/resumeQR.svg" alt="QR code for Arshil's contact links" />
+              <span>Scan me</span>
             </div>
           }
           orientation={vertical ? 'vertical' : 'horizontal'}
-          scrim
+          scrim={false}
           imageRadius={8}
-          width={460}
-          height={250}
-          stubSize={150}
+          width={vertical ? 420 : 900}
+          height={vertical ? 560 : 320}
+          stubSize={vertical ? 150 : 290}
           radius={16}
           holes={12}
           holeSize={6}
@@ -309,35 +313,45 @@ function Contact() {
           tiltReach={260}
           parallax={6}
           perspective={1000}
-          background="#27272a"
-          color="#f5f5f5"
+          background={palette.bg}
+          color={palette.ink}
           border
+          borderColor={palette.border}
           borderWidth={1}
+          stubBackground={palette.stubBg}
           recenter
           onTear={() => undefined}
-          ariaLabel="Tear off contact stub"
+          ariaLabel="Tear off Arshil's contact QR stub"
         >
-          <div className="contact-ticket-content">
-            <div className="contact-ticket-copy">
-              <p className="contact-ticket-kicker">Mohammad Arshil Siddiqui</p>
-              <h3>Student · Creative Developer · AI Enthusiast</h3>
-              <p className="contact-ticket-message">Ideas, collaborations, questions, or just a good conversation — my inbox is open.</p>
-              <a className="contact-ticket-email" href="mailto:mohammadarshilsiddiqui.2008@gmail.com">
-                <Mail size={15} />
-                <span>mohammadarshilsiddiqui.2008@gmail.com</span>
-              </a>
-              <div className="contact-ticket-socials">
-                {social.map(([Icon, href, label]) => (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}>
-                    <Icon size={15} />
-                    <span>{label}</span>
-                  </a>
-                ))}
-              </div>
+          <div className="contact-ticket-paper-content">
+            <div className="contact-ticket-doodle" aria-hidden="true">
+              <svg viewBox="0 0 520 280" fill="none">
+                <path d="M330 26 L462 34 L382 70 L330 26 Z" />
+                <path d="M382 70 L366 123 L358 63" />
+                <path d="M330 26 L358 63 L462 34" />
+                <path d="M358 63 L330 91" />
+                <circle cx="196" cy="200" r="76" />
+                <path d="M120 200 A76 76 0 0 1 186 124" />
+              </svg>
             </div>
-            <div className="contact-ticket-qr">
-              <img src="/resumeQR.svg" alt="Contact QR code" />
-              <span>Scan to connect</span>
+            <div className="contact-ticket-links">
+              {contactLinks.map(({ icon: Icon, href, label, external }, index) => (
+                <a
+                  key={label}
+                  href={href}
+                  {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                  className="contact-ticket-link"
+                  aria-label={label}
+                >
+                  <span className="contact-ticket-link-icon"><Icon size={28} strokeWidth={2.1} /></span>
+                  <span className="contact-ticket-link-text">{label}</span>
+                  {index === 0 && (
+                    <svg className="contact-ticket-plane-mark" viewBox="0 0 120 52" aria-hidden="true">
+                      <path d="M5 14 L112 5 L72 26 L28 22 L5 14 Z M72 26 L68 48 L58 23 M28 22 L58 23 L112 5" />
+                    </svg>
+                  )}
+                </a>
+              ))}
             </div>
           </div>
         </TearTicket>
