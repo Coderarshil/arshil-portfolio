@@ -3,6 +3,7 @@ import { Github, Instagram, Linkedin, Mail, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 // @ts-ignore — FolderFloat is intentionally kept as the official JS-CSS React Bits variant.
 import FolderFloat from './FolderFloat';
+import CircularCarousel from './CircularCarousel';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
@@ -226,8 +227,21 @@ function Recommendations() {
 }
 
 function Certifications() {
-  const [open,setOpen]=useState<(typeof certificates)[number] | null>(null);
-  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications"><div className="grid md:grid-cols-2 gap-5">{certificates.map(c => <motion.button type="button" key={c.title} onClick={()=>setOpen(c)} whileHover={{ y:-5, rotate:c.title.length%2?-0.4:0.4 }} className="text-left bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm"><div className="bg-[var(--bg-secondary)] p-3 border-b border-[var(--border-color)]"><AsyncImage src={c.image} alt={`${c.title} certificate`} className="w-full h-full object-contain rounded-xl" wrapperClassName="w-full aspect-[4/3] rounded-xl bg-white/50 dark:bg-black/10" /></div><div className="p-5"><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{c.org}</p><h3 className="font-serif font-bold text-xl text-[var(--text-primary)] mt-1">{c.title}</h3><p className="text-sm text-[var(--text-muted)] mt-2">{c.date}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-3">view certificate →</p></div></motion.button>)}</div><AnimateCert open={open} onClose={()=>setOpen(null)}/></Wrap>;
+  const [open, setOpen] = useState<(typeof certificates)[number] | null>(null);
+  const items = certificates.map((c) => ({ src: c.image, alt: `${c.title} certificate`, title: c.title, subtitle: c.org, certificate: c }));
+  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications">
+    <div style={{ width: '100%', height: '560px', position: 'relative' }}>
+      <CircularCarousel
+        items={items}
+        preset="panorama" intro="spin" cardWidth={294} aspectRatio={1.333} speed={14} captions={false}
+        gap={25} tilt={0} curve={1} perspective={1800} autoplay="drift" interval={3} direction="left"
+        momentum={0.6} snap pauseOnHover focusOnClick draggable parallax={0.3} stretch={0.5}
+        fadeColor="#000000" depthFade={0.55} innerShade={0.6} cornerRadius={12}
+        onSelect={(item) => setOpen(item?.certificate ?? null)}
+      />
+    </div>
+    <AnimateCert open={open} onClose={() => setOpen(null)} />
+  </Wrap>;
 }
 function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{<AsyncImage src={open.full} alt={open.title} className="w-full rounded-xl" wrapperClassName="w-full min-h-[320px] rounded-xl bg-[var(--bg-secondary)]" loading="eager" />}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
 
