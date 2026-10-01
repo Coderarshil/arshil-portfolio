@@ -230,10 +230,10 @@ function Certifications() {
   const [open, setOpen] = useState<(typeof certificates)[number] | null>(null);
   const items = certificates.map((c) => ({ src: c.image, alt: `${c.title} certificate`, title: c.title, subtitle: c.org, certificate: c }));
   return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications">
-    <div style={{ width: '100%', height: '560px', position: 'relative' }}>
+    <div className="certification-carousel-shell">
       <CircularCarousel
         items={items}
-        preset="panorama" intro="spin" cardWidth={268} aspectRatio={1.333} speed={14} captions={false}
+        preset="panorama" intro="spin" cardWidth={300} aspectRatio={1.333} speed={14} captions={false}
         gap={25} tilt={0} curve={1} perspective={1800} autoplay="drift" interval={3} direction="left"
         momentum={0.6} snap pauseOnHover focusOnClick draggable parallax={0.3} stretch={0.5}
         fadeColor="#ffffff" depthFade={0.55} innerShade={0.6} cornerRadius={12}
