@@ -260,16 +260,6 @@ function Interests() { return <Wrap id="interests" eyebrow="things that pull my 
 
 function Contact() {
   const theme = useAppStore(s => s.theme);
-  const [vertical, setVertical] = useState(() => typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(max-width: 767px)');
-    const update = () => setVertical(media.matches);
-    update();
-    media.addEventListener?.('change', update);
-    return () => media.removeEventListener?.('change', update);
-  }, []);
-
   const contactLinks = [
     { icon: Mail, href: 'mailto:mohammadarshilsiddiqui.2008@gmail.com', label: 'mohammadarshilsiddiqui.2008@gmail.com', external: false },
     { icon: Github, href: 'https://github.com/Coderarshil', label: 'github.com/Coderarshil', external: true },
@@ -283,7 +273,7 @@ function Contact() {
 
   return (
     <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section">
-      <div className={`contact-ticket-wrap contact-ticket-reference${vertical ? ' is-vertical' : ' is-horizontal'}`}>
+      <div className="contact-ticket-wrap contact-ticket-reference">
         <TearTicket
           image=""
           imageAlt=""
@@ -293,12 +283,12 @@ function Contact() {
               <span>Scan me</span>
             </div>
           }
-          orientation={vertical ? 'vertical' : 'horizontal'}
+          orientation="horizontal"
           scrim={false}
           imageRadius={8}
-          width={vertical ? 420 : 900}
-          height={vertical ? 560 : 320}
-          stubSize={vertical ? 150 : 290}
+          width={900}
+          height={320}
+          stubSize={290}
           radius={16}
           holes={12}
           holeSize={6}
@@ -324,18 +314,8 @@ function Contact() {
           ariaLabel="Tear off Arshil's contact QR stub"
         >
           <div className="contact-ticket-paper-content">
-            <div className="contact-ticket-doodle" aria-hidden="true">
-              <svg viewBox="0 0 520 280" fill="none">
-                <path d="M330 26 L462 34 L382 70 L330 26 Z" />
-                <path d="M382 70 L366 123 L358 63" />
-                <path d="M330 26 L358 63 L462 34" />
-                <path d="M358 63 L330 91" />
-                <circle cx="196" cy="200" r="76" />
-                <path d="M120 200 A76 76 0 0 1 186 124" />
-              </svg>
-            </div>
             <div className="contact-ticket-links">
-              {contactLinks.map(({ icon: Icon, href, label, external }, index) => (
+              {contactLinks.map(({ icon: Icon, href, label, external }) => (
                 <a
                   key={label}
                   href={href}
@@ -345,11 +325,6 @@ function Contact() {
                 >
                   <span className="contact-ticket-link-icon"><Icon size={28} strokeWidth={2.1} /></span>
                   <span className="contact-ticket-link-text">{label}</span>
-                  {index === 0 && (
-                    <svg className="contact-ticket-plane-mark" viewBox="0 0 120 52" aria-hidden="true">
-                      <path d="M5 14 L112 5 L72 26 L28 22 L5 14 Z M72 26 L68 48 L58 23 M28 22 L58 23 L112 5" />
-                    </svg>
-                  )}
                 </a>
               ))}
             </div>

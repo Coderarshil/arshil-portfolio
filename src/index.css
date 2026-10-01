@@ -615,8 +615,19 @@ footer {
 .tear-ticket--vertical .contact-ticket-qr img { width: 74px; height: 74px; }
 
 @media (max-width: 767px) {
-  .contact-ticket-wrap { padding-inline: 4px; }
-  .contact-ticket-content { padding: 0; }
+  .contact-ticket-reference {
+    padding: 14px 0 30px;
+  }
+  .contact-ticket-reference .tear-ticket {
+    width: 100%;
+    max-width: 900px;
+  }
+  .contact-ticket-paper-content {
+    padding: 24px 34px 22px 22px;
+  }
+  .contact-ticket-link-text {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 390px) {
@@ -695,40 +706,6 @@ footer {
   min-width: 0;
   overflow-wrap: anywhere;
 }
-.contact-ticket-plane-mark {
-  position: absolute;
-  top: -13px;
-  right: 18px;
-  width: 132px;
-  height: 58px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 4 6;
-  opacity: .32;
-  pointer-events: none;
-  transform: rotate(-2deg);
-}
-.contact-ticket-doodle {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  color: color-mix(in srgb, var(--tt-ink) 34%, transparent);
-}
-.contact-ticket-doodle svg {
-  width: 100%;
-  height: 100%;
-}
-.contact-ticket-doodle path,
-.contact-ticket-doodle circle {
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-dasharray: 5 6;
-  opacity: .65;
-}
 .contact-ticket-qr-stub {
   position: relative;
   z-index: 2;
@@ -767,37 +744,6 @@ footer {
   font: 600 1.5rem/1 'Caveat', cursive;
   color: var(--tt-ink);
 }
-.contact-ticket-reference.is-vertical .contact-ticket-paper-content {
-  padding: 18px 18px 16px;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-links {
-  align-content: start;
-  padding-top: 6px;
-  gap: 9px;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-link {
-  grid-template-columns: 40px minmax(0, 1fr);
-  column-gap: 9px;
-  font-size: .84rem;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-link-icon {
-  width: 38px;
-  height: 38px;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-link-icon svg {
-  width: 21px;
-  height: 21px;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-qr-stub img {
-  width: 98px;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-qr-stub span {
-  font-size: 1.18rem;
-}
-.contact-ticket-reference.is-vertical .contact-ticket-plane-mark,
-.contact-ticket-reference.is-vertical .contact-ticket-doodle {
-  opacity: .45;
-}
 
 .espresso-mode .contact-ticket-reference .tear-ticket__stage {
   filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
@@ -808,15 +754,13 @@ footer {
     padding: 14px 0 30px;
   }
   .contact-ticket-reference .tear-ticket {
-    width: min(420px, 100%);
+    width: 100%;
+    max-width: 900px;
   }
   .contact-ticket-paper-content {
-    padding: 16px 16px 14px;
+    padding: 24px 34px 22px 22px;
   }
   .contact-ticket-link-text {
     overflow-wrap: anywhere;
-  }
-  .contact-ticket-doodle {
-    opacity: .5;
   }
 }
