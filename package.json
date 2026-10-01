@@ -20,8 +20,7 @@
     "tailwindcss": "^4.1.14",
     "typescript": "~5.8.2",
     "vite": "^6.2.3",
-    "zustand": "^5.0.13",
-    "matter-js": "^0.20.0"
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "pdfjs-dist": "^4.10.38"

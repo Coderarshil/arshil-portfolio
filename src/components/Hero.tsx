@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '../lib/store';
 import { motion, AnimatePresence } from 'motion/react';
-import { BirdBackground } from './BirdBackground';
 
 function getAge() {
   const dob = new Date(2008, 8, 24);
@@ -64,10 +63,9 @@ export const Hero = React.memo(function Hero({ onPlay, onResume }: { onPlay: () 
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      className="hero-section pt-16 lg:pt-24 pb-4 lg:pb-0 px-4 sm:px-6 max-w-[1400px] mx-auto min-h-0"
+      className="pt-16 lg:pt-24 pb-4 lg:pb-0 px-4 sm:px-6 max-w-[1400px] mx-auto min-h-0"
     >
-      <BirdBackground />
-      <div className="hero-content grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] lg:grid-cols-[1.15fr_0.85fr] xl:grid-cols-[1.2fr_0.8fr] lg:grid-rows-[auto_auto] gap-8 lg:gap-x-4 xl:gap-x-8 items-center lg:items-start relative">
+      <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] lg:grid-cols-[1.15fr_0.85fr] xl:grid-cols-[1.2fr_0.8fr] lg:grid-rows-[auto_auto] gap-8 lg:gap-x-4 xl:gap-x-8 items-center lg:items-start relative">
         <div className="relative z-20 flex flex-col justify-start md:row-span-2 lg:row-span-2 md:h-full lg:h-full lg:pt-8 w-full md:pr-4 lg:pr-10 lg:pb-12">
           <div className="relative h-full flex flex-col justify-center lg:justify-start lg:-mt-2 transition-[opacity,transform] duration-700">
             <motion.h1

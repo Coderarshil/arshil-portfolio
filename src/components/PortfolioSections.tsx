@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Github, Instagram, Linkedin, Mail, ExternalLink } from 'lucide-react';
-import { motion } from 'motion/react';
-// @ts-ignore — FolderFloat is intentionally kept as the official JS-CSS React Bits variant.
-import FolderFloat from './FolderFloat';
-import CircularCarousel from './CircularCarousel';
-import TearTicket from './TearTicket';
-import { useAppStore } from '../lib/store';
+import { Github, Instagram, Linkedin, Mail, Sparkles, Code2, Users, Lightbulb, Palette, Zap, BookOpen, Heart, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ProfileSummary } from './ProfileSummary';
 
 const projects = [
   { title: 'Pretext Kotlin Library', label: 'Open Source · Library', what: 'A Kotlin/JVM text-layout engine built around prepared measurements and fast reusable layout.', why: 'I wanted a layout system that could do more interesting things with text, including dynamic obstacles.', learned: 'Thinking about layout as preparation + cheap reuse changed how I approach performance-sensitive UI work.', github: 'https://github.com/Coderarshil/pretext-kotlin-library', demo: 'https://github.com/Coderarshil/pretext-kotlin-library/releases/tag/v1.0.0', demoLabel: 'Demo APK' },
   { title: 'MiniCPM-V Apps', label: 'Contribution · Android', what: 'An English-localized, UI/UX-refined Android experience based on OpenBMB MiniCPM-V Apps.', why: 'I wanted the app to feel cleaner, softer and more at home on a modern Android device.', learned: 'Small visual decisions and usability refinements can completely change how a technical product feels.', github: 'https://github.com/Coderarshil/MiniCPM-V-Apps' },
   { title: 'Mosquito Risk', label: 'Open Source · Computational Project', what: 'A climate-informed mosquito risk assessment prototype using weather data and environmental modeling.', why: 'I wanted to turn environmental variables into something understandable and useful through computation.', learned: 'Mixing APIs, mathematical relationships, geospatial thinking and ML ideas is messy — and fun.', github: 'https://github.com/Coderarshil/Mosquito-risk', demo: 'https://mosquito-risk-zeta.vercel.app/', demoLabel: 'Demo' },
 ];
+
+const skills = [
+  ['Fast learner', Lightbulb],
+  ['Team worker', Users],
+  ['Problem solver', Zap],
+  ['Communication', Mail],
+  ['Extrovert', Heart],
+  ['Adaptive', Sparkles],
+  ['Creative', Palette],
+  ['Design', Code2],
+  ['Experimental', Lightbulb],
+  ['Curious', BookOpen],
+] as const;
 
 const done = [
   ['Built and open-sourced a Kotlin text-layout library.', '2026'],
@@ -48,7 +57,7 @@ export const PortfolioSections = React.memo(function PortfolioSections() {
 });
 
 function Wrap({ id, eyebrow, title, children, className='' }: { id:string; eyebrow:string; title:string; children:React.ReactNode; className?:string }) {
-  return <section id={id} className={`max-w-[1400px] mx-auto px-4 sm:px-6 py-12 sm:py-16 ${className}`}><div className="text-center mb-8 sm:mb-10">{eyebrow && <p className="font-handwriting text-xl text-[var(--accent-primary)]">{eyebrow}</p>}<h2 className="font-serif text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mt-1">{title}</h2></div>{children}</section>;
+  return <section id={id} className={`max-w-[1400px] mx-auto px-4 sm:px-6 py-12 sm:py-16 ${className}`}><div className="text-center mb-8 sm:mb-10"><p className="font-handwriting text-xl text-[var(--accent-primary)]">{eyebrow}</p><h2 className="font-serif text-4xl sm:text-5xl font-bold text-[var(--text-primary)] mt-1">{title}</h2></div>{children}</section>;
 }
 
 function About() {
@@ -71,52 +80,132 @@ function Projects() {
 function ProjectPart({label,text}:{label:string;text:string}) { return <div className="mt-4"><p className="font-handwriting text-lg text-[var(--accent-primary)]">{label}</p><p className="text-sm text-[var(--text-secondary)] leading-relaxed">{text}</p></div>; }
 
 function Skills() {
+  const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
+
   return (
-    <section id="skills" className="skills-section max-w-[1400px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
-      <div className="skills-folder-float-stage">
-        {/* Official React Bits FolderFloat — JS-CSS variant. */}
-        <FolderFloat
-          items={[
-            'Fast learner',
-            'Team worker',
-            'Problem solver',
-            'Communication',
-            'Extrovert',
-            'Adaptive',
-            'Creative',
-            'Design',
-            'Experimental',
-            'Curious'
-          ]}
-          label="Skills??"
-          sublabel="Just a student"
-          trigger="click"
-          closeOnSelect
-          physics
-          drift={0.5}
-          onSelect={(value, index) => console.log(value, index)}
-          folderColor="#ffffff"
-          frontColor="#d4956a"
-          paperColor="#f5f5f5"
-          itemColor="#fcf3cc"
-          itemTextColor="#18181b"
-          labelColor="#f5f5f5"
-          width={256}
-          height={148}
-          radius={16}
-          spread={195}
-          lift={34}
-          tilt={8}
-          flapAngle={36}
-          restAngle={16}
-          openDuration={520}
-          stagger={45}
-          bounce={0.3}
+    <Wrap id="skills" eyebrow="how I work ♡" title="Skills" className="skills-section">
+      <div className="relative mx-auto w-[min(96vw,700px)] aspect-square sm:mt-2">
+        <motion.div
+          className="absolute inset-0 rounded-full border border-[var(--border-color)]/35"
+          animate={{ opacity: isMobile ? (open ? 1 : 0) : 1 }}
+          transition={{ duration: 0.35 }}
+          aria-hidden="true"
         />
+
+        <motion.button
+          type="button"
+          onClick={() => setOpen(v => !v)}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-inner flex items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/40 skills-center"
+          animate={{ width: isMobile ? (open ? 54 : 118) : 160, height: isMobile ? (open ? 54 : 118) : 160, rotate: isMobile && open ? 90 : 0 }}
+          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          aria-expanded={isMobile ? open : undefined}
+          aria-label={isMobile ? (open ? 'Close skills' : 'Show skills') : 'Skills'}
+        >
+          <span className="skills-desktop-center text-center px-4">
+            <span className="block font-handwriting text-2xl text-[var(--accent-primary)]">me, in the middle</span>
+            <span className="block font-serif text-xl font-bold leading-tight text-[var(--text-primary)] mt-1">always figuring it out</span>
+          </span>
+          <motion.span
+            className="font-handwriting text-[var(--accent-primary)] skills-mobile-center"
+            animate={{ opacity: open ? 0 : 1, scale: open ? 0.65 : 1 }}
+            transition={{ duration: 0.2 }}
+          >Skills??</motion.span>
+          <motion.span
+            className="absolute text-2xl text-[var(--accent-primary)] skills-mobile-center"
+            animate={{ opacity: open ? 1 : 0, rotate: open ? -90 : 0, scale: open ? 1 : 0.6 }}
+            transition={{ duration: 0.22, delay: open ? 0.12 : 0 }}
+          >×</motion.span>
+        </motion.button>
+
+        {skills.map(([name, Icon], i) => {
+          const angle = (i / skills.length) * Math.PI * 2 - Math.PI / 2;
+          return (
+            <SkillOrbitItem
+              key={name}
+              name={name}
+              Icon={Icon}
+              angle={angle}
+              index={i}
+              open={open}
+              isMobile={isMobile}
+            />
+          );
+        })}
       </div>
-    </section>
+    </Wrap>
   );
 }
+
+function SkillOrbitItem({
+  name,
+  Icon,
+  angle,
+  index,
+  open,
+  isMobile,
+}: {
+  name: string;
+  Icon: React.ComponentType<{ size?: number; className?: string }>;
+  angle: number;
+  index: number;
+  open: boolean;
+  isMobile: boolean;
+}) {
+  // Desktop keeps the original circular orbit. On mobile, use a single
+  // carefully spaced ring with positions chosen for the actual chip widths.
+  // This keeps every word intact instead of solving collisions by chopping
+  // words onto multiple lines.
+  const desktopRadius = 255;
+  // Mobile uses a collision-free 3-2-2-3 ring layout rather than a
+  // mathematically even orbit. This keeps long labels like
+  // \"Experimental\" and \"Communication\" intact on narrow screens.
+  const mobilePositions = [
+    [0, -140], [-105, -60], [105, -60], [110, 0], [110, 60],
+    [105, 110], [0, 150], [-105, 110], [-110, 60], [-110, 0],
+  ] as const;
+  const [mobileX, mobileY] = mobilePositions[index];
+  const x = isMobile ? mobileX : Math.cos(angle) * desktopRadius;
+  const y = isMobile ? mobileY : Math.sin(angle) * desktopRadius;
+
+  return (
+    <motion.div
+      className="skill-orbit-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      initial={false}
+      animate={{
+        opacity: isMobile ? (open ? 1 : 0) : 1,
+        scale: isMobile ? (open ? 1 : 0.35) : 1,
+        x: open ? x : 0,
+        y: open ? y : 0,
+      }}
+      transition={{
+        duration: 0.58,
+        delay: isMobile ? (open ? index * 0.025 : (skills.length - index) * 0.012) : index * 0.015,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      style={{ '--skill-x': `${x}px`, '--skill-y': `${y}px` } as React.CSSProperties}
+    >
+      <motion.div
+        whileHover={{ scale: 1.07 }}
+        className="skill-chip w-max min-w-[88px] max-w-[132px] min-h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm px-3 py-2 flex items-center justify-center text-center overflow-visible"
+      >
+        <div className="flex w-max items-center justify-center gap-1.5 text-[11px] sm:text-xs leading-[1.15] text-[var(--text-primary)] whitespace-nowrap">
+          <Icon size={14} className="text-[var(--accent-primary)] shrink-0" />
+          <span className="whitespace-nowrap">{name}</span>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function ThingsDone() {
   return <Wrap id="done" eyebrow="a few pages from the notebook" title="Things I’ve Done"><div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">{done.map(([text,date],i) => <motion.div key={text} whileHover={{ x:i%2?2:-2 }} className="relative bg-[var(--sticky-bg)] border border-[var(--sticky-border)] rounded-xl p-5 shadow-sm"><div className="absolute -top-2 left-1/2 -translate-x-1/2 w-14 h-5 bg-white/30 dark:bg-white/10 border border-black/5 dark:border-white/10 rotate-2"/><div className="flex items-start justify-between gap-3"><p className="font-handwriting text-xl text-[var(--sticky-text)]">{text}</p><span className="text-xs font-medium text-[var(--sticky-text)]/70 mt-1 whitespace-nowrap">{date}</span></div></motion.div>)}</div></Wrap>;
 }
@@ -229,108 +318,74 @@ function Recommendations() {
 }
 
 function Certifications() {
-  const [open, setOpen] = useState<(typeof certificates)[number] | null>(null);
-  const [viewportWidth, setViewportWidth] = useState(0);
-  const items = certificates.map((c) => ({ src: c.image, alt: `${c.title} certificate`, title: c.title, subtitle: c.org, certificate: c }));
-
-  React.useEffect(() => {
-    const update = () => setViewportWidth(Math.max(1, document.documentElement.clientWidth));
-    update();
-    window.addEventListener('resize', update, { passive: true });
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications">
-    <div className="certification-carousel-shell">
-      <CircularCarousel
-        items={items}
-        preset="panorama" intro="spin" cardWidth={viewportWidth || 340} aspectRatio={1.333} speed={14} captions={false}
-        gap={25} tilt={0} curve={1} perspective={1800} autoplay="drift" interval={3} direction="left"
-        momentum={0.6} snap pauseOnHover focusOnClick draggable parallax={0.3} stretch={0.5}
-        fadeColor="#ffffff" depthFade={0.55} innerShade={0.6} cornerRadius={12}
-        onItemClick={(item) => setOpen(item?.certificate ?? null)}
-      />
-    </div>
-    <AnimateCert open={open} onClose={() => setOpen(null)} />
-  </Wrap>;
+  const [open,setOpen]=useState<(typeof certificates)[number] | null>(null);
+  return <Wrap id="certifications" eyebrow="proof I kept learning" title="Certifications"><div className="grid md:grid-cols-2 gap-5">{certificates.map(c => <motion.button type="button" key={c.title} onClick={()=>setOpen(c)} whileHover={{ y:-5, rotate:c.title.length%2?-0.4:0.4 }} className="text-left bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm"><div className="bg-[var(--bg-secondary)] p-3 border-b border-[var(--border-color)]"><AsyncImage src={c.image} alt={`${c.title} certificate`} className="w-full h-full object-contain rounded-xl" wrapperClassName="w-full aspect-[4/3] rounded-xl bg-white/50 dark:bg-black/10" /></div><div className="p-5"><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{c.org}</p><h3 className="font-serif font-bold text-xl text-[var(--text-primary)] mt-1">{c.title}</h3><p className="text-sm text-[var(--text-muted)] mt-2">{c.date}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-3">view certificate →</p></div></motion.button>)}</div><AnimateCert open={open} onClose={()=>setOpen(null)}/></Wrap>;
 }
 function AnimateCert({open,onClose}:{open:(typeof certificates)[number] | null;onClose:()=>void}) { return <>{open && <motion.div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}><motion.div onClick={e=>e.stopPropagation()} initial={{opacity:0,scale:0.97,y:10}} animate={{opacity:1,scale:1,y:0}} className="w-full max-w-5xl max-h-[90vh] overflow-auto rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 sm:p-6 shadow-2xl"><div className="flex items-start justify-between gap-4 mb-4"><div><p className="text-xs uppercase tracking-[0.08em] text-[var(--accent-primary)]">{open.org}</p><h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] mt-1">{open.title}</h3></div><button onClick={onClose} className="text-[var(--accent-primary)] px-3 py-1 rounded-full border border-[var(--border-color)]">close</button></div>{<AsyncImage src={open.full} alt={open.title} className="w-full rounded-xl" wrapperClassName="w-full min-h-[320px] rounded-xl bg-[var(--bg-secondary)]" loading="eager" />}<a href={open.full} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)]">Open full certificate <ExternalLink size={14}/></a></motion.div></motion.div>}</>; }
 
 function Interests() { return <Wrap id="interests" eyebrow="things that pull my attention" title="Interests"><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{interests.map(([title,body],i)=><motion.div key={title} whileHover={{ y:-4 }} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 shadow-sm relative overflow-hidden"><div className="absolute -right-8 -top-8 w-20 h-20 rounded-full bg-[var(--accent-primary)]/5"/><p className="font-serif text-xl font-bold text-[var(--text-primary)]">{title}</p><p className="font-handwriting text-lg text-[var(--accent-primary)] mt-1">{body}</p></motion.div>)}</div></Wrap>; }
 
 function Contact() {
-  const theme = useAppStore(s => s.theme);
-  const contactLinks = [
-    { icon: Mail, href: 'mailto:mohammadarshilsiddiqui.2008@gmail.com', label: 'mohammadarshilsiddiqui.2008@gmail.com', external: false },
-    { icon: Github, href: 'https://github.com/Coderarshil', label: 'github.com/Coderarshil', external: true },
-    { icon: Linkedin, href: 'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', label: 'linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', external: true },
-    { icon: Instagram, href: 'https://instagram.com/arshil7474', label: 'instagram.com/arshil7474', external: true },
-  ] as const;
+  const [profileOpen, setProfileOpen] = useState(false);
 
-  const palette = theme === 'espresso'
-    ? { bg: '#2a190f', stubBg: '#2f1d11', ink: '#f5ecd7', border: '#8f7055' }
-    : { bg: '#fff6d8', stubBg: '#fff8df', ink: '#18120e', border: '#7d6447' };
+  const links = [
+    { Icon: Github, href: 'https://github.com/Coderarshil', label: 'GitHub', text: 'github.com/Coderarshil' },
+    { Icon: Linkedin, href: 'https://www.linkedin.com/in/mohammad-arshil-siddiqui-0121132a5', label: 'LinkedIn', text: 'linkedin.com/in/mohammad-arshil-siddiqui-0121132a5' },
+    { Icon: Instagram, href: 'https://instagram.com/arshil7474', label: 'Instagram', text: 'instagram.com/arshil7474' },
+  ];
 
-  return (
+  return <>
     <Wrap id="contact" eyebrow="one last cup?" title="Let’s talk" className="contact-section">
-      <div className="contact-ticket-wrap contact-ticket-reference">
-        <TearTicket
-          image=""
-          imageAlt=""
-          stub={
-            <div className="contact-ticket-qr-stub">
-              <img src="/resumeQR.svg" alt="QR code for Arshil's contact links" />
-              <span>Scan me</span>
+      <motion.article
+        className="contact-ticket"
+        initial={{ opacity: 0, y: 18, scale: 0.985 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        aria-label="Arshil contact card"
+      >
+        <div className="contact-ticket__main">
+          <button
+            type="button"
+            className="contact-ticket__portrait"
+            onClick={() => setProfileOpen(true)}
+            aria-label="Open Arshil's profile"
+          >
+            <img src="/arshil-contact.png" alt="Mohammad Arshil Siddiqui" loading="lazy" decoding="async" />
+          </button>
+
+          <div className="contact-ticket__info">
+            <div className="contact-ticket__identity">
+              <p className="contact-ticket__name">Mohammad Arshil Siddiqui</p>
+              <p className="contact-ticket__role">student · developer · AI enthusiast</p>
             </div>
-          }
-          orientation="horizontal"
-          scrim={false}
-          imageRadius={8}
-          width={900}
-          height={320}
-          stubSize={290}
-          radius={16}
-          holes={12}
-          holeSize={6}
-          notch={3}
-          roughness={0}
-          tearAngle={30}
-          stretch={30}
-          resistance={0.45}
-          rotate={4}
-          tilt
-          tiltMax={9}
-          tiltReach={260}
-          parallax={6}
-          perspective={1000}
-          background={palette.bg}
-          color={palette.ink}
-          border
-          borderColor={palette.border}
-          borderWidth={1}
-          stubBackground={palette.stubBg}
-          recenter
-          onTear={() => undefined}
-          ariaLabel="Tear off Arshil's contact QR stub"
-        >
-          <div className="contact-ticket-paper-content">
-            <div className="contact-ticket-links">
-              {contactLinks.map(({ icon: Icon, href, label, external }) => (
-                <a
-                  key={label}
-                  href={href}
-                  {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                  className="contact-ticket-link"
-                  aria-label={label}
-                >
-                  <span className="contact-ticket-link-icon"><Icon size={28} strokeWidth={2.1} /></span>
-                  <span className="contact-ticket-link-text">{label}</span>
+
+            <div className="contact-ticket__links">
+              <a href="mailto:mohammadarshilsiddiqui.2008@gmail.com" aria-label="Email Arshil">
+                <Mail size={17} />
+                <span>mohammadarshilsiddiqui.2008@gmail.com</span>
+              </a>
+              {links.map(({ Icon, href, label, text }) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                  <Icon size={17} />
+                  <span>{text}</span>
                 </a>
               ))}
             </div>
           </div>
-        </TearTicket>
-      </div>
+        </div>
+
+        <div className="contact-ticket__qr-panel">
+          <div className="contact-ticket__qr-wrap">
+            <img src="/contact-qr.svg" alt="QR code for Arshil's portfolio and contact links" className="contact-ticket__qr" />
+          </div>
+          <p>scan me</p>
+        </div>
+      </motion.article>
     </Wrap>
-  );
+
+    <AnimatePresence>
+      {profileOpen && <ProfileSummary onClose={() => setProfileOpen(false)} />}
+    </AnimatePresence>
+  </>;
 }
