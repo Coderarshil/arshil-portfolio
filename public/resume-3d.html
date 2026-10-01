@@ -156,7 +156,7 @@
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 700 ? 1.5 : 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 2 : 2.5));
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -293,12 +293,20 @@
 
         async function renderPdfPage(pageNumber) {
             const page = await resumePdf.getPage(pageNumber);
-            const viewport = page.getViewport({ scale: 2.2 });
+            const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+            // Render the PDF substantially above CSS display resolution so the physical
+            // 3D resume stays crisp when the card is viewed close-up or on HiDPI screens.
+            const baseScale = window.innerWidth < 700 ? 2.8 : 3.4;
+            const viewport = page.getViewport({ scale: baseScale * Math.min(dpr, 1.35) });
             const canvas = document.createElement('canvas');
             canvas.width = Math.ceil(viewport.width);
             canvas.height = Math.ceil(viewport.height);
             const ctx = canvas.getContext('2d', { alpha: false });
             if (!ctx) throw new Error('Unable to create resume PDF canvas');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             await page.render({ canvasContext: ctx, viewport }).promise;
             return canvas;
         }
@@ -310,6 +318,7 @@
 
         const resumeTexture = new THREE.CanvasTexture(frontCanvas);
         resumeTexture.encoding = THREE.sRGBEncoding;
+        resumeTexture.generateMipmaps = true;
         resumeTexture.center.set(0.5, 0.5);
         resumeTexture.rotation = Math.PI;
         resumeTexture.repeat.set(-1, 1);
@@ -333,6 +342,7 @@
 
         const backTexture = new THREE.CanvasTexture(backCanvas);
         backTexture.encoding = THREE.sRGBEncoding;
+        backTexture.generateMipmaps = true;
         backTexture.center.set(0.5, 0.5);
         backTexture.rotation = Math.PI;
         backTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -561,7 +571,7 @@ scene.updateMatrixWorld(true);
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 700 ? 1.5 : 2));
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 2 : 2.5));
             renderer.setSize(window.innerWidth, window.innerHeight, false);
         });
 
