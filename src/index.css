@@ -462,3 +462,12 @@ footer {
     display: none;
   }
 }
+
+/* Step 4: keep React Bits FlipCard inside the existing A4 resume viewer. */
+.resume-flip-card {
+  --fc-w: 100% !important;
+  --fc-h: 100% !important;
+  --fc-radius: 0px !important;
+}
+.resume-flip-card .flip-card__face { border-radius: 0; }
+.resume-flip-card .flip-card__shadow { display: none; }
